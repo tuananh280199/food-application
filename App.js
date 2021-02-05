@@ -1,10 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {StatusBar} from 'react-native';
+import AppNavigation from './src/navigations/AppNavigation';
 
 const App = () => {
   return (
     <View style={styles.flexContainer}>
-      <Text>Hello</Text>
+      <StatusBar barStyle="dark-content" />
+      <AppNavigation />
     </View>
   );
 };
