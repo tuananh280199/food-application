@@ -1,7 +1,11 @@
 //import node_modules
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 //import navigator
 import HomeTab from './HomeTab';
@@ -17,9 +21,6 @@ import {
   PROFILE_USER_NAVIGATION,
 } from '../../constants/StackNavigation';
 import {TabActiveLine} from '../../constants/TabActiveLine';
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Entypo from "react-native-vector-icons/Entypo";
 
 const BottomTabBar = createBottomTabNavigator();
 
@@ -101,5 +102,6 @@ const MainNavigation = () => {
     </BottomTabBar.Navigator>
   );
 };
+
 
 export default MainNavigation;
