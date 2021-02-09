@@ -2,55 +2,64 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
+import {useDispatch} from 'react-redux';
 
 //import other
 import {HOME_SCREEN} from '../../constants/StackNavigation';
+import {firstIsLaunch} from '../../slices/authSlice';
+
+const Dots = ({selected}) => {
+  let backgroundColor;
+
+  backgroundColor = selected ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)';
+
+  return (
+    <View
+      style={{
+        width: 6,
+        height: 6,
+        marginHorizontal: 3,
+        borderRadius: 6,
+        backgroundColor,
+      }}
+    />
+  );
+};
+
+const Skip = ({...props}) => (
+  <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
+    <Text style={{fontSize: 16}}>Bỏ Qua</Text>
+  </TouchableOpacity>
+);
+
+const Next = ({...props}) => (
+  <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
+    <Text style={{fontSize: 16}}>Tiếp Theo</Text>
+  </TouchableOpacity>
+);
+
+const Done = ({...props}) => (
+  <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
+    <Text style={{fontSize: 16}}>Đến Trang Chủ</Text>
+  </TouchableOpacity>
+);
 
 const OnboardingScreen = ({navigation}) => {
-  const Dots = ({selected}) => {
-    let backgroundColor;
-
-    backgroundColor = selected ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0.3)';
-
-    return (
-      <View
-        style={{
-          width: 6,
-          height: 6,
-          marginHorizontal: 3,
-          borderRadius: 6,
-          backgroundColor,
-        }}
-      />
-    );
-  };
-
-  const Skip = ({...props}) => (
-    <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
-      <Text style={{fontSize: 16}}>Bỏ Qua</Text>
-    </TouchableOpacity>
-  );
-
-  const Next = ({...props}) => (
-    <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
-      <Text style={{fontSize: 16}}>Tiếp Theo</Text>
-    </TouchableOpacity>
-  );
-
-  const Done = ({...props}) => (
-    <TouchableOpacity style={{marginHorizontal: 10}} {...props}>
-      <Text style={{fontSize: 16}}>Đến Trang Chủ</Text>
-    </TouchableOpacity>
-  );
-
+  const dispatch = useDispatch();
   return (
     <Onboarding
       SkipButtonComponent={Skip}
       NextButtonComponent={Next}
       DoneButtonComponent={Done}
       DotComponent={Dots}
-      onSkip={() => navigation.replace(HOME_SCREEN)}
-      onDone={() => navigation.navigate(HOME_SCREEN)}
+      onSkip={() => {
+        dispatch(firstIsLaunch(false));
+        navigation.replace(HOME_SCREEN);
+      }}
+      onDone={() => {
+        dispatch(firstIsLaunch(false));
+        navigation.replace(HOME_SCREEN);
+      }}
       pages={[
         {
           backgroundColor: '#a6e4d0',

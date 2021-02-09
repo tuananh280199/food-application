@@ -1,21 +1,19 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {StatusBar} from 'react-native';
 import AppNavigation from './src/navigations/AppNavigation';
+import {persistor, store} from './src/store';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
 
 const App = () => {
   return (
-    <View style={styles.flexContainer}>
-      <StatusBar barStyle="dark-content" />
-      <AppNavigation />
-    </View>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <StatusBar barStyle="dark-content" />
+        <AppNavigation />
+      </PersistGate>
+    </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  flexContainer: {
-    flex: 1,
-  },
-});
 
 export default App;

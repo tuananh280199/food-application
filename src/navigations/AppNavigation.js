@@ -1,5 +1,6 @@
 //import node_modules
-import React, {useState} from 'react';
+import React from 'react';
+import {useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -15,11 +16,11 @@ import {HOME_SCREEN, ONBOARDING_SCREEN} from '../constants/StackNavigation';
 const Stack = createStackNavigator();
 
 const AppNavigation = () => {
-  const [firstOpenApp] = useState(true);
+  const firstIsLaunch = useSelector((state) => state.auth.firstIsLaunch);
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {firstOpenApp ? (
+        {firstIsLaunch ? (
           <Stack.Screen
             name={ONBOARDING_SCREEN}
             component={OnboardingScreen}
