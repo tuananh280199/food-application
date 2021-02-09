@@ -12,17 +12,7 @@ const Stack = createStackNavigator();
 
 const ProfileUserTab = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        // headerShown: false,
-      }}>
+    <Stack.Navigator>
       <Stack.Screen name={PROFILE_USER_SCREEN} component={ProfileUserScreen} />
     </Stack.Navigator>
   );

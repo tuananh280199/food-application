@@ -1,4 +1,26 @@
 apply plugin: "com.android.application"
+project.ext.vectoricons = [
+  iconFontNames: [
+    'AntDesign.ttf',
+    'Entypo.ttf',
+    'EvilIcons.ttf',
+    'Feather.ttf',
+    'FontAwesome.ttf',
+    'FontAwesome5_Brands.ttf',
+    'FontAwesome5_Regular.ttf',
+    'FontAwesome5_Solid.ttf',
+    'Foundation.ttf',
+    'Ionicons.ttf',
+    'MaterialIcons.ttf',
+    'MaterialCommunityIcons.ttf',
+    'SimpleLineIcons.ttf',
+    'Octicons.ttf',
+    'Zocial.ttf',
+    'Fontisto.ttf',
+    'icomoon.ttf',
+  ]
+]
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 
@@ -82,11 +104,6 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-
-project.ext.vectoricons = [
-    iconFontNames: [ 'AntDesign.ttf', 'Entypo.ttf', 'Feather.ttf', 'MaterialIcons.ttf', 'EvilIcons.ttf', 'Ionicons.ttf', 'FontAwesome.ttf', 'FontAwesome5_Brands.ttf', 'FontAwesome5_Regular.ttf', 'FontAwesome5_Solid.ttf', 'Foundation.ttf', 'MaterialCommunityIcons.ttf', 'SimpleLineIcons.ttf', 'Octicons.ttf', 'Zocial.ttf', 'Fontisto.ttf' ] // Name of the font files you want to copy
-
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
