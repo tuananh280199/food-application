@@ -10,3 +10,9 @@ export const HOME_SCREEN = 'Home';
 export const CART_SCREEN = 'Cart';
 export const CONTACT_SCREEN = 'Contact';
 export const PROFILE_USER_SCREEN = 'User';
+
+//Auth
+export const SIGN_IN = 'SignIn';
+export const SIGN_UP = 'SignUp';
+export const FORGOT_PASSWORD = 'ForgotPassword';
+export const CHANGE_INFORMATION_USER = 'ChangeInformationUser';

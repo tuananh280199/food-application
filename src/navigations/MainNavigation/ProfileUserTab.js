@@ -6,7 +6,9 @@ import React from 'react';
 import {ProfileUserScreen} from '../../screens/ProfileUser';
 
 //import other
-import {PROFILE_USER_SCREEN} from '../../constants/StackNavigation';
+import {
+  PROFILE_USER_SCREEN,
+} from '../../constants/StackNavigation';
 
 const Stack = createStackNavigator();
 

@@ -11,9 +11,10 @@ import {useNavigation} from '@react-navigation/native';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
+import {SIGN_IN} from '../../constants/StackNavigation';
 
 const ProfileUserScreen = () => {
-  const [signIn, setSignIn] = useState(false);
+  const [signIn, setSignIn] = useState(true);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,6 +26,10 @@ const ProfileUserScreen = () => {
       ),
     });
   });
+
+  const handleClickSignInOrSignUp = () => {
+    signIn ? navigation.navigate(SIGN_IN) : null;
+  };
 
   return (
     <View style={styles.flexContainer}>
@@ -41,7 +46,7 @@ const ProfileUserScreen = () => {
             <Text style={styles.subText}>@Nickname</Text>
           </View>
         </View>
-        <View style={{flex: 6, justifyContent: 'center'}}>
+        <View style={{flex: 6, justifyContent: 'space-around'}}>
           <View style={styles.commonInfo}>
             <Entypo name={'location'} size={20} />
             <Text
@@ -127,7 +132,9 @@ const ProfileUserScreen = () => {
             Cài Đặt
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}>
+        <TouchableOpacity
+          style={styles.commonOther}
+          onPress={() => handleClickSignInOrSignUp()}>
           <FontAwesome
             name={signIn ? 'sign-in' : 'sign-out'}
             size={20}
@@ -151,12 +158,10 @@ const styles = StyleSheet.create({
   },
   commonInfo: {
     flexDirection: 'row',
-    marginVertical: 10,
     alignItems: 'center',
   },
   commonOther: {
     flexDirection: 'row',
-    marginVertical: 15,
     alignItems: 'center',
   },
   profileUser: {
@@ -221,8 +226,9 @@ const styles = StyleSheet.create({
   },
   other: {
     flex: 5,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     paddingHorizontal: 20,
+    marginVertical: 5,
   },
 });
 
