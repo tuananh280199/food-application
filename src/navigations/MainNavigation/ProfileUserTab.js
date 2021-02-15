@@ -7,8 +7,16 @@ import {ProfileUserScreen} from '../../screens/ProfileUser';
 
 //import other
 import {
+  CHANGE_PASSWORD,
+  FORGOT_PASSWORD,
   PROFILE_USER_SCREEN,
+  SIGN_IN,
+  SIGN_UP,
 } from '../../constants/StackNavigation';
+import {SignInScreen} from '../../screens/SignIn';
+import {SignUpScreen} from '../../screens/SignUp';
+import {ChangePasswordScreen} from '../../screens/ChangePassword';
+import {ForgotPasswordScreen} from '../../screens/ForgotPassword';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +24,10 @@ const ProfileUserTab = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name={PROFILE_USER_SCREEN} component={ProfileUserScreen} />
+      <Stack.Screen name={SIGN_IN} component={SignInScreen} />
+      <Stack.Screen name={SIGN_UP} component={SignUpScreen} />
+      <Stack.Screen name={CHANGE_PASSWORD} component={ChangePasswordScreen} />
+      <Stack.Screen name={FORGOT_PASSWORD} component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );
 };

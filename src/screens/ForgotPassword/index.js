@@ -13,26 +13,23 @@ import {
   Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 
 //import other
-import {SIGN_UP} from '../../constants/StackNavigation';
+import {SIGN_IN} from '../../constants/StackNavigation';
 
-const SignUpScreen = () => {
+const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
 
   const [data, setData] = React.useState({
-    username: '',
-    password: '',
+    passwordOld: '',
+    passwordNew: '',
     confirmPassword: '',
-    checkUsernameChange: false,
-    secureTextEntry: true,
+    secureTextEntryNew: true,
     confirmSecureTextEntry: true,
-    isValidUser: true,
-    isValidPassword: true,
+    isValidPasswordNew: true,
   });
 
   useLayoutEffect(() => {
@@ -41,36 +38,25 @@ const SignUpScreen = () => {
     });
   });
 
-  const handleUsernameChange = (value) => {
-    if (value.trim().length >= 4) {
-      setData({
-        ...data,
-        username: value,
-        checkUsernameChange: true,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        username: value,
-        checkUsernameChange: false,
-        isValidUser: false,
-      });
-    }
+  const handlePasswordOldChange = (value) => {
+    setData({
+      ...data,
+      passwordOld: value,
+    });
   };
 
-  const handlePasswordChange = (value) => {
+  const handlePasswordNewChange = (value) => {
     if (value.trim().length >= 8) {
       setData({
         ...data,
-        password: value,
-        isValidPassword: true,
+        passwordNew: value,
+        isValidPasswordNew: true,
       });
     } else {
       setData({
         ...data,
-        password: value,
-        isValidPassword: false,
+        passwordNew: value,
+        isValidPasswordNew: false,
       });
     }
   };
@@ -82,24 +68,10 @@ const SignUpScreen = () => {
     });
   };
 
-  const handleValidUser = (value) => {
-    if (value.trim().length >= 4) {
-      setData({
-        ...data,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        isValidUser: false,
-      });
-    }
-  };
-
-  const changeSecureTextEntry = () => {
+  const changeSecureTextEntryNew = () => {
     setData({
       ...data,
-      secureTextEntry: !data.secureTextEntry,
+      secureTextEntryNew: !data.secureTextEntryNew,
     });
   };
 
@@ -110,22 +82,18 @@ const SignUpScreen = () => {
     });
   };
 
-  const handleSignUpSubmit = () => {
+  const handleChangePasswordSubmit = () => {
     if (
-      data.username.length === 0 ||
-      data.password.length === 0 ||
+      data.passwordOld.length === 0 ||
+      data.passwordNew.length === 0 ||
       data.confirmPassword.length === 0
     ) {
-      Alert.alert(
-        'Thông báo',
-        'Tài khoản, mật khẩu và xác nhận mật khẩu không được để trống !',
-        [{text: 'OK'}],
-      );
-    } else if (!data.isValidUser || !data.isValidPassword) {
-      Alert.alert('Thông báo', 'Tài khoản hoặc mật khẩu không hợp lệ !', [
+      Alert.alert('Thông báo', 'Các trường nhập không được để trống !', [
         {text: 'OK'},
       ]);
-    } else if (data.confirmPassword !== data.password) {
+    } else if (!data.isValidPasswordNew) {
+      Alert.alert('Thông báo', 'Mật khẩu mới không hợp lệ !', [{text: 'OK'}]);
+    } else if (data.confirmPassword !== data.passwordNew) {
       Alert.alert(
         'Thông báo',
         'Mật khẩu và xác nhận mật khẩu khác nhau. Vui lòng kiểm tra lại !',
@@ -133,11 +101,14 @@ const SignUpScreen = () => {
       );
     } else {
       //todo
-      Alert.alert(
-        'Thông báo',
-        'Đăng ký thành thành công !',
-        [{text: 'OK'}],
-      );
+      Alert.alert('Thông báo', 'Đổi mật khẩu thành công !', [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ]);
     }
   };
 
@@ -146,56 +117,41 @@ const SignUpScreen = () => {
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
         <Animatable.View style={styles.header} animation="fadeInDownBig">
-          <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
+          <Text style={styles.textHeader}>Đổi Mật Khẩu</Text>
         </Animatable.View>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={styles.textFooter}>Tài Khoản</Text>
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Tài khoản"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleUsernameChange(value)}
-            />
-            {data.checkUsernameChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidUser ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>
-                Tài khoản chứa ít nhất 4 ký tự
-              </Text>
-            </Animatable.View>
-          )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu</Text>
+          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Cũ</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
-              placeholder="Mật khẩu"
+              placeholder="Mật khẩu cũ"
               placeholderTextColor="#666666"
-              secureTextEntry={data.secureTextEntry ? true : false}
+              secureTextEntry={false}
               style={styles.textInput}
               autoCapitalize="none"
-              onChangeText={(value) => handlePasswordChange(value)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+              onChangeText={(value) => handlePasswordOldChange(value)}
             />
-            <TouchableOpacity onPress={changeSecureTextEntry}>
-              {data.secureTextEntry ? (
+          </View>
+          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Mới</Text>
+          <View style={styles.action}>
+            <Feather name="lock" color={'#05375a'} size={20} />
+            <TextInput
+              placeholder="Mật khẩu mới"
+              placeholderTextColor="#666666"
+              secureTextEntry={data.secureTextEntryNew ? true : false}
+              style={styles.textInput}
+              autoCapitalize="none"
+              onChangeText={(value) => handlePasswordNewChange(value)}
+            />
+            <TouchableOpacity onPress={changeSecureTextEntryNew}>
+              {data.secureTextEntryNew ? (
                 <Feather name="eye-off" color="grey" size={20} />
               ) : (
                 <Feather name="eye" color="grey" size={20} />
               )}
             </TouchableOpacity>
           </View>
-          {data.isValidPassword ? null : (
+          {data.isValidPasswordNew ? null : (
             <Animatable.View
               animation="fadeInLeft"
               duration={500}
@@ -224,29 +180,10 @@ const SignUpScreen = () => {
               )}
             </TouchableOpacity>
           </View>
-          <View style={styles.textPrivate}>
-            <Text style={styles.color_textPrivate}>
-              Bằng cách đăng ký, bạn đồng ý với
-            </Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              <TouchableOpacity>
-                <Text>Điều khoản dịch vụ</Text>
-              </TouchableOpacity>
-            </Text>
-            <Text style={styles.color_textPrivate}> và</Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              <TouchableOpacity>
-                <Text>Chính sách bảo mật</Text>
-              </TouchableOpacity>
-            </Text>
-            <Text style={styles.color_textPrivate}> của chúng tôi</Text>
-          </View>
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={handleSignUpSubmit}>
+              onPress={handleChangePasswordSubmit}>
               <LinearGradient
                 colors={['#08d4c4', '#20c997']}
                 style={styles.signIn}>
@@ -257,12 +194,12 @@ const SignUpScreen = () => {
                       color: '#fff',
                     },
                   ]}>
-                  Đăng Ký
+                  Đổi Mật Khẩu
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate(SIGN_IN)}
               style={[
                 styles.signIn,
                 {
@@ -341,7 +278,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 50,
   },
   signIn: {
     width: '100%',
@@ -354,15 +291,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  textPrivate: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginTop: 30,
-  },
-  color_textPrivate: {
-    color: 'grey',
-  },
 });
 
-export {SignUpScreen};
+export {ForgotPasswordScreen};

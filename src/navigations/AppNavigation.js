@@ -9,16 +9,9 @@ import MainNavigation from './MainNavigation';
 
 //import screens
 import {OnboardingScreen} from '../screens/Onboarding';
-import {SignInScreen} from '../screens/SignIn';
-import {SignUpScreen} from '../screens/SignUp';
 
 //import other
-import {
-  HOME_SCREEN,
-  ONBOARDING_SCREEN,
-  SIGN_IN,
-  SIGN_UP,
-} from '../constants/StackNavigation';
+import {HOME_SCREEN, ONBOARDING_SCREEN} from '../constants/StackNavigation';
 
 const Stack = createStackNavigator();
 
@@ -45,8 +38,6 @@ const AppNavigation = () => {
           name={HOME_SCREEN}
           component={MainNavigation}
         />
-        <Stack.Screen name={SIGN_IN} component={SignInScreen} />
-        <Stack.Screen name={SIGN_UP} component={SignUpScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

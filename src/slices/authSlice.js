@@ -2,6 +2,8 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initState = {
   firstIsLaunch: true,
+  token: '',
+  profile: {},
 };
 
 const authSlice = createSlice({
@@ -11,9 +13,19 @@ const authSlice = createSlice({
     firstIsLaunch(state, action) {
       state.firstIsLaunch = action.payload;
     },
+    login(state, action) {
+      const {token, profile} = action.payload;
+      state.token = token;
+      state.profile = profile;
+    },
+    logout(state, action) {
+      state.token = '';
+      state.profile = {};
+    },
+    // logout: () => initState,
   },
 });
 
-export const {firstIsLaunch} = authSlice.actions;
+export const {firstIsLaunch, login, logout} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -8,14 +8,23 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
 import {SIGN_IN} from '../../constants/StackNavigation';
+import {logout} from '../../slices/authSlice';
 
 const ProfileUserScreen = () => {
-  const [signIn, setSignIn] = useState(true);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {profile, token} = useSelector((state) => {
+    return {
+      profile: state.auth.profile,
+      token: state.auth.token,
+    };
+  });
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Profile',
@@ -25,25 +34,36 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
       ),
     });
-  });
+  }, [navigation]);
 
   const handleClickSignInOrSignUp = () => {
-    signIn ? navigation.navigate(SIGN_IN) : null;
+    if (token === '') {
+      navigation.navigate(SIGN_IN);
+      return;
+    }
+    dispatch(logout());
   };
 
   return (
     <View style={styles.flexContainer}>
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
-          <View>
-            <Image style={styles.image} source={IMAGE_DEFAULT} />
+          <TouchableOpacity onPress={() => {}}>
+            <Image
+              style={styles.image}
+              source={profile?.avatar ? {uri: profile.avatar} : IMAGE_DEFAULT}
+            />
             <View style={styles.wrapperIcon}>
               <Entypo name={'camera'} size={16} color={'white'} />
             </View>
-          </View>
+          </TouchableOpacity>
           <View>
-            <Text style={styles.text}>Nguyen Duc Tuan Anh</Text>
-            <Text style={styles.subText}>@Nickname</Text>
+            <Text style={styles.text}>
+              {profile?.name ? profile.name : 'Tên Khách Hàng'}
+            </Text>
+            <Text style={styles.subText}>
+              @{profile?.nickname ? profile.nickname : 'bídanh'}
+            </Text>
           </View>
         </View>
         <View style={{flex: 6, justifyContent: 'space-around'}}>
@@ -52,7 +72,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              Tân Hội - Đan Phượng - Hà Nội
+              {profile?.address ? profile.address : 'Hà Nội'}
             </Text>
           </View>
           <View style={styles.commonInfo}>
@@ -60,7 +80,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              +84 - 372842282
+              {profile?.phone ? profile.phone : '0123456789'}
             </Text>
           </View>
           <View style={styles.commonInfo}>
@@ -68,7 +88,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              example@gmail.com
+              {profile?.email ? profile.email : 'example@gmail.com'}
             </Text>
           </View>
         </View>
@@ -134,16 +154,16 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
-          onPress={() => handleClickSignInOrSignUp()}>
+          onPress={handleClickSignInOrSignUp}>
           <FontAwesome
-            name={signIn ? 'sign-in' : 'sign-out'}
+            name={token === '' ? 'sign-in' : 'sign-out'}
             size={20}
             color={'rgb(245, 54, 37)'}
           />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
             numberOfLine={2}>
-            {signIn ? 'Đăng Nhập' : 'Đăng Xuất'}
+            {token === '' ? 'Đăng Nhập' : 'Đăng Xuất'}
           </Text>
         </TouchableOpacity>
       </View>
