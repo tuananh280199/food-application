@@ -22,10 +22,14 @@ const authSlice = createSlice({
       state.token = '';
       state.profile = {};
     },
+    updateProfile(state, action) {
+      const {profile} = action.payload;
+      state.profile = profile;
+    },
     // logout: () => initState,
   },
 });
 
-export const {firstIsLaunch, login, logout} = authSlice.actions;
+export const {firstIsLaunch, login, logout, updateProfile} = authSlice.actions;
 
 export default authSlice.reducer;

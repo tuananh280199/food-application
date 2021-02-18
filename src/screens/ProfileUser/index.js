@@ -1,6 +1,13 @@
 //import node_module
 import React, {useState, useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -12,12 +19,19 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
-import {SIGN_IN} from '../../constants/StackNavigation';
+import {
+  CHANGE_PASSWORD,
+  CHANGE_PROFILE_USER,
+  SIGN_IN,
+} from '../../constants/StackNavigation';
 import {logout} from '../../slices/authSlice';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  const uid = useSelector((state) => state.auth.profile?.id);
+
   const {profile, token} = useSelector((state) => {
     return {
       profile: state.auth.profile,
@@ -29,12 +43,16 @@ const ProfileUserScreen = () => {
     navigation.setOptions({
       title: 'Profile',
       headerRight: () => (
-        <TouchableOpacity style={{marginRight: 10}} onPress={() => {}}>
+        <TouchableOpacity
+          style={{marginRight: 10}}
+          onPress={() =>
+            handleOptionClick('Sửa Thông Tin', CHANGE_PROFILE_USER)
+          }>
           <FontAwesome5 name={'user-edit'} size={18} />
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  });
 
   const handleClickSignInOrSignUp = () => {
     if (token === '') {
@@ -42,6 +60,16 @@ const ProfileUserScreen = () => {
       return;
     }
     dispatch(logout());
+  };
+
+  const handleOptionClick = (txt, screen = CHANGE_PASSWORD) => {
+    if (!uid) {
+      Alert.alert('Thông báo', `Vui lòng đăng nhập để vào màn hình ${txt}!`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    navigation.navigate(screen);
   };
 
   return (
@@ -104,7 +132,9 @@ const ProfileUserScreen = () => {
         </View>
       </View>
       <View style={styles.other}>
-        <TouchableOpacity style={styles.commonOther}>
+        <TouchableOpacity
+          style={styles.commonOther}
+          onPress={() => handleOptionClick('Đồ Ăn Yêu Thích')}>
           <AntDesign name={'hearto'} size={20} color={'rgb(245, 54, 37)'} />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
@@ -112,7 +142,9 @@ const ProfileUserScreen = () => {
             Đồ Ăn Yêu Thích
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}>
+        <TouchableOpacity
+          style={styles.commonOther}
+          onPress={() => handleOptionClick('Lịch Sử Mua Hàng')}>
           <Entypo name={'list'} size={20} color={'rgb(245, 54, 37)'} />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
@@ -120,7 +152,19 @@ const ProfileUserScreen = () => {
             Lịch Sử Mua Hàng
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}>
+        <TouchableOpacity
+          style={styles.commonOther}
+          onPress={() => handleOptionClick('Đổi Mật Khẩu', CHANGE_PASSWORD)}>
+          <FontAwesome name={'key'} size={20} color={'rgb(245, 54, 37)'} />
+          <Text
+            style={[styles.subTextOther, {marginHorizontal: 15}]}
+            numberOfLine={2}>
+            Đổi Mật Khẩu
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.commonOther}
+          onPress={() => handleOptionClick('Thanh Toán')}>
           <MaterialIcons
             name={'payment'}
             size={20}
@@ -142,14 +186,6 @@ const ProfileUserScreen = () => {
             style={[styles.subTextOther, {marginHorizontal: 15}]}
             numberOfLine={2}>
             Hỗ Trợ
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}>
-          <AntDesign name={'setting'} size={20} color={'rgb(245, 54, 37)'} />
-          <Text
-            style={[styles.subTextOther, {marginHorizontal: 15}]}
-            numberOfLine={2}>
-            Cài Đặt
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -200,12 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#20c997',
-    top: 50,
+    top: 48,
     left: 40,
-    width: 25,
-    height: 25,
-    borderRadius: 25,
-    borderWidth: 1,
+    width: 28,
+    height: 28,
+    borderRadius: 28,
+    borderWidth: 1.5,
     borderColor: 'white',
   },
   text: {

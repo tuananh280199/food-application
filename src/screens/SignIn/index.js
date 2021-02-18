@@ -15,20 +15,21 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch} from 'react-redux';
+import Snackbar from 'react-native-snackbar';
 
 //import other
 import {
-  CHANGE_PASSWORD,
   SIGN_UP,
   FORGOT_PASSWORD,
   PROFILE_USER_SCREEN,
 } from '../../constants/StackNavigation';
 import authAPI from '../../services/auth';
 import {login} from '../../slices/authSlice';
-import Snackbar from "react-native-snackbar";
+import {getErrorMessage} from '../../utils/HandleError';
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -126,12 +127,16 @@ const SignInScreen = () => {
         navigation.navigate(PROFILE_USER_SCREEN);
       } catch (e) {
         Snackbar.show({
-          text: 'Error, please try again later',
+          text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
           backgroundColor: 'rgba(245, 101, 101, 1)',
         });
       }
     }
+  };
+
+  const handleGoBack = () => {
+    navigation.navigate(PROFILE_USER_SCREEN);
   };
 
   return (
@@ -141,6 +146,9 @@ const SignInScreen = () => {
         <Animatable.View style={styles.header} animation="fadeInDownBig">
           <Text style={styles.textHeader}>Đăng Nhập</Text>
         </Animatable.View>
+        <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+          <Ionicons name="arrow-back" color={'white'} size={30} />
+        </TouchableOpacity>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={styles.textFooter}>Tài Khoản</Text>
           <View style={styles.action}>
@@ -196,17 +204,11 @@ const SignInScreen = () => {
               <Text style={styles.errorMsg}>Mật khẩu chứa ít nhất 8 kí tự</Text>
             </Animatable.View>
           )}
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
             <TouchableOpacity
               onPress={() => navigation.navigate(FORGOT_PASSWORD)}>
               <Text style={{color: '#20c997', marginTop: 30}}>
                 Quên mật khẩu ?
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(CHANGE_PASSWORD)}>
-              <Text style={{color: '#20c997', marginTop: 30}}>
-                Đổi mật khẩu !
               </Text>
             </TouchableOpacity>
           </View>
@@ -257,6 +259,11 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
     backgroundColor: '#20c997',
+  },
+  iconBack: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 44 : 20,
+    left: 20,
   },
   header: {
     flex: 1,

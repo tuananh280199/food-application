@@ -16,12 +16,20 @@ import {useNavigation} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import Snackbar from 'react-native-snackbar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
 
 //import other
-import {SIGN_IN} from '../../constants/StackNavigation';
+import {PROFILE_USER_SCREEN} from '../../constants/StackNavigation';
+import {updateProfile} from '../../slices/authSlice';
+import {getErrorMessage} from '../../utils/HandleError';
+import authAPI from '../../services/auth';
 
 const ChangePasswordScreen = () => {
   const navigation = useNavigation();
+
+  const uid = useSelector((state) => state.auth.profile?.id);
 
   const [data, setData] = React.useState({
     passwordOld: '',
@@ -82,7 +90,7 @@ const ChangePasswordScreen = () => {
     });
   };
 
-  const handleChangePasswordSubmit = () => {
+  const handleChangePasswordSubmit = async () => {
     if (
       data.passwordOld.length === 0 ||
       data.passwordNew.length === 0 ||
@@ -100,16 +108,43 @@ const ChangePasswordScreen = () => {
         [{text: 'OK'}],
       );
     } else {
-      //todo
-      Alert.alert('Thông báo', 'Đổi mật khẩu thành công !', [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.goBack();
+      try {
+        const params = {
+          passwordOld: data.passwordOld,
+          passwordNew: data.passwordNew,
+        };
+        await authAPI.resetPassword(uid, params);
+        Alert.alert('Thông báo', 'Đổi mật khẩu thành công !', [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.navigate(PROFILE_USER_SCREEN);
+            },
           },
-        },
-      ]);
+        ]);
+      } catch (e) {
+        Snackbar.show({
+          text: getErrorMessage(e),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: 'rgba(245, 101, 101, 1)',
+        });
+      }
     }
+  };
+
+  const handleCancel = () => {
+    setData({
+      passwordOld: '',
+      passwordNew: '',
+      confirmPassword: '',
+      secureTextEntryNew: true,
+      confirmSecureTextEntry: true,
+      isValidPasswordNew: true,
+    });
+  };
+
+  const handleGoBack = () => {
+    navigation.navigate(PROFILE_USER_SCREEN);
   };
 
   return (
@@ -119,6 +154,9 @@ const ChangePasswordScreen = () => {
         <Animatable.View style={styles.header} animation="fadeInDownBig">
           <Text style={styles.textHeader}>Đổi Mật Khẩu</Text>
         </Animatable.View>
+        <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+          <Ionicons name="arrow-back" color={'white'} size={30} />
+        </TouchableOpacity>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Cũ</Text>
           <View style={styles.action}>
@@ -130,6 +168,7 @@ const ChangePasswordScreen = () => {
               style={styles.textInput}
               autoCapitalize="none"
               onChangeText={(value) => handlePasswordOldChange(value)}
+              value={data.passwordOld}
             />
           </View>
           <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Mới</Text>
@@ -142,6 +181,7 @@ const ChangePasswordScreen = () => {
               style={styles.textInput}
               autoCapitalize="none"
               onChangeText={(value) => handlePasswordNewChange(value)}
+              value={data.passwordNew}
             />
             <TouchableOpacity onPress={changeSecureTextEntryNew}>
               {data.secureTextEntryNew ? (
@@ -171,6 +211,7 @@ const ChangePasswordScreen = () => {
               style={styles.textInput}
               autoCapitalize="none"
               onChangeText={(value) => handleConfirmPasswordChange(value)}
+              value={data.confirmPassword}
             />
             <TouchableOpacity onPress={changeConfirmSecureTextEntry}>
               {data.confirmSecureTextEntry ? (
@@ -199,7 +240,7 @@ const ChangePasswordScreen = () => {
               </LinearGradient>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate(SIGN_IN)}
+              onPress={handleCancel}
               style={[
                 styles.signIn,
                 {
@@ -215,7 +256,7 @@ const ChangePasswordScreen = () => {
                     color: '#20c997',
                   },
                 ]}>
-                Đăng Nhập
+                Huỷ
               </Text>
             </TouchableOpacity>
           </View>
@@ -229,6 +270,11 @@ const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
     backgroundColor: '#20c997',
+  },
+  iconBack: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 44 : 20,
+    left: 20,
   },
   header: {
     flex: 1,

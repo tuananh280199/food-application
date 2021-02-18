@@ -17,9 +17,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import Snackbar from 'react-native-snackbar';
 
 //import other
-import {SIGN_UP} from '../../constants/StackNavigation';
+import authAPI from '../../services/auth';
+import {getErrorMessage} from '../../utils/HandleError';
+import {SIGN_IN} from '../../constants/StackNavigation';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -110,7 +113,7 @@ const SignUpScreen = () => {
     });
   };
 
-  const handleSignUpSubmit = () => {
+  const handleSignUpSubmit = async () => {
     if (
       data.username.length === 0 ||
       data.password.length === 0 ||
@@ -132,12 +135,24 @@ const SignUpScreen = () => {
         [{text: 'OK'}],
       );
     } else {
-      //todo
-      Alert.alert(
-        'Thông báo',
-        'Đăng ký thành thành công !',
-        [{text: 'OK'}],
-      );
+      try {
+        const params = {
+          username: data.username,
+          password: data.password,
+        };
+        const response = await authAPI.register(params);
+        if (response) {
+          Alert.alert('Thông báo', 'Đăng ký thành công !', [
+            {text: 'OK', onPress: () => navigation.navigate(SIGN_IN)},
+          ]);
+        }
+      } catch (e) {
+        Snackbar.show({
+          text: getErrorMessage(e),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: 'rgba(245, 101, 101, 1)',
+        });
+      }
     }
   };
 

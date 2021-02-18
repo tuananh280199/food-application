@@ -16,4 +16,4 @@ export const SIGN_IN = 'SignIn';
 export const SIGN_UP = 'SignUp';
 export const FORGOT_PASSWORD = 'ForgotPassword';
 export const CHANGE_PASSWORD = 'ChangePassword';
-export const CHANGE_INFORMATION_USER = 'ChangeInformationUser';
+export const CHANGE_PROFILE_USER = 'ChangeProfileUser';
