@@ -17,3 +17,8 @@ export const SIGN_UP = 'SignUp';
 export const FORGOT_PASSWORD = 'ForgotPassword';
 export const CHANGE_PASSWORD = 'ChangePassword';
 export const CHANGE_PROFILE_USER = 'ChangeProfileUser';
+
+//user
+export const FAVOURITE_FOOD = 'FavouriteFood';
+export const ORDER_HISTORY = 'OrderHistory';
+export const PAYMENT = 'Payment';

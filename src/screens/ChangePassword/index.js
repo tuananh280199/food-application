@@ -151,9 +151,9 @@ const ChangePasswordScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <Animatable.View style={styles.header} animation="fadeInDownBig">
+        <View style={styles.header}>
           <Text style={styles.textHeader}>Đổi Mật Khẩu</Text>
-        </Animatable.View>
+        </View>
         <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
           <Ionicons name="arrow-back" color={'white'} size={30} />
         </TouchableOpacity>

@@ -160,9 +160,9 @@ const SignUpScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <Animatable.View style={styles.header} animation="fadeInDownBig">
+        <View style={styles.header}>
           <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
-        </Animatable.View>
+        </View>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={styles.textFooter}>Tài Khoản</Text>
           <View style={styles.action}>

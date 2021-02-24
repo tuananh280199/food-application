@@ -116,9 +116,9 @@ const ForgotPasswordScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <Animatable.View style={styles.header} animation="fadeInDownBig">
-          <Text style={styles.textHeader}>Đổi Mật Khẩu</Text>
-        </Animatable.View>
+        <View style={styles.header}>
+          <Text style={styles.textHeader}>Quên Mật Khẩu</Text>
+        </View>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Cũ</Text>
           <View style={styles.action}>

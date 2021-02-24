@@ -13,12 +13,18 @@ import {
   PROFILE_USER_SCREEN,
   SIGN_IN,
   SIGN_UP,
+  FAVOURITE_FOOD,
+  ORDER_HISTORY,
+  PAYMENT,
 } from '../../constants/StackNavigation';
 import {SignInScreen} from '../../screens/SignIn';
 import {SignUpScreen} from '../../screens/SignUp';
 import {ChangePasswordScreen} from '../../screens/ChangePassword';
 import {ForgotPasswordScreen} from '../../screens/ForgotPassword';
 import {ChangeProfileScreen} from '../../screens/ChangeProfileUser';
+import {FavouriteFoodScreen} from '../../screens/FavouriteFood';
+import {OrderHistoryScreen} from '../../screens/OrderHistory';
+import {PaymentScreen} from '../../screens/Payment';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +40,9 @@ const ProfileUserTab = () => {
         name={CHANGE_PROFILE_USER}
         component={ChangeProfileScreen}
       />
+      <Stack.Screen name={FAVOURITE_FOOD} component={FavouriteFoodScreen} />
+      <Stack.Screen name={ORDER_HISTORY} component={OrderHistoryScreen} />
+      <Stack.Screen name={PAYMENT} component={PaymentScreen} />
     </Stack.Navigator>
   );
 };

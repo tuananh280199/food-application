@@ -10,6 +10,14 @@ const profileUserAPI = {
       email: params.email,
     });
   },
+  uploadAvatar: (id, file) => {
+    return axios({
+      method: 'put',
+      url: `files/public/${id}`,
+      data: file,
+      headers: {'Content-Type': 'multipart/form-data'},
+    });
+  },
 };
 
 export default profileUserAPI;

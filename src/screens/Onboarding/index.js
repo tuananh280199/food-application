@@ -1,12 +1,13 @@
 //import node_modules
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import {useDispatch} from 'react-redux';
 
 //import other
 import {HOME_SCREEN} from '../../constants/StackNavigation';
 import {firstIsLaunch} from '../../slices/authSlice';
+import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 
 const Dots = ({selected}) => {
   let backgroundColor;
@@ -66,34 +67,53 @@ const OnboardingScreen = ({navigation}) => {
           image: (
             <Image
               source={require('../../../src/assets/onboarding-img1.png')}
+              style={styles.images}
             />
           ),
-          title: 'Mua Sắm Dễ Dàng - Tiện Lợi',
+          title: 'Mua Sắm Dễ Dàng',
           subtitle: 'Mua đồ ăn ở bất cứ đâu, bất cứ nơi nào bạn muốn !',
+          titleStyles: {
+            marginTop: 120,
+          },
         },
         {
           backgroundColor: '#fdeb93',
           image: (
             <Image
               source={require('../../../src/assets/onboarding-img2.png')}
+              style={styles.images}
             />
           ),
           title: 'Đồ Ăn Đa Dạng',
           subtitle: 'Nhiều loại đồ ăn phù hợp cho nhiều lứa tuổi <3',
+          titleStyles: {
+            marginTop: 120,
+          },
         },
         {
           backgroundColor: '#e9bcbe',
           image: (
             <Image
               source={require('../../../src/assets/onboarding-img3.png')}
+              style={styles.images}
             />
           ),
           title: 'Phù Hợp Với Túi Tiền',
           subtitle: 'Ăn uống thoải mải mà không cần phải lo về giá ^.^',
+          titleStyles: {
+            marginTop: 120,
+          },
         },
       ]}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  images: {
+    position: 'absolute',
+    bottom: -80,
+  },
+});
 
 export {OnboardingScreen};

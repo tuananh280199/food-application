@@ -1,5 +1,5 @@
 //import node_module
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useCallback, useEffect, useLayoutEffect} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Platform,
+  AppState,
+  Linking,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -15,22 +18,28 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
-import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import Snackbar from 'react-native-snackbar';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
 import {
   CHANGE_PASSWORD,
   CHANGE_PROFILE_USER,
+  ORDER_HISTORY,
   SIGN_IN,
+  FAVOURITE_FOOD,
+  PAYMENT,
 } from '../../constants/StackNavigation';
-import {logout} from '../../slices/authSlice';
+import {logout, updateProfile} from '../../slices/authSlice';
+import {getErrorMessage} from '../../utils/HandleError';
+import profileUserAPI from '../../services/profileUser';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const uid = useSelector((state) => state.auth.profile?.id);
 
   const {profile, token} = useSelector((state) => {
     return {
@@ -38,6 +47,34 @@ const ProfileUserScreen = () => {
       token: state.auth.token,
     };
   });
+
+  const [avatar, setAvatar] = useState(profile?.avatar);
+
+  useEffect(() => {
+    setAvatar(profile?.avatar);
+  }, [profile]);
+
+  // const appState = useRef(AppState.currentState);
+  // const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  //
+  // useEffect(() => {
+  //   AppState.addEventListener('change', _handleAppStateChange);
+  //
+  //   return () => {
+  //     AppState.removeEventListener('change', _handleAppStateChange);
+  //   };
+  // }, [appStateVisible]);
+  //
+  // const _handleAppStateChange = (nextAppState) => {
+  //   if (
+  //     appState.current.match(/inactive|background/) &&
+  //     nextAppState === 'active'
+  //   ) {
+  //     console.log('App has come to the foreground!');
+  //   }
+  //   appState.current = nextAppState;
+  //   setAppStateVisible(appState.current);
+  // };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,6 +91,108 @@ const ProfileUserScreen = () => {
     });
   });
 
+  const chooseFile = (type) => {
+    let option = {
+      mediaType: type,
+      quality: 1,
+    };
+    launchImageLibrary(option, (response) => {
+      if (response.didCancel) {
+        return;
+      }
+      Alert.alert(
+        'Thông báo',
+        'Bạn có chắc chắn muốn thay đổi Avatar ?',
+        [
+          {
+            text: 'Huỷ',
+            style: 'cancel',
+          },
+          {text: 'OK', onPress: () => handleSubmitAvatar(response)},
+        ],
+        {cancelable: false},
+      );
+    });
+  };
+
+  const handleSubmitAvatar = useCallback(
+    async (fileBlob) => {
+      try {
+        const data = new FormData();
+        data.append('file', {
+          name: fileBlob.fileName,
+          type: fileBlob.type,
+          uri:
+            Platform.OS === 'android'
+              ? fileBlob.uri
+              : fileBlob.uri.replace('file://', ''),
+        });
+        const filePath = await profileUserAPI.uploadAvatar(profile.id, data);
+        await dispatch(updateProfile({profile: filePath.data}));
+      } catch (e) {
+        Snackbar.show({
+          text: getErrorMessage(e),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: 'rgba(245, 101, 101, 1)',
+        });
+      }
+    },
+    [avatar],
+  );
+
+  const checkPermission = async (devicePermission, type) => {
+    try {
+      if (!profile.id) {
+        Alert.alert('Thông báo', 'Vui lòng đăng nhập để thay Avatar !', [
+          {text: 'OK'},
+        ]);
+        return;
+      }
+      const permission = await check(devicePermission);
+      if (permission === RESULTS.DENIED) {
+        const isAllowOpenCamera = await request(devicePermission);
+        if (isAllowOpenCamera === RESULTS.GRANTED) {
+          chooseFile(type);
+        }
+      } else if (
+        permission === RESULTS.GRANTED ||
+        permission === RESULTS.LIMITED
+      ) {
+        chooseFile(type);
+      } else {
+        Alert.alert(
+          'Vui lòng cho phép quyền sử dụng thư mục ảnh',
+          'Di chuyển đến màn hình cài đặt quyền truy cập thư mục ảnh。',
+          [
+            {
+              text: 'Huỷ',
+              onPress: () => {},
+            },
+            {
+              text: 'OK',
+              onPress: () => {
+                Linking.openSettings();
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    } catch (error) {
+      Snackbar.show({
+        text: getErrorMessage(error),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
+  const handleUploadFile = () => {
+    Platform.OS === 'ios'
+      ? checkPermission(PERMISSIONS.IOS.PHOTO_LIBRARY, 'photo')
+      : checkPermission(PERMISSIONS.ANDROID.CAMERA, 'photo');
+  };
+
   const handleClickSignInOrSignUp = () => {
     if (token === '') {
       navigation.navigate(SIGN_IN);
@@ -62,8 +201,8 @@ const ProfileUserScreen = () => {
     dispatch(logout());
   };
 
-  const handleOptionClick = (txt, screen = CHANGE_PASSWORD) => {
-    if (!uid) {
+  const handleOptionClick = (txt, screen) => {
+    if (!profile.id) {
       Alert.alert('Thông báo', `Vui lòng đăng nhập để vào màn hình ${txt}!`, [
         {text: 'OK'},
       ]);
@@ -76,10 +215,10 @@ const ProfileUserScreen = () => {
     <View style={styles.flexContainer}>
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={handleUploadFile}>
             <Image
               style={styles.image}
-              source={profile?.avatar ? {uri: profile.avatar} : IMAGE_DEFAULT}
+              source={avatar ? {uri: avatar} : IMAGE_DEFAULT}
             />
             <View style={styles.wrapperIcon}>
               <Entypo name={'camera'} size={16} color={'white'} />
@@ -134,7 +273,7 @@ const ProfileUserScreen = () => {
       <View style={styles.other}>
         <TouchableOpacity
           style={styles.commonOther}
-          onPress={() => handleOptionClick('Đồ Ăn Yêu Thích')}>
+          onPress={() => handleOptionClick('Đồ Ăn Yêu Thích', FAVOURITE_FOOD)}>
           <AntDesign name={'hearto'} size={20} color={'rgb(245, 54, 37)'} />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
@@ -144,7 +283,7 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
-          onPress={() => handleOptionClick('Lịch Sử Mua Hàng')}>
+          onPress={() => handleOptionClick('Lịch Sử Mua Hàng', ORDER_HISTORY)}>
           <Entypo name={'list'} size={20} color={'rgb(245, 54, 37)'} />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
@@ -164,7 +303,7 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
-          onPress={() => handleOptionClick('Thanh Toán')}>
+          onPress={() => handleOptionClick('Thanh Toán', PAYMENT)}>
           <MaterialIcons
             name={'payment'}
             size={20}
