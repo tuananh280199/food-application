@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: DriveWidth * 0.48,
     height: DriveWidth * 0.52,
-    margin: 10,
+    marginVertical: 10,
+    marginHorizontal: 12,
   },
   cardImage: {
     width: DriveWidth * 0.48,

@@ -8,10 +8,12 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Swiper from 'react-native-swiper';
 
 //import components
 import {CardFood} from './components/CardFood';
@@ -59,7 +61,37 @@ const HomeScreen = () => {
           />
         </View>
       </View>
-      <ScrollView style={styles.body}>
+      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+        <View style={styles.sliderContainer}>
+          <Swiper
+            autoplay
+            horizontal
+            height={200}
+            width={DriveWidth * 0.92}
+            activeDotColor="#43bb6c">
+            <View style={styles.slide}>
+              <Image
+                source={require('../../assets/banner3.jpg')}
+                resizeMode="stretch"
+                style={styles.sliderImage}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                source={require('../../assets/banner2.jpg')}
+                resizeMode="stretch"
+                style={styles.sliderImage}
+              />
+            </View>
+            <View style={styles.slide}>
+              <Image
+                source={require('../../assets/banner1.jpg')}
+                resizeMode="stretch"
+                style={styles.sliderImage}
+              />
+            </View>
+          </Swiper>
+        </View>
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
             <Text style={styles.titleItem}>Đồ Ăn Bán Chạy</Text>
@@ -80,9 +112,6 @@ const HomeScreen = () => {
               renderItem={renderItemRecommend}
             />
           </View>
-        </View>
-        <View style={styles.admod}>
-
         </View>
         <View style={styles.category}>
           <View style={[styles.headerRecommend, {justifyContent: 'center'}]}>
@@ -166,6 +195,26 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
   },
+  sliderContainer: {
+    height: 200,
+    width: DriveWidth * 0.92,
+    marginTop: 15,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 8,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 8,
+  },
+  sliderImage: {
+    height: 200,
+    width: DriveWidth * 0.92,
+    alignSelf: 'center',
+    borderRadius: 8,
+  },
   listRecommend: {
     marginTop: 10,
   },
@@ -175,7 +224,7 @@ const styles = StyleSheet.create({
   headerRecommend: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
     paddingTop: 10,
     paddingBottom: 5,
   },
