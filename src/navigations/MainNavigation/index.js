@@ -70,7 +70,11 @@ const IconTabProfileUser = ({color, focused, size}) => (
 
 const MainNavigation = () => {
   return (
-    <BottomTabBar.Navigator>
+    <BottomTabBar.Navigator
+      tabBarOptions={{
+        activeTintColor: '#43bb6c',
+        inactiveTintColor: 'gray',
+      }}>
       <BottomTabBar.Screen
         name={HOME_NAVIGATION}
         component={HomeTab}

@@ -369,6 +369,7 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 50,
     marginRight: 15,
+    backgroundColor: 'silver',
   },
   wrapperIcon: {
     position: 'absolute',

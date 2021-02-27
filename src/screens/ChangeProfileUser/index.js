@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -215,12 +216,12 @@ const ChangeProfileScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <View style={styles.header}>
+        <SafeAreaView style={styles.header}>
           <Text style={styles.textHeader}>Sửa Thông Tin</Text>
-        </View>
-        <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
-          <Ionicons name="arrow-back" color={'white'} size={30} />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+            <Ionicons name="arrow-back" color={'white'} size={30} />
+          </TouchableOpacity>
+        </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={[styles.textFooter]}>Tên Khách Hàng</Text>
           <View style={styles.action}>
@@ -386,7 +387,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 3.5,
+    flex: 4.5,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

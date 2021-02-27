@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  SafeAreaView
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -42,7 +43,7 @@ const SignUpScreen = () => {
     navigation.setOptions({
       headerShown: false,
     });
-  });
+  }, [navigation]);
 
   const handleUsernameChange = (value) => {
     if (value.trim().length >= 4) {
@@ -160,9 +161,9 @@ const SignUpScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <View style={styles.header}>
+        <SafeAreaView style={styles.header}>
           <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
-        </View>
+        </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={styles.textFooter}>Tài Khoản</Text>
           <View style={styles.action}>
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 3,
+    flex: 4,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

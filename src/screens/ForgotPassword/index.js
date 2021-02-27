@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  SafeAreaView
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -116,9 +117,9 @@ const ForgotPasswordScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.flexContainer}>
         <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <View style={styles.header}>
+        <SafeAreaView style={styles.header}>
           <Text style={styles.textHeader}>Quên Mật Khẩu</Text>
-        </View>
+        </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
           <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Cũ</Text>
           <View style={styles.action}>
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 3,
+    flex: 4,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

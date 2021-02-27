@@ -15,7 +15,7 @@ const HomeTab = () => {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: '#43bb6c',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
