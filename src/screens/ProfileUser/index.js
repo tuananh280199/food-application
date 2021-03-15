@@ -36,6 +36,7 @@ import {
 import {logout, updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
+import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -54,42 +55,11 @@ const ProfileUserScreen = () => {
     setAvatar(profile?.avatar);
   }, [profile]);
 
-  // const appState = useRef(AppState.currentState);
-  // const [appStateVisible, setAppStateVisible] = useState(appState.current);
-  //
-  // useEffect(() => {
-  //   AppState.addEventListener('change', _handleAppStateChange);
-  //
-  //   return () => {
-  //     AppState.removeEventListener('change', _handleAppStateChange);
-  //   };
-  // }, [appStateVisible]);
-  //
-  // const _handleAppStateChange = (nextAppState) => {
-  //   if (
-  //     appState.current.match(/inactive|background/) &&
-  //     nextAppState === 'active'
-  //   ) {
-  //     console.log('App has come to the foreground!');
-  //   }
-  //   appState.current = nextAppState;
-  //   setAppStateVisible(appState.current);
-  // };
-
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Profile',
-      headerRight: () => (
-        <TouchableOpacity
-          style={{marginRight: 10}}
-          onPress={() =>
-            handleOptionClick('Sửa Thông Tin', CHANGE_PROFILE_USER)
-          }>
-          <FontAwesome5 name={'user-edit'} size={18} />
-        </TouchableOpacity>
-      ),
+      headerShown: false,
     });
-  });
+  }, [navigation]);
 
   const chooseFile = (type) => {
     let option = {
@@ -213,6 +183,21 @@ const ProfileUserScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
+      <View
+        style={[
+          styles.header,
+          Platform.OS === 'ios' ? {paddingTop: 20} : null,
+        ]}>
+        <View />
+        <Text style={styles.titleHeader}>THÔNG TIN CÁ NHÂN</Text>
+        <TouchableOpacity
+          style={{marginRight: 10}}
+          onPress={() =>
+            handleOptionClick('Sửa Thông Tin', CHANGE_PROFILE_USER)
+          }>
+          <FontAwesome5 name={'user-edit'} size={20} color={'#fff'} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity onPress={handleUploadFile}>
@@ -349,7 +334,25 @@ const ProfileUserScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f8fffa',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    width: DriveWidth,
+    height: DriveHeight * 0.12,
+    backgroundColor: '#43bb6c',
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    marginBottom: 3,
+  },
+  titleHeader: {
+    marginLeft: 35,
+    color: 'white',
+    fontSize: 22,
+    fontWeight: '700',
   },
   commonInfo: {
     flexDirection: 'row',
@@ -361,7 +364,7 @@ const styles = StyleSheet.create({
   },
   profileUser: {
     flex: 3.5,
-    paddingVertical: 10,
+    paddingBottom: 10,
     paddingHorizontal: 20,
   },
   image: {
@@ -375,7 +378,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#20c997',
+    backgroundColor: '#43bb6c',
     top: 48,
     left: 40,
     width: 28,

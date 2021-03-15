@@ -151,7 +151,7 @@ const SignInScreen = () => {
           </TouchableOpacity>
         </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={styles.textFooter}>Tài Khoản</Text>
+          <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
           <View style={styles.action}>
             <FontAwesome name="user-o" color={'#05375a'} size={20} />
             <TextInput
@@ -178,7 +178,7 @@ const SignInScreen = () => {
               </Text>
             </Animatable.View>
           )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu</Text>
+          <Text style={styles.textFooter}>Mật Khẩu</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
@@ -208,7 +208,7 @@ const SignInScreen = () => {
           <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
             <TouchableOpacity
               onPress={() => navigation.navigate(FORGOT_PASSWORD)}>
-              <Text style={{color: '#20c997', marginTop: 30}}>
+              <Text style={{color: '#43bb6c', marginTop: 30}}>
                 Quên mật khẩu ?
               </Text>
             </TouchableOpacity>
@@ -216,7 +216,7 @@ const SignInScreen = () => {
           <View style={styles.button}>
             <TouchableOpacity style={styles.signIn} onPress={handleLoginSubmit}>
               <LinearGradient
-                colors={['#08d4c4', '#20c997']}
+                colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
                 <Text
                   style={[
@@ -234,7 +234,7 @@ const SignInScreen = () => {
               style={[
                 styles.signIn,
                 {
-                  borderColor: '#20c997',
+                  borderColor: '#43bb6c',
                   borderWidth: 1,
                   marginTop: 15,
                 },
@@ -243,7 +243,7 @@ const SignInScreen = () => {
                 style={[
                   styles.textSign,
                   {
-                    color: '#20c997',
+                    color: '#43bb6c',
                   },
                 ]}>
                 Đăng Ký
@@ -259,7 +259,7 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#20c997',
+    backgroundColor: '#43bb6c',
   },
   iconBack: {
     position: 'absolute',
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
+    marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   action: {
     flexDirection: 'row',
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 30,
   },
   signIn: {
     width: '100%',

@@ -121,7 +121,7 @@ const ForgotPasswordScreen = () => {
           <Text style={styles.textHeader}>Quên Mật Khẩu</Text>
         </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Cũ</Text>
+          <Text style={[styles.textFooter, {marginTop: 0}]}>Mật Khẩu Cũ</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
@@ -133,7 +133,7 @@ const ForgotPasswordScreen = () => {
               onChangeText={(value) => handlePasswordOldChange(value)}
             />
           </View>
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Mới</Text>
+          <Text style={styles.textFooter}>Mật Khẩu Mới</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
@@ -160,7 +160,7 @@ const ForgotPasswordScreen = () => {
               <Text style={styles.errorMsg}>Mật khẩu chứa ít nhất 8 kí tự</Text>
             </Animatable.View>
           )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>
+          <Text style={styles.textFooter}>
             Xác Nhận Mật Khẩu
           </Text>
           <View style={styles.action}>
@@ -186,7 +186,7 @@ const ForgotPasswordScreen = () => {
               style={styles.signIn}
               onPress={handleChangePasswordSubmit}>
               <LinearGradient
-                colors={['#08d4c4', '#20c997']}
+                colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
                 <Text
                   style={[
@@ -204,7 +204,7 @@ const ForgotPasswordScreen = () => {
               style={[
                 styles.signIn,
                 {
-                  borderColor: '#20c997',
+                  borderColor: '#43bb6c',
                   borderWidth: 1,
                   marginTop: 15,
                 },
@@ -213,7 +213,7 @@ const ForgotPasswordScreen = () => {
                 style={[
                   styles.textSign,
                   {
-                    color: '#20c997',
+                    color: '#43bb6c',
                   },
                 ]}>
                 Đăng Nhập
@@ -229,7 +229,7 @@ const ForgotPasswordScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#20c997',
+    backgroundColor: '#43bb6c',
   },
   header: {
     flex: 1,
@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
+    marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   action: {
     flexDirection: 'row',
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 30,
   },
   signIn: {
     width: '100%',

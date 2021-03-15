@@ -1,17 +1,15 @@
 //import node_modules
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //import other
 import {DriveWidth} from '../../../constants/Dimensions';
+import {Rating} from '../../../components/Rating';
 
 type CardFoodProps = {
-  onClickImage?: Function,
-  onClickAddCart?: Function,
   newFood?: boolean,
-  hotFood?: boolean,
   saleFood?: boolean,
   image?: string,
   name?: string,
@@ -19,39 +17,49 @@ type CardFoodProps = {
 };
 
 const CardFood = (props: CardFoodProps) => {
-  const {
-    onClickImage,
-    onClickAddCart,
-    newFood = false,
-    hotFood = false,
-    saleFood = true,
-  } = props;
+  const {newFood = true, saleFood = true} = props;
+
+  const onClickAddCart = () => {
+    console.log('add cart');
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onClickImage}>
+      <View>
         <FastImage
           style={styles.cardImage}
           source={{
             uri:
-              'https://www.greencore.com/wp-content/uploads/2015/08/ChickenPenang-250x250.jpg',
+              'https://image.freepik.com/free-photo/herbs-vegetables-white-background_23-2147828984.jpg',
             priority: FastImage.priority.normal,
           }}>
           <View style={styles.containNew}>
-            {(newFood || hotFood || saleFood) && (
+            {newFood && (
               <>
                 <View style={styles.labelNew} />
                 <View style={styles.transformLabel}>
-                  <Text style={styles.titleNew}>
-                    {newFood ? 'NEW' : hotFood ? 'HOT' : 'SALE'}
-                  </Text>
+                  <Text style={styles.titleNew}>NEW</Text>
                 </View>
               </>
             )}
+            {saleFood && (
+              <Image
+                source={require('../../../assets/sale.jpg')}
+                style={styles.iconSale}
+              />
+            )}
           </View>
         </FastImage>
-      </TouchableOpacity>
+      </View>
       <View style={styles.cardDetail}>
         <Text style={styles.titleName}>Avocado Toast</Text>
+        <Rating
+          styleContainer={{marginTop: 2}}
+          styleTitle={{fontSize: 15, marginLeft: 4}}
+          rating={2.4}
+          size={13}
+          maxRate={5}
+        />
         <View style={styles.footerItem}>
           <Text
             style={[
@@ -80,7 +88,7 @@ const CardFood = (props: CardFoodProps) => {
             <MaterialCommunityIcons
               name={'cart-plus'}
               size={20}
-              color={'#00cc00'}
+              color={'#43bb6c'}
             />
           </TouchableOpacity>
         </View>
@@ -94,26 +102,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     shadowColor: 'gray',
     shadowOffset: {
-      width: 2,
-      height: 3,
+      width: 1,
+      height: 1,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 8,
     borderRadius: 10,
-    width: DriveWidth * 0.48,
+    width: DriveWidth * 0.47,
     height: DriveWidth * 0.52,
     marginVertical: 10,
     marginHorizontal: 12,
   },
   cardImage: {
-    width: DriveWidth * 0.48,
-    height: DriveWidth * 0.37,
+    width: DriveWidth * 0.47,
+    height: DriveWidth * 0.35,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
   cardDetail: {
-    padding: 10,
+    padding: 5,
   },
   titleName: {
     color: 'black',
@@ -124,10 +132,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 2,
   },
   titleCost: {
-    color: '#00cc00',
+    color: '#43bb6c',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -155,7 +163,15 @@ const styles = StyleSheet.create({
   titleNew: {
     fontSize: 10,
     fontWeight: '500',
-    color: 'red',
+    color: 'blue',
+  },
+  iconSale: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 50,
+    height: 50,
+    transform: [{rotate: '30deg'}],
   },
 });
 

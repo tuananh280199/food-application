@@ -1,6 +1,7 @@
 //import node_modules
 import React, {useLayoutEffect} from 'react';
 import {
+  Platform,
   View,
   Text,
   StyleSheet,
@@ -14,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 //import components
 import {CardFood} from './components/CardFood';
@@ -22,7 +24,7 @@ import {CategoryFood} from './components/CategoryFood';
 //import others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import USER_PLACEHOLDER from '../../assets/user-placeholder.png';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {FOOD_DETAIL, LIST_FOOD} from '../../constants/StackNavigation';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -33,13 +35,29 @@ const HomeScreen = () => {
     });
   }, [navigation]);
 
-  const renderItemRecommend = (item, index) => {
-    return <CardFood />;
+  const handleClickCardFood = (item) => {
+    navigation.navigate(FOOD_DETAIL);
   };
 
-  const renderItemCategory = (item, index) => {
+  const handleClickCategoryFood = (item) => {
+    navigation.navigate(LIST_FOOD);
+  };
+
+  const handleSeeMore = () => {
+    navigation.navigate(LIST_FOOD);
+  };
+
+  const renderItemRecommend = ({item, index}) => {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => handleClickCardFood(item)}>
+        <CardFood />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderItemCategory = ({item, index}) => {
+    return (
+      <TouchableOpacity onPress={() => handleClickCategoryFood(item)}>
         <CategoryFood />
       </TouchableOpacity>
     );
@@ -47,17 +65,31 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View style={styles.header}>
-        <Ionicons name={'fast-food'} size={35} color={'#faf55c'} />
-        <Text style={styles.titleHeader}>Trang Chủ</Text>
+      <View
+        style={[
+          styles.header,
+          Platform.OS === 'android' ? {paddingBottom: 20} : null,
+        ]}>
+        <Ionicons name={'fast-food'} size={35} color={'#c3e8f7'} />
+        <Text style={styles.titleHeader}>TRANG CHỦ</Text>
         <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
       </View>
-      <View style={styles.search}>
+      <View
+        style={[
+          styles.search,
+          Platform.OS === 'android' ? {height: 42} : null,
+          Platform.OS === 'ios' ? {padding: 12} : null,
+        ]}>
         <View style={styles.searchWrapper}>
-          <Ionicons name={'search'} size={20} color={'black'} />
+          <Ionicons
+            name={'search'}
+            size={20}
+            color={'black'}
+            style={{paddingHorizontal: 10}}
+          />
           <TextInput
             placeholder={'Nhập tên đồ ăn bạn muốn tìm kiếm !'}
-            style={styles.searchInput}
+            style={[styles.searchInput]}
           />
         </View>
       </View>
@@ -66,7 +98,7 @@ const HomeScreen = () => {
           <Swiper
             autoplay
             horizontal
-            height={200}
+            height={DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24)}
             width={DriveWidth * 0.92}
             activeDotColor="#43bb6c">
             <View style={styles.slide}>
@@ -94,9 +126,9 @@ const HomeScreen = () => {
         </View>
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
-            <Text style={styles.titleItem}>Đồ Ăn Bán Chạy</Text>
-            <TouchableOpacity style={styles.seeMore}>
-              <Text style={styles.titleSeeMore}>Xem thêm</Text>
+            <Text style={styles.titleItem}>ĐỒ ĂN BÁN CHẠY</Text>
+            <TouchableOpacity style={styles.seeMore} onPress={handleSeeMore}>
+              <Text style={styles.titleSeeMore}>XEM THÊM</Text>
               <AntDesign name={'forward'} size={15} color={'tomato'} />
             </TouchableOpacity>
           </View>
@@ -107,7 +139,7 @@ const HomeScreen = () => {
               initialNumToRender={30}
               showsHorizontalScrollIndicator={false}
               data={[1, 2, 3]}
-              // keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               numColumns={1}
               renderItem={renderItemRecommend}
             />
@@ -115,7 +147,7 @@ const HomeScreen = () => {
         </View>
         <View style={styles.category}>
           <View style={[styles.headerRecommend, {justifyContent: 'center'}]}>
-            <Text style={[styles.titleItem]}>Các Loại Đồ Ăn</Text>
+            <Text style={[styles.titleItem]}>DANH MỤC</Text>
           </View>
         </View>
         <View
@@ -153,10 +185,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     width: DriveWidth,
-    height: DriveHeight * 0.16,
+    height: DriveHeight * 0.15,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
   },
   avatar: {
     width: 40,
@@ -168,14 +200,13 @@ const styles = StyleSheet.create({
   },
   titleHeader: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
   },
   search: {
     marginHorizontal: 20,
     backgroundColor: '#fff',
     borderRadius: 20,
-    padding: 12,
     marginTop: -30,
     shadowColor: 'gray',
     shadowOffset: {
@@ -185,18 +216,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 8,
+    marginBottom: 3,
   },
   searchWrapper: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   searchInput: {
-    marginLeft: 10,
+    marginRight: 45,
   },
   body: {
     flex: 1,
   },
   sliderContainer: {
-    height: 200,
+    height: DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24),
     width: DriveWidth * 0.92,
     marginTop: 15,
     justifyContent: 'center',
@@ -210,7 +243,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   sliderImage: {
-    height: 200,
+    height: DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24),
     width: DriveWidth * 0.92,
     alignSelf: 'center',
     borderRadius: 8,
@@ -229,17 +262,17 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   titleItem: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '600',
   },
   seeMore: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   titleSeeMore: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'tomato',
-    marginRight: 2,
+    marginRight: 5,
   },
 });
 

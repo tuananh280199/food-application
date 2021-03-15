@@ -331,7 +331,7 @@ const ChangeProfileScreen = () => {
               style={styles.signIn}
               onPress={handleChangePasswordSubmit}>
               <LinearGradient
-                colors={['#08d4c4', '#20c997']}
+                colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
                 <Text
                   style={[
@@ -349,7 +349,7 @@ const ChangeProfileScreen = () => {
               style={[
                 styles.signIn,
                 {
-                  borderColor: '#20c997',
+                  borderColor: '#43bb6c',
                   borderWidth: 1,
                   marginTop: 15,
                 },
@@ -358,7 +358,7 @@ const ChangeProfileScreen = () => {
                 style={[
                   styles.textSign,
                   {
-                    color: '#20c997',
+                    color: '#43bb6c',
                   },
                 ]}>
                 Huỷ
@@ -374,7 +374,7 @@ const ChangeProfileScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#20c997',
+    backgroundColor: '#43bb6c',
   },
   iconBack: {
     position: 'absolute',

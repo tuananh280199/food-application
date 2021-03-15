@@ -40,10 +40,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: DriveWidth / 3 - 30,
     height: DriveWidth / 3 - 60,
+    shadowColor: 'gray',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 8,
   },
   image: {
     width: DriveWidth / 3 - 30,
     height: DriveWidth / 3 - 30,
+    shadowColor: 'gray',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 1,
   },
   title: {
     textAlign: 'center',

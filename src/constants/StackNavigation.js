@@ -1,8 +1,8 @@
 // Common
-export const HOME_NAVIGATION = 'Home';
-export const CART_NAVIGATION = 'Cart';
-export const CONTACT_NAVIGATION = 'Contact';
-export const PROFILE_USER_NAVIGATION = 'User';
+export const HOME_NAVIGATION = 'Trang Chủ';
+export const CART_NAVIGATION = 'Giỏ Hàng';
+export const CONTACT_NAVIGATION = 'Liên Hệ';
+export const PROFILE_USER_NAVIGATION = 'Tôi';
 
 // Screen
 export const ONBOARDING_SCREEN = 'Onboarding';
@@ -10,6 +10,10 @@ export const HOME_SCREEN = 'Home';
 export const CART_SCREEN = 'Cart';
 export const CONTACT_SCREEN = 'Contact';
 export const PROFILE_USER_SCREEN = 'User';
+
+//Home
+export const FOOD_DETAIL = 'FoodDetail';
+export const LIST_FOOD = 'ListFood';
 
 //Auth
 export const SIGN_IN = 'SignIn';

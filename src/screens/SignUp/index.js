@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -165,7 +165,7 @@ const SignUpScreen = () => {
           <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
         </SafeAreaView>
         <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={styles.textFooter}>Tài Khoản</Text>
+          <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
           <View style={styles.action}>
             <FontAwesome name="user-o" color={'#05375a'} size={20} />
             <TextInput
@@ -191,7 +191,7 @@ const SignUpScreen = () => {
               </Text>
             </Animatable.View>
           )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu</Text>
+          <Text style={styles.textFooter}>Mật Khẩu</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
@@ -219,9 +219,7 @@ const SignUpScreen = () => {
               <Text style={styles.errorMsg}>Mật khẩu chứa ít nhất 8 kí tự</Text>
             </Animatable.View>
           )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>
-            Xác Nhận Mật Khẩu
-          </Text>
+          <Text style={styles.textFooter}>Xác Nhận Mật Khẩu</Text>
           <View style={styles.action}>
             <Feather name="lock" color={'#05375a'} size={20} />
             <TextInput
@@ -264,7 +262,7 @@ const SignUpScreen = () => {
               style={styles.signIn}
               onPress={handleSignUpSubmit}>
               <LinearGradient
-                colors={['#08d4c4', '#20c997']}
+                colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
                 <Text
                   style={[
@@ -282,7 +280,7 @@ const SignUpScreen = () => {
               style={[
                 styles.signIn,
                 {
-                  borderColor: '#20c997',
+                  borderColor: '#43bb6c',
                   borderWidth: 1,
                   marginTop: 15,
                 },
@@ -291,7 +289,7 @@ const SignUpScreen = () => {
                 style={[
                   styles.textSign,
                   {
-                    color: '#20c997',
+                    color: '#43bb6c',
                   },
                 ]}>
                 Đăng Nhập
@@ -307,7 +305,7 @@ const SignUpScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#20c997',
+    backgroundColor: '#43bb6c',
   },
   header: {
     flex: 1,
@@ -330,6 +328,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
+    marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   action: {
     flexDirection: 'row',
@@ -357,7 +356,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   signIn: {
     width: '100%',
@@ -374,7 +373,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   color_textPrivate: {
     color: 'grey',

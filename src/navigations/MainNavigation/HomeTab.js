@@ -4,9 +4,15 @@ import React from 'react';
 
 //import screen
 import {HomeScreen} from '../../screens/Home';
+import {FoodDetail} from '../../screens/FoodDetail';
+import {ListFood} from '../../screens/ListFood';
 
 //import other
-import {HOME_SCREEN} from '../../constants/StackNavigation';
+import {
+  FOOD_DETAIL,
+  HOME_SCREEN,
+  LIST_FOOD,
+} from '../../constants/StackNavigation';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +30,8 @@ const HomeTab = () => {
         // headerShown: false,
       }}>
       <Stack.Screen name={HOME_SCREEN} component={HomeScreen} />
+      <Stack.Screen name={FOOD_DETAIL} component={FoodDetail} />
+      <Stack.Screen name={LIST_FOOD} component={ListFood} />
     </Stack.Navigator>
   );
 };
