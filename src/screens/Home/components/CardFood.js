@@ -7,17 +7,30 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 //import other
 import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
+import {roundHalfRate} from '../../../utils/RoundHalfRate';
 
 type CardFoodProps = {
-  newFood?: boolean,
-  saleFood?: boolean,
+  newFood?: number,
+  saleFood?: number,
   image?: string,
   name?: string,
-  cost?: string,
+  price?: number,
+  priceSale?: number,
+  like?: number,
+  dislike?: number,
 };
 
 const CardFood = (props: CardFoodProps) => {
-  const {newFood = true, saleFood = true} = props;
+  const {
+    name,
+    image,
+    price,
+    priceSale,
+    newFood,
+    saleFood,
+    like,
+    dislike,
+  } = props;
 
   const onClickAddCart = () => {
     console.log('add cart');
@@ -29,12 +42,11 @@ const CardFood = (props: CardFoodProps) => {
         <FastImage
           style={styles.cardImage}
           source={{
-            uri:
-              'https://image.freepik.com/free-photo/herbs-vegetables-white-background_23-2147828984.jpg',
+            uri: image,
             priority: FastImage.priority.normal,
           }}>
           <View style={styles.containNew}>
-            {newFood && (
+            {newFood === 1 && (
               <>
                 <View style={styles.labelNew} />
                 <View style={styles.transformLabel}>
@@ -42,7 +54,7 @@ const CardFood = (props: CardFoodProps) => {
                 </View>
               </>
             )}
-            {saleFood && (
+            {saleFood === 1 && (
               <Image
                 source={require('../../../assets/sale.jpg')}
                 style={styles.iconSale}
@@ -52,38 +64,48 @@ const CardFood = (props: CardFoodProps) => {
         </FastImage>
       </View>
       <View style={styles.cardDetail}>
-        <Text style={styles.titleName}>Avocado Toast</Text>
+        <Text style={styles.titleName}>{name}</Text>
         <Rating
           styleContainer={{marginTop: 2}}
           styleTitle={{fontSize: 15, marginLeft: 4}}
-          rating={2.4}
+          rating={roundHalfRate(like, dislike)}
+          like={like}
+          dislike={dislike}
           size={13}
           maxRate={5}
         />
         <View style={styles.footerItem}>
-          <Text
-            style={[
-              styles.titleCost,
-              saleFood
-                ? {
-                    textDecorationLine: 'line-through',
-                    textDecorationStyle: 'solid',
-                  }
-                : null,
-            ]}>
-            150.000₫
-          </Text>
-          {saleFood ? (
+          <View style={{flexDirection: 'row'}}>
             <Text
               style={[
                 styles.titleCost,
-                {marginLeft: -15, color: 'red', fontSize: 16},
+                saleFood === 1
+                  ? {
+                      textDecorationLine: 'line-through',
+                      textDecorationStyle: 'solid',
+                    }
+                  : null,
               ]}>
-              120.000₫
+              {price.toLocaleString('vi', {
+                style: 'currency',
+                currency: 'VND',
+              })}
             </Text>
-          ) : (
-            <></>
-          )}
+            {saleFood === 1 ? (
+              <Text
+                style={[
+                  styles.titleCost,
+                  {marginLeft: 5, color: 'red', fontSize: 16},
+                ]}>
+                {priceSale.toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            ) : (
+              <></>
+            )}
+          </View>
           <TouchableOpacity onPress={onClickAddCart}>
             <MaterialCommunityIcons
               name={'cart-plus'}
@@ -136,7 +158,7 @@ const styles = StyleSheet.create({
   },
   titleCost: {
     color: '#43bb6c',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
   },
   containNew: {
@@ -163,7 +185,7 @@ const styles = StyleSheet.create({
   titleNew: {
     fontSize: 10,
     fontWeight: '500',
-    color: 'blue',
+    color: 'purple',
   },
   iconSale: {
     position: 'absolute',

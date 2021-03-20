@@ -3,23 +3,38 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation} from '@react-navigation/native';
 
 //others
 import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
-import { FOOD_DETAIL } from "../../../constants/StackNavigation";
+import {FOOD_DETAIL} from '../../../constants/StackNavigation';
+import {roundHalfRate} from '../../../utils/RoundHalfRate';
 
 type FoodItemProps = {
   newFood?: boolean,
   saleFood?: boolean,
   image?: string,
   name?: string,
-  cost?: string,
+  price?: number,
+  priceSale?: number,
+  like?: number,
+  dislike?: number,
+  description?: string,
 };
 
 const FoodItem = (props: FoodItemProps) => {
-  const {newFood = true, saleFood = true} = props;
+  const {
+    name,
+    image,
+    price,
+    priceSale,
+    like,
+    dislike,
+    description,
+    newFood = true,
+    saleFood = true,
+  } = props;
   const navigation = useNavigation();
 
   const onClickAddCart = () => {
@@ -36,8 +51,7 @@ const FoodItem = (props: FoodItemProps) => {
         <FastImage
           style={styles.image}
           source={{
-            uri:
-              'https://www.greencore.com/wp-content/uploads/2015/08/ChickenPenang-250x250.jpg',
+            uri: image,
             priority: FastImage.priority.normal,
           }}
         />
@@ -49,14 +63,14 @@ const FoodItem = (props: FoodItemProps) => {
               alignItems: 'center',
             }}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={styles.titleName}>Avocado Toast</Text>
-              {newFood && (
+              <Text style={styles.titleName}>{name}</Text>
+              {newFood === 1 && (
                 <Image
                   source={require('../../../assets/icon-new.png')}
                   style={styles.icon}
                 />
               )}
-              {saleFood && (
+              {saleFood === 1 && (
                 <Image
                   source={require('../../../assets/icon-sale-cate.png')}
                   style={styles.icon}
@@ -74,30 +88,38 @@ const FoodItem = (props: FoodItemProps) => {
           <Rating
             styleContainer={{marginBottom: 2}}
             styleTitle={{fontSize: 15, marginLeft: 4}}
-            rating={2.4}
-            size={13}
+            rating={roundHalfRate(like, dislike)}
+            like={like}
+            dislike={dislike}
+            size={15}
             maxRate={5}
           />
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={[
                 styles.titleCost,
-                saleFood
+                saleFood === 1
                   ? {
                       textDecorationLine: 'line-through',
                       textDecorationStyle: 'solid',
                     }
                   : null,
               ]}>
-              150.000₫
+              {price.toLocaleString('vi', {
+                style: 'currency',
+                currency: 'VND',
+              })}
             </Text>
-            {saleFood ? (
+            {saleFood === 1 ? (
               <Text
                 style={[
                   styles.titleCost,
                   {marginLeft: 5, color: 'red', fontSize: 16},
                 ]}>
-                120.000₫
+                {priceSale.toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
               </Text>
             ) : (
               <></>
@@ -108,10 +130,10 @@ const FoodItem = (props: FoodItemProps) => {
               numberOfLines={1}
               ellipsizeMode={'tail'}
               style={{width: '78%'}}>
-              Mo ta thuc an sach se, thom ngon, lanh manh
+              {description}
             </Text>
             <TouchableOpacity onPress={handleDetailClick}>
-              <Text style={{color: 'tomato', marginRight: 2,}}>Chi Tiết</Text>
+              <Text style={{color: 'tomato', marginRight: 2}}>Chi Tiết</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -143,12 +165,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 15,
   },
   image: {
-    width: DriveWidth * 0.23,
-    height: 100,
+    width: DriveWidth * 0.25,
+    height: DriveWidth * 0.25,
     borderTopLeftRadius: 15,
   },
   content: {
-    width: DriveWidth * 0.68,
+    width: DriveWidth * 0.66,
     marginLeft: 10,
     justifyContent: 'space-around',
   },

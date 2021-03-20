@@ -8,10 +8,20 @@ type RatingProps = {
   size?: number,
   styleContainer?: any,
   styleTitle?: any,
+  like?: number,
+  dislike: number,
 };
 
 const Rating = (props: RatingProps) => {
-  const {rating, maxRate, size, styleContainer, styleTitle} = props;
+  const {
+    rating,
+    maxRate,
+    size,
+    styleContainer,
+    styleTitle,
+    like,
+    dislike,
+  } = props;
 
   const [stars, setStars] = useState([]);
 
@@ -61,7 +71,7 @@ const Rating = (props: RatingProps) => {
   return (
     <View style={[styles.flexContainer, styleContainer]}>
       {stars}
-      <Text style={styleTitle}>({rating})</Text>
+      <Text style={styleTitle}>{`(từ ${like + dislike} votes)`}</Text>
     </View>
   );
 };

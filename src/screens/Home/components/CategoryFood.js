@@ -4,10 +4,12 @@ import FastImage from 'react-native-fast-image';
 import {DriveWidth} from '../../../constants/Dimensions';
 
 type CategoryFoodProps = {
-  title?: string,
+  name?: string,
+  image?: string,
 };
 
 const CategoryFood = (props: CategoryFoodProps) => {
+  const {name, image} = props;
   return (
     <View style={styles.container}>
       <View style={styles.absoluteView} />
@@ -15,12 +17,11 @@ const CategoryFood = (props: CategoryFoodProps) => {
         <FastImage
           style={styles.image}
           source={{
-            uri:
-              'https://raw.githubusercontent.com/yuliantosb/Supermart/master/assets/images/p2.png',
+            uri: image,
             priority: FastImage.priority.normal,
           }}
         />
-        <Text style={styles.title}>Fruits And Vegetables</Text>
+        <Text style={styles.title}>{name}</Text>
       </View>
     </View>
   );
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     width: DriveWidth / 3 - 30,
     marginHorizontal: 10,
     justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 10,
   },
   absoluteView: {

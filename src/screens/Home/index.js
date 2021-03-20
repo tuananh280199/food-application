@@ -1,5 +1,5 @@
 //import node_modules
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState, useEffect} from 'react';
 import {
   Platform,
   View,
@@ -16,6 +16,7 @@ import FastImage from 'react-native-fast-image';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Snackbar from 'react-native-snackbar';
 
 //import components
 import {CardFood} from './components/CardFood';
@@ -25,9 +26,16 @@ import {CategoryFood} from './components/CategoryFood';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import USER_PLACEHOLDER from '../../assets/user-placeholder.png';
 import {FOOD_DETAIL, LIST_FOOD} from '../../constants/StackNavigation';
+import productAPI from '../../services/product';
+import categoryAPI from '../../services/category';
+import {getErrorMessage} from '../../utils/HandleError';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [listHotProduct, setListHotProduct] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [loadingListHotProduct, setLoadingListHotProduct] = useState(true);
+  const [loadingListCategory, setLoadingListCategory] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,12 +43,36 @@ const HomeScreen = () => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    getInitData();
+  }, []);
+
+  const getInitData = async () => {
+    try {
+      const hotProducts = await productAPI.getHotProductHomeScreen();
+      const categories = await categoryAPI.getCategoryHomeScreen();
+      setListHotProduct(hotProducts.data);
+      setListCategory(categories.data);
+      setLoadingListHotProduct(false);
+      setLoadingListCategory(false);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
   const handleClickCardFood = (item) => {
     navigation.navigate(FOOD_DETAIL);
   };
 
   const handleClickCategoryFood = (item) => {
-    navigation.navigate(LIST_FOOD);
+    navigation.navigate(LIST_FOOD, {
+      category_id: item.id,
+      category_name: item.name,
+    });
   };
 
   const handleSeeMore = () => {
@@ -50,15 +82,24 @@ const HomeScreen = () => {
   const renderItemRecommend = ({item, index}) => {
     return (
       <TouchableOpacity onPress={() => handleClickCardFood(item)}>
-        <CardFood />
+        <CardFood
+          name={item.name}
+          image={item.image}
+          price={item.price}
+          priceSale={item.priceSale}
+          newFood={item.new}
+          saleFood={item.sale}
+          like={item.like}
+          dislike={item.dislike}
+        />
       </TouchableOpacity>
     );
   };
 
-  const renderItemCategory = ({item, index}) => {
+  const renderCategory = ({item, index}) => {
     return (
       <TouchableOpacity onPress={() => handleClickCategoryFood(item)}>
-        <CategoryFood />
+        <CategoryFood name={item.name} image={item.image} />
       </TouchableOpacity>
     );
   };
@@ -138,8 +179,8 @@ const HomeScreen = () => {
               maxToRenderPerBatch={50}
               initialNumToRender={30}
               showsHorizontalScrollIndicator={false}
-              data={[1, 2, 3]}
-              keyExtractor={(item, index) => index.toString()}
+              data={listHotProduct}
+              keyExtractor={(item) => `hot-${item.id}`}
               numColumns={1}
               renderItem={renderItemRecommend}
             />
@@ -149,25 +190,22 @@ const HomeScreen = () => {
           <View style={[styles.headerRecommend, {justifyContent: 'center'}]}>
             <Text style={[styles.titleItem]}>DANH MỤC</Text>
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginTop: 10,
-          }}>
-          {[1, 2, 3].map((item, index) => {
-            {
-              return renderItemCategory(item, index);
-            }
-          })}
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          {[1, 2, 3].map((item, index) => {
-            {
-              return renderItemCategory(item, index);
-            }
-          })}
+          <View
+            style={{
+              marginTop: 15,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <FlatList
+              contentContainerStyle={{
+                flexDirection: 'column',
+              }}
+              numColumns={3}
+              data={listCategory}
+              renderItem={renderCategory}
+              keyExtractor={(item) => `category-${item.id}`}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>
