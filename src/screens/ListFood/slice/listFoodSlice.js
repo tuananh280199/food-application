@@ -21,12 +21,37 @@ export const fetchListFoodByCategory = createAsyncThunk(
   },
 );
 
+export const fetchListHotFood = createAsyncThunk(
+  'list_food/fetchListHotFood',
+  async (params) => {
+    const {page, isLoadMore = false} = params;
+    const result = await productAPI.getMoreHotProduct(page);
+    return {
+      result,
+      isLoadMore,
+    };
+  },
+);
+
 const listFoodSlice = createSlice({
   name: 'list_food',
   initialState: initState,
   reducers: {},
   extraReducers: {
     [fetchListFoodByCategory.fulfilled]: (state, action) => {
+      const {result, isLoadMore} = action.payload;
+      const currentList = isLoadMore
+        ? state.listFood.list.concat(result.data)
+        : result.data;
+      const hasNext = result.hasNext;
+      const page = result.page;
+      state.listFood = {
+        list: currentList,
+        hasNext,
+        page,
+      };
+    },
+    [fetchListHotFood.fulfilled]: (state, action) => {
       const {result, isLoadMore} = action.payload;
       const currentList = isLoadMore
         ? state.listFood.list.concat(result.data)

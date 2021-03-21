@@ -1,34 +1,39 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import { DriveWidth } from "../../../constants/Dimensions";
 
-const IntroductionFood = () => {
+const IntroductionFood = (props) => {
+  const {product} = props;
   return (
     <View style={styles.flexContainer}>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Xuất xứ : </Text>
-        <Text style={styles.subText}>Hà Nội Food</Text>
+        <Text style={styles.subText}>{product?.origin}</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Đơn vị tính : </Text>
-        <Text style={styles.subText}>Suất</Text>
+        <Text style={styles.subText}>{product?.unit}</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Định lượng : </Text>
-        <Text style={styles.subText}>50 g/Suất</Text>
+        <Text style={styles.subText}>{product?.quantitative}</Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Thành phần : </Text>
         <Text
-          style={[styles.subText, {paddingRight: 100}]}
+          style={[styles.subText, {paddingRight: 50}]}
           numberOfLines={2}
           ellipsizeMode={'tail'}>
-          Thịt bò, bánh phở, xà lách, rau húng, mắm chua cay mặn ngọt
+          {product?.ingredient}
         </Text>
       </View>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Ghi chú : </Text>
-        <Text style={styles.subText}>
-          Giao hàng miễn phí với đơn hàng từ 100k trở lên
+        <Text
+          style={[styles.subText, {paddingRight: 50}]}
+          numberOfLines={2}
+          ellipsizeMode={'tail'}>
+          {product?.note}
         </Text>
       </View>
     </View>
@@ -41,10 +46,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   dadText: {
+    width: DriveWidth * 0.25,
     fontSize: 14,
     fontWeight: '500',
   },
   subText: {
+    width: DriveWidth * 0.75,
     fontSize: 14,
   },
 });

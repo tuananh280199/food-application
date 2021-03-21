@@ -4,9 +4,10 @@ import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
 import {DescriptionFood} from './DescriptionFood';
 import {IntroductionFood} from './IntroductionFood';
-import { DriveWidth } from "../../../constants/Dimensions";
+import {DriveWidth} from '../../../constants/Dimensions';
 
-const InformationFoodTab = () => {
+const InformationFoodTab = (props) => {
+  const {product} = props;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'first', title: 'Giới Thiệu'},
@@ -14,8 +15,8 @@ const InformationFoodTab = () => {
   ]);
 
   const renderScene = SceneMap({
-    first: () => <DescriptionFood />,
-    second: () => <IntroductionFood />,
+    first: () => <DescriptionFood product={product} />,
+    second: () => <IntroductionFood product={product} />,
   });
 
   const renderTabBar = (props) => (

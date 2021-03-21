@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 
 import authSlice from '../slices/authSlice';
-import listFoodByCategoryReducer from '../../src/screens/ListFood/slice/listFoodByCategorySlice';
+import listFoodByCategoryReducer from '../screens/ListFood/slice/listFoodSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,

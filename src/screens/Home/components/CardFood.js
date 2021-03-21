@@ -86,7 +86,7 @@ const CardFood = (props: CardFoodProps) => {
                     }
                   : null,
               ]}>
-              {price.toLocaleString('vi', {
+              {price?.toLocaleString('vi', {
                 style: 'currency',
                 currency: 'VND',
               })}
@@ -97,7 +97,7 @@ const CardFood = (props: CardFoodProps) => {
                   styles.titleCost,
                   {marginLeft: 5, color: 'red', fontSize: 16},
                 ]}>
-                {priceSale.toLocaleString('vi', {
+                {priceSale?.toLocaleString('vi', {
                   style: 'currency',
                   currency: 'VND',
                 })}
@@ -121,6 +121,7 @@ const CardFood = (props: CardFoodProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'space-between',
     backgroundColor: '#FFF',
     shadowColor: 'gray',
     shadowOffset: {
@@ -129,10 +130,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 8,
+    elevation: 1,
     borderRadius: 10,
     width: DriveWidth * 0.47,
-    height: DriveWidth * 0.52,
+    height: DriveWidth * 0.54,
     marginVertical: 10,
     marginHorizontal: 12,
   },
@@ -143,6 +144,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   cardDetail: {
+    flex: 1,
+    justifyContent: 'space-around',
     padding: 5,
   },
   titleName: {

@@ -15,6 +15,7 @@ type FoodItemProps = {
   newFood?: boolean,
   saleFood?: boolean,
   image?: string,
+  product_id?: number,
   name?: string,
   price?: number,
   priceSale?: number,
@@ -25,6 +26,7 @@ type FoodItemProps = {
 
 const FoodItem = (props: FoodItemProps) => {
   const {
+    product_id,
     name,
     image,
     price,
@@ -42,7 +44,9 @@ const FoodItem = (props: FoodItemProps) => {
   };
 
   const handleDetailClick = () => {
-    navigation.navigate(FOOD_DETAIL);
+    navigation.navigate(FOOD_DETAIL, {
+      product_id,
+    });
   };
 
   return (
@@ -105,7 +109,7 @@ const FoodItem = (props: FoodItemProps) => {
                     }
                   : null,
               ]}>
-              {price.toLocaleString('vi', {
+              {price?.toLocaleString('vi', {
                 style: 'currency',
                 currency: 'VND',
               })}
@@ -116,7 +120,7 @@ const FoodItem = (props: FoodItemProps) => {
                   styles.titleCost,
                   {marginLeft: 5, color: 'red', fontSize: 16},
                 ]}>
-                {priceSale.toLocaleString('vi', {
+                {priceSale?.toLocaleString('vi', {
                   style: 'currency',
                   currency: 'VND',
                 })}

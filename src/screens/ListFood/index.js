@@ -22,7 +22,7 @@ import Snackbar from 'react-native-snackbar';
 import {FoodItem} from './components/FoodItem';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {ItemFilter} from './components/ItemFilter';
-import {fetchListFoodByCategory} from './slice/listFoodByCategorySlice';
+import {fetchListFoodByCategory, fetchListHotFood} from './slice/listFoodSlice';
 import {LIST_FOOD} from '../../constants/StackNavigation';
 import {getErrorMessage} from '../../utils/HandleError';
 import {CardFood} from '../Home/components/CardFood';
@@ -61,7 +61,11 @@ const ListFood = () => {
   const getInitData = async () => {
     try {
       setLoadingInitData(true);
-      await dispatch(fetchListFoodByCategory({category_id, page: 1}));
+      if (category_id === 0) {
+        await dispatch(fetchListHotFood({page: 1}));
+      } else {
+        await dispatch(fetchListFoodByCategory({category_id, page: 1}));
+      }
       setLoadingInitData(false);
     } catch (e) {
       Snackbar.show({
@@ -80,13 +84,19 @@ const ListFood = () => {
         setOutOfProduct(true);
         return;
       }
-      await dispatch(
-        fetchListFoodByCategory({
-          category_id,
-          page: currentPage + 1,
-          isLoadMore: true,
-        }),
-      );
+      if (category_id === 0) {
+        await dispatch(
+          fetchListHotFood({page: currentPage + 1, isLoadMore: true}),
+        );
+      } else {
+        await dispatch(
+          fetchListFoodByCategory({
+            category_id,
+            page: currentPage + 1,
+            isLoadMore: true,
+          }),
+        );
+      }
       setLoadingMore(false);
     } catch (e) {
       setLoadingMore(false);
@@ -120,6 +130,7 @@ const ListFood = () => {
   const renderItem = ({item, index}) => {
     return (
       <FoodItem
+        product_id={item.id}
         name={item.name}
         image={item.image}
         price={item.price}

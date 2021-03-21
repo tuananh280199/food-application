@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,25 +9,51 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
 import {Image} from 'react-native-animatable';
+import Snackbar from 'react-native-snackbar';
 
 //others
 import {InformationFoodTab} from './components/InformationFoodTab';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Rating} from '../../components/Rating';
+import {getErrorMessage} from '../../utils/HandleError';
+import productAPI from '../../services/product';
+import {roundHalfRate} from '../../utils/RoundHalfRate';
 
 const FoodDetail = () => {
   const navigation = useNavigation();
-  const saleFood = true;
+  const route = useRoute();
+  const {product_id} = route.params;
+
+  const [product, setProduct] = useState({});
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
+
+  useEffect(() => {
+    getDetail();
+  }, []);
+
+  const getDetail = async () => {
+    try {
+      const {data} = await productAPI.getDetailProduct(product_id);
+      setProduct(data);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
+  console.log(product);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -47,8 +73,7 @@ const FoodDetail = () => {
         <FastImage
           style={styles.subImage}
           source={{
-            uri:
-              'https://www.greencore.com/wp-content/uploads/2015/08/ChickenPenang-250x250.jpg',
+            uri: product?.image,
             priority: FastImage.priority.normal,
           }}
         />
@@ -58,11 +83,11 @@ const FoodDetail = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <ImageBackground
+      <FastImage
         style={styles.imageBackground}
         source={{
-          uri:
-            'https://www.greencore.com/wp-content/uploads/2015/08/ChickenPenang-250x250.jpg',
+          uri: product?.image,
+          priority: FastImage.priority.normal,
         }}>
         <SafeAreaView>
           <View
@@ -81,43 +106,51 @@ const FoodDetail = () => {
           </View>
           <View style={styles.bodyImage}>
             <Text style={[styles.text, {fontSize: 32, fontWeight: '700'}]}>
-              Spicy Food
+              {product?.name}
             </Text>
             <View style={styles.divider} />
             <Rating
               styleContainer={{marginTop: 10}}
               styleTitle={[styles.text, {fontSize: 18, fontWeight: '500'}]}
-              rating={2.4}
-              size={18}
+              rating={roundHalfRate(product?.like, product?.dislike)}
+              like={product?.like}
+              dislike={product?.dislike}
+              size={19}
               maxRate={5}
             />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text
                 style={[
                   styles.text,
-                  {fontSize: 18, fontWeight: '600', marginTop: 5},
-                  saleFood
+                  {fontSize: 18, fontWeight: '600', marginTop: 7},
+                  product?.sale === 1
                     ? {
                         textDecorationLine: 'line-through',
                         textDecorationStyle: 'solid',
                       }
                     : null,
                 ]}>
-                150.000₫
+                {product?.price?.toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
               </Text>
-              {saleFood ? (
+              {product?.sale === 1 ? (
                 <Text
                   style={[
                     styles.text,
                     {
                       fontSize: 21,
                       fontWeight: '600',
-                      marginTop: 5,
+                      marginTop: 7,
                       marginLeft: 5,
                       color: 'red',
                     },
                   ]}>
-                  120.000₫
+                  {product?.priceSale?.toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
                 </Text>
               ) : (
                 <></>
@@ -127,12 +160,16 @@ const FoodDetail = () => {
           <TouchableOpacity
             style={styles.buttonAddCart}
             onPress={handleAddToCart}>
-            <Text style={[styles.text, {fontSize: 16, fontWeight: '600'}]}>
+            <Text
+              style={[
+                styles.text,
+                {fontSize: 16, fontWeight: '600', color: 'purple'},
+              ]}>
               THÊM VÀO GIỎ HÀNG
             </Text>
           </TouchableOpacity>
         </SafeAreaView>
-      </ImageBackground>
+      </FastImage>
       <View style={styles.footer}>
         <Image source={require('../../assets/line.png')} style={styles.line} />
         <View>
@@ -147,7 +184,7 @@ const FoodDetail = () => {
           />
         </View>
       </View>
-      <InformationFoodTab />
+      <InformationFoodTab product={product} />
     </View>
   );
 };
@@ -178,7 +215,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   bodyImage: {
-    marginTop: DriveHeight * 0.135,
+    marginTop: DriveHeight * 0.12,
     marginBottom: 28,
     paddingLeft: 32,
   },
@@ -200,7 +237,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonAddCart: {
-    backgroundColor: 'rgba(255, 255, 255 , 0.5)',
+    backgroundColor: 'rgba(255, 255, 255 , 0.7)',
     alignSelf: 'flex-start',
     marginBottom: 56,
     marginLeft: 32,

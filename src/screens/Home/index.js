@@ -65,7 +65,9 @@ const HomeScreen = () => {
   };
 
   const handleClickCardFood = (item) => {
-    navigation.navigate(FOOD_DETAIL);
+    navigation.navigate(FOOD_DETAIL, {
+      product_id: item.id,
+    });
   };
 
   const handleClickCategoryFood = (item) => {
@@ -75,8 +77,11 @@ const HomeScreen = () => {
     });
   };
 
-  const handleSeeMore = () => {
-    navigation.navigate(LIST_FOOD);
+  const handleSeeMoreHotProduct = () => {
+    navigation.navigate(LIST_FOOD, {
+      category_id: 0,
+      category_name: 'Đồ Ăn Bán Chạy',
+    });
   };
 
   const renderItemRecommend = ({item, index}) => {
@@ -168,7 +173,7 @@ const HomeScreen = () => {
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
             <Text style={styles.titleItem}>ĐỒ ĂN BÁN CHẠY</Text>
-            <TouchableOpacity style={styles.seeMore} onPress={handleSeeMore}>
+            <TouchableOpacity style={styles.seeMore} onPress={handleSeeMoreHotProduct}>
               <Text style={styles.titleSeeMore}>XEM THÊM</Text>
               <AntDesign name={'forward'} size={15} color={'tomato'} />
             </TouchableOpacity>

@@ -71,7 +71,7 @@ const Rating = (props: RatingProps) => {
   return (
     <View style={[styles.flexContainer, styleContainer]}>
       {stars}
-      <Text style={styleTitle}>{`(từ ${like + dislike} votes)`}</Text>
+      <Text style={styleTitle}>{` (từ ${like + dislike} votes)`}</Text>
     </View>
   );
 };
