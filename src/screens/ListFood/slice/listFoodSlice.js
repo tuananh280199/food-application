@@ -12,8 +12,12 @@ const initState = {
 export const fetchListFoodByCategory = createAsyncThunk(
   'list_food/fetchListFoodByCategory',
   async (params) => {
-    const {page, category_id, isLoadMore = false} = params;
-    const result = await productAPI.getListFoodByCategory(category_id, page);
+    const {page, category_id, filter, isLoadMore = false} = params;
+    const result = await productAPI.getListFoodByCategory(
+      category_id,
+      page,
+      filter,
+    );
     return {
       result,
       isLoadMore,
@@ -24,8 +28,8 @@ export const fetchListFoodByCategory = createAsyncThunk(
 export const fetchListHotFood = createAsyncThunk(
   'list_food/fetchListHotFood',
   async (params) => {
-    const {page, isLoadMore = false} = params;
-    const result = await productAPI.getMoreHotProduct(page);
+    const {page, filter, isLoadMore = false} = params;
+    const result = await productAPI.getMoreHotProduct(page, filter);
     return {
       result,
       isLoadMore,

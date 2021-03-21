@@ -14,7 +14,6 @@ import Collapsible from 'react-native-collapsible';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Foundation from 'react-native-vector-icons/Foundation';
 import {BlurView} from '@react-native-community/blur';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 
@@ -44,9 +43,9 @@ const ListFood = () => {
 
   const [loadingInitData, setLoadingInitData] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [outOfProduct, setOutOfProduct] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [checkItem, setCheckItem] = useState('all');
+  const [conditionFilter, setConditionFilter] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -56,15 +55,21 @@ const ListFood = () => {
 
   useEffect(() => {
     getInitData();
-  }, []);
+  }, [conditionFilter]);
 
   const getInitData = async () => {
     try {
       setLoadingInitData(true);
       if (category_id === 0) {
-        await dispatch(fetchListHotFood({page: 1}));
+        await dispatch(fetchListHotFood({page: 1, filter: conditionFilter}));
       } else {
-        await dispatch(fetchListFoodByCategory({category_id, page: 1}));
+        await dispatch(
+          fetchListFoodByCategory({
+            category_id,
+            page: 1,
+            filter: conditionFilter,
+          }),
+        );
       }
       setLoadingInitData(false);
     } catch (e) {
@@ -81,18 +86,22 @@ const ListFood = () => {
       setLoadingMore(true);
       if (!hasNextPage) {
         setLoadingMore(false);
-        setOutOfProduct(true);
         return;
       }
       if (category_id === 0) {
         await dispatch(
-          fetchListHotFood({page: currentPage + 1, isLoadMore: true}),
+          fetchListHotFood({
+            page: currentPage + 1,
+            filter: conditionFilter,
+            isLoadMore: true,
+          }),
         );
       } else {
         await dispatch(
           fetchListFoodByCategory({
             category_id,
             page: currentPage + 1,
+            filter: conditionFilter,
             isLoadMore: true,
           }),
         );
@@ -114,16 +123,19 @@ const ListFood = () => {
 
   const filterAll = () => {
     setCheckItem('all');
+    setConditionFilter('');
     setToggle(!toggle);
   };
 
   const filterNew = () => {
     setCheckItem('new');
+    setConditionFilter('new');
     setToggle(!toggle);
   };
 
   const filterSale = () => {
     setCheckItem('sale');
+    setConditionFilter('sale');
     setToggle(!toggle);
   };
 
@@ -145,14 +157,10 @@ const ListFood = () => {
   };
 
   const renderFooter = () => {
-    return loadingMore ? (
-      <View style={{marginBottom: 10, alignItems: 'center'}}>
-        <Spinner color={'#43bb6c'} />
-      </View>
-    ) : (
-      outOfProduct && (
-        <View style={{marginBottom: 15, alignItems: 'center'}}>
-          <Text style={{color: 'red'}}>Hết Đồ Ăn !!!</Text>
+    return (
+      loadingMore && (
+        <View style={{marginBottom: 10, alignItems: 'center'}}>
+          <Spinner color={'#43bb6c'} />
         </View>
       )
     );
@@ -226,12 +234,6 @@ const ListFood = () => {
                 checked={checkItem === 'sale'}
                 onSelectItem={filterSale}>
                 <Foundation name={'burst-sale'} size={28} color={'#ff8533'} />
-              </ItemFilter>
-              <ItemFilter
-                title={'Đồ Ăn Bán Chạy'}
-                checked={checkItem === 'hot'}
-                onSelectItem={filterSale}>
-                <MaterialCommunityIcons name={'fire'} size={25} color={'red'} />
               </ItemFilter>
             </View>
           </Collapsible>
