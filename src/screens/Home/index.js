@@ -25,7 +25,7 @@ import {CategoryFood} from './components/CategoryFood';
 //import others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import USER_PLACEHOLDER from '../../assets/user-placeholder.png';
-import {FOOD_DETAIL, LIST_FOOD} from '../../constants/StackNavigation';
+import {FOOD_DETAIL, LIST_FOOD, SEARCH} from '../../constants/StackNavigation';
 import productAPI from '../../services/product';
 import categoryAPI from '../../services/category';
 import {getErrorMessage} from '../../utils/HandleError';
@@ -120,12 +120,13 @@ const HomeScreen = () => {
         <Text style={styles.titleHeader}>TRANG CHỦ</Text>
         <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
       </View>
-      <View
+      <TouchableOpacity
         style={[
           styles.search,
           Platform.OS === 'android' ? {height: 42} : null,
-          Platform.OS === 'ios' ? {padding: 12} : null,
-        ]}>
+          Platform.OS === 'ios' ? {padding: 11} : null,
+        ]}
+        onPress={() => navigation.navigate(SEARCH)}>
         <View style={styles.searchWrapper}>
           <Ionicons
             name={'search'}
@@ -133,12 +134,9 @@ const HomeScreen = () => {
             color={'black'}
             style={{paddingHorizontal: 10}}
           />
-          <TextInput
-            placeholder={'Nhập tên đồ ăn bạn muốn tìm kiếm !'}
-            style={[styles.searchInput]}
-          />
+          <Text style={{color: 'gray'}}>Tìm kiếm đồ ăn !</Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.sliderContainer}>
           <Swiper
@@ -173,7 +171,9 @@ const HomeScreen = () => {
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
             <Text style={styles.titleItem}>ĐỒ ĂN BÁN CHẠY</Text>
-            <TouchableOpacity style={styles.seeMore} onPress={handleSeeMoreHotProduct}>
+            <TouchableOpacity
+              style={styles.seeMore}
+              onPress={handleSeeMoreHotProduct}>
               <Text style={styles.titleSeeMore}>XEM THÊM</Text>
               <AntDesign name={'forward'} size={15} color={'tomato'} />
             </TouchableOpacity>
@@ -228,10 +228,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     width: DriveWidth,
-    height: DriveHeight * 0.15,
+    height: DriveHeight * 0.145,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+    borderBottomLeftRadius: 35,
+    borderBottomRightRadius: 35,
   },
   avatar: {
     width: 40,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: '#fff',
     borderRadius: 20,
-    marginTop: -30,
+    marginTop: -28,
     shadowColor: 'gray',
     shadowOffset: {
       width: 0,

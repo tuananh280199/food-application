@@ -1,6 +1,13 @@
 //node_modules
 import React, {useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -22,17 +29,13 @@ const FavouriteFoodScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View
-        style={[
-          styles.header,
-          Platform.OS === 'ios' ? {paddingTop: 20} : null,
-        ]}>
+      <SafeAreaView style={[styles.header]}>
         <TouchableOpacity onPress={handleGoBack}>
           <Ionicons name="arrow-back" color={'white'} size={25} />
         </TouchableOpacity>
-        <Text style={styles.titleHeader}>Cart Food</Text>
+        <Text style={styles.titleHeader}>Đồ Ăn Yêu Thích</Text>
         <View style={{width: 25}} />
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -44,15 +47,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 20,
     width: DriveWidth,
     height: DriveHeight * 0.12,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 3,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -5,
   },
   titleHeader: {
     color: 'white',

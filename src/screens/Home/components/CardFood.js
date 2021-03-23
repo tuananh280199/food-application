@@ -18,6 +18,8 @@ type CardFoodProps = {
   priceSale?: number,
   like?: number,
   dislike?: number,
+  styleContainer?: any,
+  styleImage?: any,
 };
 
 const CardFood = (props: CardFoodProps) => {
@@ -30,6 +32,8 @@ const CardFood = (props: CardFoodProps) => {
     saleFood,
     like,
     dislike,
+    styleContainer,
+    styleImage,
   } = props;
 
   const onClickAddCart = () => {
@@ -37,10 +41,10 @@ const CardFood = (props: CardFoodProps) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styleContainer]}>
       <View>
         <FastImage
-          style={styles.cardImage}
+          style={[styles.cardImage, styleImage]}
           source={{
             uri: image,
             priority: FastImage.priority.normal,
@@ -134,8 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: DriveWidth * 0.47,
     height: DriveWidth * 0.54,
-    marginVertical: 10,
-    marginHorizontal: 12,
+    margin: 11,
   },
   cardImage: {
     width: DriveWidth * 0.47,

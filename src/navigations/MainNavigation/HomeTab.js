@@ -12,7 +12,9 @@ import {
   FOOD_DETAIL,
   HOME_SCREEN,
   LIST_FOOD,
+  SEARCH,
 } from '../../constants/StackNavigation';
+import {SearchScreen} from '../../screens/Search';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +34,7 @@ const HomeTab = () => {
       <Stack.Screen name={HOME_SCREEN} component={HomeScreen} />
       <Stack.Screen name={FOOD_DETAIL} component={FoodDetail} />
       <Stack.Screen name={LIST_FOOD} component={ListFood} />
+      <Stack.Screen name={SEARCH} component={SearchScreen} />
     </Stack.Navigator>
   );
 };

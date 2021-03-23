@@ -2,7 +2,7 @@
 export const HOME_NAVIGATION = 'Trang Chủ';
 export const CART_NAVIGATION = 'Giỏ Hàng';
 export const CONTACT_NAVIGATION = 'Liên Hệ';
-export const PROFILE_USER_NAVIGATION = 'Tôi';
+export const PROFILE_USER_NAVIGATION = 'Cá Nhân';
 
 // Screen
 export const ONBOARDING_SCREEN = 'Onboarding';
@@ -14,6 +14,7 @@ export const PROFILE_USER_SCREEN = 'User';
 //Home
 export const FOOD_DETAIL = 'FoodDetail';
 export const LIST_FOOD = 'ListFood';
+export const SEARCH = 'Search';
 
 //Auth
 export const SIGN_IN = 'SignIn';

@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
   FlatList,
   TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -168,19 +168,15 @@ const ListFood = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View
-        style={[
-          styles.header,
-          Platform.OS === 'ios' ? {paddingTop: 20} : null,
-        ]}>
-        <TouchableOpacity onPress={handleGoBack}>
+      <SafeAreaView style={[styles.header]}>
+        <TouchableOpacity onPress={handleGoBack} style={{marginLeft: 20}}>
           <Ionicons name="arrow-back" color={'white'} size={25} />
         </TouchableOpacity>
         <Text style={styles.titleHeader}>{category_name.toUpperCase()}</Text>
         <TouchableOpacity onPress={() => setToggle(!toggle)}>
-          <FontAwesome name={'filter'} size={25} color={'#fff'} />
+          <FontAwesome name={'filter'} size={25} color={'#fff'} style={{marginRight: 20}}/>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
       {loadingInitData ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Spinner color={'#43bb6c'} />
@@ -252,13 +248,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
     width: DriveWidth,
     height: DriveHeight * 0.12,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 3,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -5,
   },
   titleHeader: {
     color: 'white',

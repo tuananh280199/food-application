@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableOpacity,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -36,17 +37,9 @@ const CartScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View
-        style={[
-          styles.header,
-          Platform.OS === 'ios' ? {paddingTop: 20} : null,
-        ]}>
-        <TouchableOpacity onPress={handleGoBack}>
-          <Ionicons name="arrow-back" color={'white'} size={25} />
-        </TouchableOpacity>
+      <SafeAreaView style={[styles.header]}>
         <Text style={styles.titleHeader}>Cart Food</Text>
-        <View style={{width: 25}} />
-      </View>
+      </SafeAreaView>
       <FlatList
         style={{paddingTop: 9}}
         maxToRenderPerBatch={50}
@@ -91,15 +84,14 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
     width: DriveWidth,
     height: DriveHeight * 0.12,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 3,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -5,
   },
   titleHeader: {
     color: 'white',

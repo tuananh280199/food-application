@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
-  AppState,
+  SafeAreaView,
   Linking,
 } from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -183,11 +183,7 @@ const ProfileUserScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View
-        style={[
-          styles.header,
-          Platform.OS === 'ios' ? {paddingTop: 20} : null,
-        ]}>
+      <SafeAreaView style={[styles.header]}>
         <View />
         <Text style={styles.titleHeader}>THÔNG TIN CÁ NHÂN</Text>
         <TouchableOpacity
@@ -197,7 +193,7 @@ const ProfileUserScreen = () => {
           }>
           <FontAwesome5 name={'user-edit'} size={20} color={'#fff'} />
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity onPress={handleUploadFile}>
@@ -340,13 +336,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
     width: DriveWidth,
     height: DriveHeight * 0.12,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 3,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -5,
   },
   titleHeader: {
     marginLeft: 35,

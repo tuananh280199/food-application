@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   Platform,
+  Alert,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,11 +23,14 @@ import {Rating} from '../../components/Rating';
 import {getErrorMessage} from '../../utils/HandleError';
 import productAPI from '../../services/product';
 import {roundHalfRate} from '../../utils/RoundHalfRate';
+import {useSelector} from 'react-redux';
 
 const FoodDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const {product_id} = route.params;
+
+  const {id} = useSelector((state) => state.auth.profile);
 
   const [product, setProduct] = useState({});
 
@@ -53,14 +57,28 @@ const FoodDetail = () => {
     }
   };
 
-  console.log(product);
-
   const handleGoBack = () => {
     navigation.goBack();
   };
 
-  const handleAddFavourite = () => {
-    console.log('add favourite');
+  const handleAddFavourite = async () => {
+    if (!id) {
+      Alert.alert(
+        'Thông báo',
+        'Vui lòng đăng nhập trước khi thêm đồ ăn vào danh sách yêu thích!',
+        [{text: 'OK'}],
+      );
+      return;
+    }
+    try {
+      //TODO
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
   };
 
   const handleAddToCart = () => {

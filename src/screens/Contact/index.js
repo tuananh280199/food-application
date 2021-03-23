@@ -1,6 +1,6 @@
 //node_modules
 import React, {useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, SafeAreaView } from "react-native";
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -22,13 +22,9 @@ const ContactScreen = () => {
 
   return (
     <View style={styles.flexContainer}>
-      <View
-        style={[
-          styles.header,
-          Platform.OS === 'ios' ? {paddingTop: 20} : null,
-        ]}>
+      <SafeAreaView style={[styles.header]}>
         <Text style={styles.titleHeader}>LIÊN HỆ</Text>
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -45,9 +41,9 @@ const styles = StyleSheet.create({
     width: DriveWidth,
     height: DriveHeight * 0.12,
     backgroundColor: '#43bb6c',
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    marginBottom: 3,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    marginTop: -5,
   },
   titleHeader: {
     color: 'white',
