@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 8,
     marginBottom: 3,
+    justifyContent: 'center',
   },
   searchWrapper: {
     flexDirection: 'row',

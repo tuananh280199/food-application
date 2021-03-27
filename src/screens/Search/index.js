@@ -1,5 +1,5 @@
 //node_modules
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -14,43 +14,48 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
+import Snackbar from 'react-native-snackbar';
+import {useDispatch, useSelector} from 'react-redux';
 
 //others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {ItemSearch} from './components/ItemSearch';
-import newImage from '../../assets/icon-new.png';
-import saleImage from '../../assets/icon-sale-cate.png';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {CardFood} from '../Home/components/CardFood';
 import {FOOD_DETAIL} from '../../constants/StackNavigation';
+import {getErrorMessage} from '../../utils/HandleError';
+import {
+  fetchDataSearchByName,
+  fetchDataSearchByType,
+} from './slice/searchSlide';
+import {Spinner} from '../../components/Spinner';
+import {
+  deleteHistorySearch,
+  setListKeyWordSearch,
+} from './slice/historySearchSlice';
 
-const mockData = [
-  {
-    id: 1,
-    text: 'Khoai Tay Chien',
-  },
-  {
-    id: 2,
-    text: 'Khoai Lang',
-  },
-  {
-    id: 3,
-    text: 'Khoai Mon',
-  },
-  {
-    id: 3,
-    text: 'Nem Chua Ran',
-  },
-];
+const checkIndexIsEven = (n) => n % 2 === 0;
 
 const SearchScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const {listFood, currentPage, hasNextPage} = useSelector((state) => {
+    const {list, page, hasNext} = state.search.food;
+    return {
+      listFood: list,
+      currentPage: page,
+      hasNextPage: hasNext,
+    };
+  });
+  const historySearch = useSelector((state) => state.historySearch.listKeyWord);
 
   const [visibleClearText, setVisibleClearText] = useState(false);
   const [valueTextInput, setValueTextInput] = useState('');
-  const [visibleFlatList, setVisibleFlatlist] = useState(false);
+  const [visibleFlatList, setVisibleFlatList] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [typeFood, setTypeFood] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,6 +65,65 @@ const SearchScreen = () => {
 
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  const getDataSearchByName = async (keyWord) => {
+    try {
+      setLoading(true);
+      await dispatch(fetchDataSearchByName({keyWord, page: 1}));
+      setLoading(false);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
+  const getDataSearchByType = async (type) => {
+    try {
+      setLoading(true);
+      await dispatch(fetchDataSearchByType({type, page: 1}));
+      setLoading(false);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
+  const handleLoadMore = async () => {
+    try {
+      if (!hasNextPage) {
+        return;
+      }
+      if (typeFood === '') {
+        await dispatch(
+          fetchDataSearchByName({
+            keyWord: valueTextInput,
+            page: currentPage + 1,
+            isLoadMore: true,
+          }),
+        );
+      } else {
+        await dispatch(
+          fetchDataSearchByType({
+            type: typeFood,
+            page: currentPage + 1,
+            isLoadMore: true,
+          }),
+        );
+      }
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
   };
 
   const handleChangeTextInput = (text) => {
@@ -74,13 +138,26 @@ const SearchScreen = () => {
   const handleClearTextInput = () => {
     setValueTextInput('');
     setVisibleClearText(false);
-    setVisibleFlatlist(false);
+    setVisibleFlatList(false);
   };
 
-  const handleClearHistorySearch = () => {};
+  const handleClearHistorySearch = () => {
+    dispatch(deleteHistorySearch());
+  };
 
-  const handleSearch = () => {
-    setVisibleFlatlist(true);
+  const handleSearchByName = (keyWord) => {
+    setValueTextInput(keyWord);
+    setVisibleClearText(true);
+    setVisibleFlatList(true);
+    setTypeFood('');
+    dispatch(setListKeyWordSearch({data: [keyWord]}));
+    return getDataSearchByName(keyWord);
+  };
+
+  const handleSearchByType = (type) => {
+    setVisibleFlatList(true);
+    setTypeFood(type);
+    return getDataSearchByType(type);
   };
 
   const handleClickCardFood = (item) => {
@@ -91,7 +168,9 @@ const SearchScreen = () => {
 
   const renderItemRecommend = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={() => handleClickCardFood(item)}>
+      <TouchableOpacity
+        onPress={() => handleClickCardFood(item)}
+        style={{paddingLeft: checkIndexIsEven(index) ? 5 : 0}}>
         <CardFood
           name={item.name}
           image={item.image}
@@ -103,12 +182,12 @@ const SearchScreen = () => {
           dislike={item.dislike}
           styleContainer={{
             width: DriveWidth * 0.45,
-            height: DriveWidth * 0.5,
+            height: DriveWidth * 0.51,
             margin: 8,
           }}
           styleImage={{
             width: DriveWidth * 0.45,
-            height: DriveWidth * 0.3,
+            height: DriveWidth * 0.32,
           }}
         />
       </TouchableOpacity>
@@ -131,7 +210,8 @@ const SearchScreen = () => {
                 alignItems: 'center',
                 width: DriveWidth * 0.65,
               }}>
-              <TouchableOpacity onPress={handleSearch}>
+              <TouchableOpacity
+                onPress={() => handleSearchByName(valueTextInput)}>
                 <Ionicons
                   name={'search'}
                   size={20}
@@ -185,24 +265,27 @@ const SearchScreen = () => {
                   marginBottom: 15,
                   width: DriveWidth,
                 }}>
-                {mockData.map((item, index) => {
+                {historySearch.map((item, index) => {
                   return (
-                    <View style={styles.wrapTextSearch} key={index}>
+                    <TouchableOpacity
+                      style={styles.wrapTextSearch}
+                      key={index}
+                      onPress={() => handleSearchByName(item)}>
                       <Text
                         style={{
                           paddingVertical: 7,
                           paddingHorizontal: 10,
                           color: '#262626',
                         }}>
-                        {item.text}
+                        {item}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
               <View style={styles.divider} />
               <View style={styles.headerContent}>
-                <Text style={styles.title}>Tìm Kiếm Theo</Text>
+                <Text style={styles.title}>Tìm Kiếm Đồ Ăn</Text>
               </View>
               <View
                 style={{
@@ -221,12 +304,12 @@ const SearchScreen = () => {
                     />
                   }
                   name={'Mới Nhất'}
-                  onClick={() => {}}
+                  onClick={() => handleSearchByType('new')}
                 />
                 <ItemSearch
                   icon={<AntDesign name={'star'} size={50} color={'#ffff66'} />}
                   name={'Yêu Thích'}
-                  onClick={() => {}}
+                  onClick={() => handleSearchByType('hot')}
                 />
                 <ItemSearch
                   icon={
@@ -237,28 +320,57 @@ const SearchScreen = () => {
                     />
                   }
                   name={'Giảm Giá'}
-                  onClick={() => {}}
+                  onClick={() => handleSearchByType('sale')}
                 />
               </View>
             </View>
           )}
-          {visibleFlatList && (
-            <View style={{marginVertical: 5}}>
-              <FlatList
-                contentContainerStyle={{
-                  justifyContent: 'center',
+          {visibleFlatList &&
+            (loading ? (
+              <View
+                style={{
+                  flex: 1,
                   alignItems: 'center',
-                }}
-                maxToRenderPerBatch={50}
-                initialNumToRender={30}
-                showsHorizontalScrollIndicator={false}
-                data={[1, 2, 3, 4]}
-                keyExtractor={(item) => `hot-${item.id}`}
-                numColumns={2}
-                renderItem={renderItemRecommend}
-              />
-            </View>
-          )}
+                  justifyContent: 'center',
+                }}>
+                <Spinner color={'#43bb6c'} />
+              </View>
+            ) : (
+              <View style={{flex: 1, marginVertical: 5}}>
+                <View style={{margin: 10}}>
+                  <Text style={{fontSize: 16}}>Kết Quả Tìm Kiếm</Text>
+                </View>
+                {listFood.length === 0 ? (
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: '#43bb6c',
+                        fontSize: 21,
+                        fontWeight: '500',
+                      }}>
+                      Không Tim Thấy Sản Phẩm
+                    </Text>
+                  </View>
+                ) : (
+                  <FlatList
+                    maxToRenderPerBatch={50}
+                    initialNumToRender={30}
+                    showsHorizontalScrollIndicator={false}
+                    data={listFood}
+                    keyExtractor={(item) => item.id.toString()}
+                    numColumns={2}
+                    renderItem={renderItemRecommend}
+                    onEndReachedThreshold={0.5}
+                    onEndReached={handleLoadMore}
+                  />
+                )}
+              </View>
+            ))}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -289,7 +401,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   textInput: {
-    height: 35,
+    height: 40,
     backgroundColor: '#fff',
     textAlignVertical: 'top',
     borderRadius: 5,

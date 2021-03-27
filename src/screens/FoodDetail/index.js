@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useEffect, useState} from 'react';
+import React, {useLayoutEffect, useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
 import {Image} from 'react-native-animatable';
 import Snackbar from 'react-native-snackbar';
+import {useSelector} from 'react-redux';
+import Toast from 'react-native-easy-toast';
 
 //others
 import {InformationFoodTab} from './components/InformationFoodTab';
@@ -23,11 +25,11 @@ import {Rating} from '../../components/Rating';
 import {getErrorMessage} from '../../utils/HandleError';
 import productAPI from '../../services/product';
 import {roundHalfRate} from '../../utils/RoundHalfRate';
-import {useSelector} from 'react-redux';
 
 const FoodDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const toastRef = useRef(null);
   const {product_id} = route.params;
 
   const {id} = useSelector((state) => state.auth.profile);
@@ -71,7 +73,21 @@ const FoodDetail = () => {
       return;
     }
     try {
-      //TODO
+      toastRef.current.show(
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 80,
+          }}>
+          <AntDesign name={'check'} size={40} color={'white'} />
+          <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+            Thêm Thành Công
+          </Text>
+        </View>,
+        700,
+      );
     } catch (e) {
       Snackbar.show({
         text: getErrorMessage(e),
@@ -203,6 +219,15 @@ const FoodDetail = () => {
         </View>
       </View>
       <InformationFoodTab product={product} />
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };

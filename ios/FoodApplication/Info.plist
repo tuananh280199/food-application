@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>FoodApplication</string>
+	<string>Khoái Khẩu</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -40,30 +40,30 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSCameraUsageDescription</key>
-    <string>Your message to user when the camera is accessed for the first time</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Photo Library Access Warning</string>
+	<string>Your message to user when the camera is accessed for the first time</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library Access Warning</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIAppFonts</key>
-    <array>
-      <string>AntDesign.ttf</string>
-      <string>Entypo.ttf</string>
-      <string>EvilIcons.ttf</string>
-      <string>Feather.ttf</string>
-      <string>FontAwesome.ttf</string>
-      <string>FontAwesome5_Brands.ttf</string>
-      <string>FontAwesome5_Regular.ttf</string>
-      <string>FontAwesome5_Solid.ttf</string>
-      <string>Foundation.ttf</string>
-      <string>Ionicons.ttf</string>
-      <string>MaterialIcons.ttf</string>
-      <string>MaterialCommunityIcons.ttf</string>
-      <string>SimpleLineIcons.ttf</string>
-      <string>Octicons.ttf</string>
-      <string>Zocial.ttf</string>
-      <string>Fontisto.ttf</string>
-    </array>
+	<array>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
+	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

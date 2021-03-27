@@ -265,6 +265,7 @@ const ChangeProfileScreen = () => {
             <TextInput
               placeholder="Số điện thoại"
               placeholderTextColor="#666666"
+              keyboardType={'numeric'}
               style={styles.textInput}
               autoCapitalize="none"
               onChangeText={(value) => handlePhoneChange(value)}

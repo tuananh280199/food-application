@@ -5,7 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -42,7 +42,6 @@ const ListFood = () => {
   });
 
   const [loadingInitData, setLoadingInitData] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [checkItem, setCheckItem] = useState('all');
   const [conditionFilter, setConditionFilter] = useState('');
@@ -83,7 +82,6 @@ const ListFood = () => {
 
   const handleLoadMore = async () => {
     try {
-      setLoadingMore(true);
       if (!hasNextPage) {
         setLoadingMore(false);
         return;
@@ -106,9 +104,7 @@ const ListFood = () => {
           }),
         );
       }
-      setLoadingMore(false);
     } catch (e) {
-      setLoadingMore(false);
       Snackbar.show({
         text: getErrorMessage(e),
         duration: Snackbar.LENGTH_SHORT,
@@ -156,16 +152,6 @@ const ListFood = () => {
     );
   };
 
-  const renderFooter = () => {
-    return (
-      loadingMore && (
-        <View style={{marginBottom: 10, alignItems: 'center'}}>
-          <Spinner color={'#43bb6c'} />
-        </View>
-      )
-    );
-  };
-
   return (
     <View style={styles.flexContainer}>
       <SafeAreaView style={[styles.header]}>
@@ -174,7 +160,12 @@ const ListFood = () => {
         </TouchableOpacity>
         <Text style={styles.titleHeader}>{category_name.toUpperCase()}</Text>
         <TouchableOpacity onPress={() => setToggle(!toggle)}>
-          <FontAwesome name={'filter'} size={25} color={'#fff'} style={{marginRight: 20}}/>
+          <FontAwesome
+            name={'filter'}
+            size={25}
+            color={'#fff'}
+            style={{marginRight: 20}}
+          />
         </TouchableOpacity>
       </SafeAreaView>
       {loadingInitData ? (
@@ -183,7 +174,7 @@ const ListFood = () => {
         </View>
       ) : listFood.length === 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: '#43bb6c', fontSize: 21, fontWeight: '500'}}>
+          <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
             Không Có Sản Phẩm
           </Text>
         </View>
@@ -206,7 +197,6 @@ const ListFood = () => {
               renderItem={renderItem}
               onEndReachedThreshold={0.5}
               onEndReached={handleLoadMore}
-              ListFooterComponent={renderFooter}
             />
           </BlurView>
           <Collapsible
