@@ -20,6 +20,22 @@ const productAPI = {
     const data = await axios.get(`/product/get-detail-product/${product_id}`);
     return data;
   },
+  getFavouriteProduct: async (uid, page) => {
+    const data = await axios.get(
+      `/product/favorite-product/${uid}?page=${page}`,
+    );
+    return data;
+  },
+  addFavouriteProduct: async (uid, product_id) => {
+    const data = await axios.post('/product/favorite-product', {
+      user_id: uid,
+      product_id: product_id,
+    });
+    return data;
+  },
+  deleteFavouriteProduct: (uid, product_id) => {
+    return axios.delete(`/product/favorite-product/${uid}/${product_id}`);
+  },
 };
 
 export default productAPI;

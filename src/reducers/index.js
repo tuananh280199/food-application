@@ -4,12 +4,14 @@ import authSlice from '../slices/authSlice';
 import listFoodByCategoryReducer from '../screens/ListFood/slice/listFoodSlice';
 import searchReducer from '../screens/Search/slice/searchSlide';
 import historySearchReducer from '../screens/Search/slice/historySearchSlice';
+import favouriteReducer from '../screens/FavouriteFood/slide/favouriteSlide';
 
 const rootReducer = combineReducers({
   auth: authSlice,
   listFoodByCategory: listFoodByCategoryReducer,
   search: searchReducer,
   historySearch: historySearchReducer,
+  favourite: favouriteReducer,
 });
 
 export default rootReducer;

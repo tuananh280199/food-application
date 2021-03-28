@@ -83,7 +83,6 @@ const ListFood = () => {
   const handleLoadMore = async () => {
     try {
       if (!hasNextPage) {
-        setLoadingMore(false);
         return;
       }
       if (category_id === 0) {

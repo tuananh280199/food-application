@@ -15,7 +15,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage from 'react-native-fast-image';
 import {Image} from 'react-native-animatable';
 import Snackbar from 'react-native-snackbar';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-easy-toast';
 
 //others
@@ -25,9 +25,12 @@ import {Rating} from '../../components/Rating';
 import {getErrorMessage} from '../../utils/HandleError';
 import productAPI from '../../services/product';
 import {roundHalfRate} from '../../utils/RoundHalfRate';
+import { addFavouriteFood } from "../FavouriteFood/slide/favouriteSlide";
+import { store } from "../../store";
 
 const FoodDetail = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const route = useRoute();
   const toastRef = useRef(null);
   const {product_id} = route.params;
@@ -73,6 +76,8 @@ const FoodDetail = () => {
       return;
     }
     try {
+      const {data} = await productAPI.addFavouriteProduct(id, product_id);
+      await dispatch(addFavouriteFood({data}));
       toastRef.current.show(
         <View
           style={{
