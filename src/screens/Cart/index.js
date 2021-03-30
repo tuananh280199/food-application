@@ -3,19 +3,26 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
   TouchableOpacity,
   FlatList,
   SafeAreaView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useDispatch, useSelector} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {CartItem} from './components/CartItem';
-import LinearGradient from 'react-native-linear-gradient';
+import {
+  decrementQuantity,
+  deleteItemToCart,
+  incrementQuantity,
+} from './slice/cartSlice';
 
 const CartScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -23,37 +30,98 @@ const CartScreen = () => {
     });
   }, [navigation]);
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  };
-
   const handleOrder = () => {
     console.log('order');
   };
 
+  const handleRemove = (id) => {
+    dispatch(deleteItemToCart({product_id: id}));
+  };
+
+  const handlePlusQuantity = (id) => {
+    const newList = listFoodInCart.map((item) => {
+      if (item.product.id !== id) {
+        return item;
+      }
+      return {product: item.product, quantity: item.quantity + 1};
+    });
+    dispatch(incrementQuantity({list: newList}));
+  };
+
+  const handleMinusQuantity = (id) => {
+    const newItem = listFoodInCart.find((item) => item.product.id === id);
+    if (newItem.quantity === 1) {
+      return;
+    }
+    const newList = listFoodInCart.map((item) => {
+      if (item.product.id !== id) {
+        return item;
+      }
+      return {product: item.product, quantity: item.quantity - 1};
+    });
+    dispatch(decrementQuantity({list: newList}));
+  };
+
+  const arrayTotalPriceItem = listFoodInCart.map((item) => {
+    if (item.product.priceSale) {
+      return item.product.priceSale * item.quantity;
+    } else {
+      return item.product.price * item.quantity;
+    }
+  });
+  const totalPrice = arrayTotalPriceItem.reduce((a, b) => a + b, 0);
+
   const renderItem = ({item, index}) => {
-    return <CartItem />;
+    return (
+      <CartItem
+        name={item.product.name}
+        image={item.product.image}
+        price={
+          item.product.priceSale ? item.product.priceSale : item.product.price
+        }
+        unit={item.product.unit}
+        quantity={item.quantity}
+        like={item.product.like}
+        dislike={item.product.dislike}
+        handleRemove={() => handleRemove(item.product.id)}
+        handlePlusQuantity={() => handlePlusQuantity(item.product.id)}
+        handleMinusQuantity={() => handleMinusQuantity(item.product.id)}
+      />
+    );
   };
 
   return (
     <View style={styles.flexContainer}>
       <SafeAreaView style={[styles.header]}>
-        <Text style={styles.titleHeader}>Cart Food</Text>
+        <Text style={styles.titleHeader}>Giỏ Hàng</Text>
       </SafeAreaView>
-      <FlatList
-        style={{paddingTop: 9}}
-        maxToRenderPerBatch={50}
-        initialNumToRender={30}
-        showsVerticalScrollIndicator={false}
-        data={[1, 2, 3]}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={1}
-        renderItem={renderItem}
-      />
+      {listFoodInCart.length === 0 ? (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
+            Chưa Có Sản Phẩm Trong Giỏ
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          style={{paddingTop: 9}}
+          maxToRenderPerBatch={50}
+          initialNumToRender={30}
+          showsVerticalScrollIndicator={false}
+          data={listFoodInCart}
+          keyExtractor={(item) => item.product.id.toString()}
+          numColumns={1}
+          renderItem={renderItem}
+        />
+      )}
       <View style={styles.footer}>
         <View style={styles.headerFooter}>
           <Text style={styles.textFooter}>Tổng Tiền : </Text>
-          <Text style={[styles.textFooter, {fontSize: 28}]}>1.000.000₫</Text>
+          <Text style={[styles.textFooter, {fontSize: 28}]}>
+            {totalPrice?.toLocaleString('vi', {
+              style: 'currency',
+              currency: 'VND',
+            })}
+          </Text>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <TouchableOpacity style={styles.order} onPress={() => handleOrder()}>

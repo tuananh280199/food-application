@@ -1,5 +1,5 @@
 //import node_modules
-import React, {useLayoutEffect, useState, useEffect} from 'react';
+import React, {useLayoutEffect, useState, useEffect, useRef} from 'react';
 import {
   Platform,
   View,
@@ -10,6 +10,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -29,9 +30,17 @@ import {FOOD_DETAIL, LIST_FOOD, SEARCH} from '../../constants/StackNavigation';
 import productAPI from '../../services/product';
 import categoryAPI from '../../services/category';
 import {getErrorMessage} from '../../utils/HandleError';
+import {addItemToCart} from '../Cart/slice/cartSlice';
+import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-easy-toast';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const toastRef = useRef();
+
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
+
   const [listHotProduct, setListHotProduct] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [loadingListHotProduct, setLoadingListHotProduct] = useState(true);
@@ -84,6 +93,31 @@ const HomeScreen = () => {
     });
   };
 
+  const onClickAddCart = async (item) => {
+    if (listFoodInCart.find((o) => o.product.id === item.id)) {
+      Alert.alert('Thông báo', `Đã có ${item.name} trong giỏ hàng !`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    await dispatch(addItemToCart({product: item, quantity: 1}));
+    toastRef.current.show(
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 130,
+          height: 80,
+        }}>
+        <AntDesign name={'check'} size={40} color={'white'} />
+        <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+          Thêm Thành Công
+        </Text>
+      </View>,
+      700,
+    );
+  };
+
   const renderItemRecommend = ({item, index}) => {
     return (
       <TouchableOpacity onPress={() => handleClickCardFood(item)}>
@@ -96,6 +130,7 @@ const HomeScreen = () => {
           saleFood={item.sale}
           like={item.like}
           dislike={item.dislike}
+          onClickAddCart={() => onClickAddCart(item)}
         />
       </TouchableOpacity>
     );
@@ -213,6 +248,15 @@ const HomeScreen = () => {
           </View>
         </View>
       </ScrollView>
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };

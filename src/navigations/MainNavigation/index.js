@@ -21,6 +21,7 @@ import {
   PROFILE_USER_NAVIGATION,
 } from '../../constants/StackNavigation';
 import {TabActiveLine} from '../../constants/TabActiveLine';
+import {useSelector} from 'react-redux';
 
 const BottomTabBar = createBottomTabNavigator();
 
@@ -69,6 +70,7 @@ const IconTabProfileUser = ({color, focused, size}) => (
 );
 
 const MainNavigation = () => {
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
   return (
     <BottomTabBar.Navigator
       tabBarOptions={{
@@ -87,6 +89,8 @@ const MainNavigation = () => {
         component={CartTab}
         options={{
           tabBarIcon: IconTabCart,
+          tabBarBadge:
+            listFoodInCart?.length !== 0 ? listFoodInCart?.length : null,
         }}
       />
       <BottomTabBar.Screen
@@ -106,6 +110,5 @@ const MainNavigation = () => {
     </BottomTabBar.Navigator>
   );
 };
-
 
 export default MainNavigation;

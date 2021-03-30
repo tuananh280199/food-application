@@ -39,6 +39,7 @@ type FoodItemProps = {
   dislike?: number,
   description?: string,
   screen?: string,
+  onClickAddCart?: Function,
 };
 
 const FoodItem = (props: FoodItemProps) => {
@@ -54,15 +55,12 @@ const FoodItem = (props: FoodItemProps) => {
     newFood = true,
     saleFood = true,
     screen,
+    onClickAddCart
   } = props;
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const {id} = useSelector((state) => state.auth.profile);
-
-  const onClickAddCart = () => {
-    console.log('add cart');
-  };
 
   const handleDeleteItem = () => {
     Alert.alert(

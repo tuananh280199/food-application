@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   SafeAreaView,
   TouchableOpacity,
   FlatList,
@@ -25,8 +24,8 @@ import {Rating} from '../../components/Rating';
 import {getErrorMessage} from '../../utils/HandleError';
 import productAPI from '../../services/product';
 import {roundHalfRate} from '../../utils/RoundHalfRate';
-import { addFavouriteFood } from "../FavouriteFood/slide/favouriteSlide";
-import { store } from "../../store";
+import {addFavouriteFood} from '../FavouriteFood/slide/favouriteSlide';
+import {addItemToCart} from '../Cart/slice/cartSlice';
 
 const FoodDetail = () => {
   const navigation = useNavigation();
@@ -36,6 +35,7 @@ const FoodDetail = () => {
   const {product_id} = route.params;
 
   const {id} = useSelector((state) => state.auth.profile);
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
 
   const [product, setProduct] = useState({});
 
@@ -102,8 +102,29 @@ const FoodDetail = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    console.log('add to cart');
+  const onClickAddCart = async (item) => {
+    if (listFoodInCart.find((o) => o.product.id === item.id)) {
+      Alert.alert('Thông báo', `Đã có ${item.name} trong giỏ hàng !`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    await dispatch(addItemToCart({product: item, quantity: 1}));
+    toastRef.current.show(
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 130,
+          height: 80,
+        }}>
+        <AntDesign name={'check'} size={40} color={'white'} />
+        <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+          Thêm Thành Công
+        </Text>
+      </View>,
+      700,
+    );
   };
 
   const renderItemSubImage = ({item, index}) => {
@@ -198,7 +219,7 @@ const FoodDetail = () => {
           </View>
           <TouchableOpacity
             style={styles.buttonAddCart}
-            onPress={handleAddToCart}>
+            onPress={() => onClickAddCart(product)}>
             <Text
               style={[
                 styles.text,

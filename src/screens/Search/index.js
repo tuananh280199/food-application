@@ -1,5 +1,5 @@
 //node_modules
-import React, {useCallback, useLayoutEffect, useState} from 'react';
+import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   TextInput,
@@ -10,12 +10,14 @@ import {
   TouchableWithoutFeedback,
   Text,
   FlatList,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-easy-toast';
 
 //others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
@@ -34,13 +36,16 @@ import {
   deleteHistorySearch,
   setListKeyWordSearch,
 } from './slice/historySearchSlice';
+import {addItemToCart} from '../Cart/slice/cartSlice';
 
 const checkIndexIsEven = (n) => n % 2 === 0;
 
 const SearchScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const toastRef = useRef();
 
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
   const {listFood, currentPage, hasNextPage} = useSelector((state) => {
     const {list, page, hasNext} = state.search.food;
     return {
@@ -166,12 +171,38 @@ const SearchScreen = () => {
     });
   };
 
+  const onClickAddCart = async (item) => {
+    if (listFoodInCart.find((o) => o.product.id === item.id)) {
+      Alert.alert('Thông báo', `Đã có ${item.name} trong giỏ hàng !`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    await dispatch(addItemToCart({product: item, quantity: 1}));
+    toastRef.current.show(
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 130,
+          height: 80,
+        }}>
+        <AntDesign name={'check'} size={40} color={'white'} />
+        <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+          Thêm Thành Công
+        </Text>
+      </View>,
+      700,
+    );
+  };
+
   const renderItemRecommend = ({item, index}) => {
     return (
       <TouchableOpacity
         onPress={() => handleClickCardFood(item)}
         style={{paddingLeft: checkIndexIsEven(index) ? 5 : 0}}>
         <CardFood
+          product_id={item.id}
           name={item.name}
           image={item.image}
           price={item.price}
@@ -189,6 +220,7 @@ const SearchScreen = () => {
             width: DriveWidth * 0.45,
             height: DriveWidth * 0.32,
           }}
+          onClickAddCart={() => onClickAddCart(item)}
         />
       </TouchableOpacity>
     );
@@ -372,6 +404,15 @@ const SearchScreen = () => {
               </View>
             ))}
         </View>
+        <Toast
+          ref={toastRef}
+          style={{backgroundColor: '#000'}}
+          position="top"
+          fadeInDuration={200}
+          fadeOutDuration={700}
+          positionValue={320}
+          opacity={0.8}
+        />
       </View>
     </TouchableWithoutFeedback>
   );

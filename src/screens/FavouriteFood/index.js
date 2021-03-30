@@ -1,5 +1,5 @@
 //node_modules
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,14 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Toast from 'react-native-easy-toast';
 
 //others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
@@ -20,11 +23,14 @@ import {Spinner} from '../../components/Spinner';
 import {getErrorMessage} from '../../utils/HandleError';
 import {FoodItem} from '../ListFood/components/FoodItem';
 import {fetchFavouriteFood} from './slide/favouriteSlide';
+import {addItemToCart} from '../Cart/slice/cartSlice';
 
 const FavouriteFoodScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const toastRef = useRef();
 
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
   const uid = useSelector((state) => state.auth.profile.id);
   const {listFood, currentPage, hasNextPage} = useSelector((state) => {
     const {list, page, hasNext} = state.favourite.favouriteFood;
@@ -82,6 +88,31 @@ const FavouriteFoodScreen = () => {
     }
   };
 
+  const onClickAddCart = async (item) => {
+    if (listFoodInCart.find((o) => o.product.id === item.id)) {
+      Alert.alert('Thông báo', `Đã có ${item.name} trong giỏ hàng !`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    await dispatch(addItemToCart({product: item, quantity: 1}));
+    toastRef.current.show(
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 130,
+          height: 80,
+        }}>
+        <AntDesign name={'check'} size={40} color={'white'} />
+        <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+          Thêm Thành Công
+        </Text>
+      </View>,
+      700,
+    );
+  };
+
   const renderItem = ({item, index}) => {
     return (
       <FoodItem
@@ -96,6 +127,7 @@ const FavouriteFoodScreen = () => {
         dislike={item.dislike}
         description={item.description}
         screen={'Favourite'}
+        onClickAddCart={() => onClickAddCart(item)}
       />
     );
   };
@@ -135,6 +167,15 @@ const FavouriteFoodScreen = () => {
           />
         </View>
       )}
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };

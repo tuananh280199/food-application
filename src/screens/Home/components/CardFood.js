@@ -1,6 +1,13 @@
 //import node_modules
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,6 +27,7 @@ type CardFoodProps = {
   dislike?: number,
   styleContainer?: any,
   styleImage?: any,
+  onClickAddCart?: Function,
 };
 
 const CardFood = (props: CardFoodProps) => {
@@ -34,11 +42,8 @@ const CardFood = (props: CardFoodProps) => {
     dislike,
     styleContainer,
     styleImage,
+    onClickAddCart,
   } = props;
-
-  const onClickAddCart = () => {
-    console.log('add cart');
-  };
 
   return (
     <View style={[styles.container, styleContainer]}>

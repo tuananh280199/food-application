@@ -1,31 +1,46 @@
 //import node_modules
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
 
 //others
 import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
+import {roundHalfRate} from '../../../utils/RoundHalfRate';
 
 type CartItemProps = {
   image?: string,
   name?: string,
-  cost?: string,
+  price?: number,
+  quantity?: number,
+  like?: number,
+  dislike?: number,
+  unit?: string,
+  handleRemove?: Function,
+  handlePlusQuantity?: Function,
+  handleMinusQuantity?: Function,
 };
 
 const CartItem = (props: CartItemProps) => {
-  const handleRemove = () => {
-    console.log('remove item cart');
-  };
-
-  const handlePlusQuantity = () => {
-    console.log('plus quantity');
-  };
-
-  const handleMinusQuantity = () => {
-    console.log('minus quantity');
-  };
+  const {
+    name,
+    image,
+    price,
+    quantity,
+    like,
+    dislike,
+    unit,
+    handleRemove,
+    handlePlusQuantity,
+    handleMinusQuantity,
+  } = props;
 
   return (
     <View style={styles.flexContainer}>
@@ -33,48 +48,66 @@ const CartItem = (props: CartItemProps) => {
         <FastImage
           style={styles.image}
           source={{
-            uri:
-              'https://www.greencore.com/wp-content/uploads/2015/08/ChickenPenang-250x250.jpg',
+            uri: image,
             priority: FastImage.priority.normal,
           }}
         />
         <View style={styles.content}>
           <View
             style={{
+              flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <Text style={styles.titleName}>Avocado Toast</Text>
+            <Text style={styles.titleName}>{name}</Text>
             <TouchableOpacity onPress={handleRemove}>
               <Feather name={'delete'} size={20} color={'tomato'} />
             </TouchableOpacity>
           </View>
           <Rating
-            styleContainer={{marginTop: 2}}
+            styleContainer={{flex: 1, marginTop: 2}}
             styleTitle={{fontSize: 15, marginLeft: 4}}
-            rating={2.4}
+            rating={roundHalfRate(like, dislike)}
+            like={like}
+            dislike={dislike}
             size={13}
             maxRate={5}
           />
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+            <Text style={{fontSize: 14}}>Đơn vị tính: {unit}</Text>
+          </View>
           <View style={styles.footerItem}>
-            <Text style={styles.titleCost}>120.000₫</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 16}}>Giá : </Text>
+              <Text style={styles.titleCost}>
+                {price?.toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 2,
+              }}>
               <TouchableOpacity
                 style={[
                   styles.button,
                   {borderTopLeftRadius: 15, borderBottomLeftRadius: 15},
                 ]}
-                onPress={() => handleMinusQuantity()}>
+                onPress={handleMinusQuantity}>
                 <Text style={{color: '#fff', fontSize: 21}}>-</Text>
               </TouchableOpacity>
-              <Text style={styles.titleQuantity}>0</Text>
+              <Text style={styles.titleQuantity}>{quantity}</Text>
               <TouchableOpacity
                 style={[
                   styles.button,
                   {borderTopRightRadius: 15, borderBottomRightRadius: 15},
                 ]}
-                onPress={() => handlePlusQuantity()}>
+                onPress={handlePlusQuantity}>
                 <Text style={{color: '#fff', fontSize: 21}}>+</Text>
               </TouchableOpacity>
             </View>
@@ -108,12 +141,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 15,
   },
   image: {
-    width: DriveWidth * 0.23,
-    height: 100,
+    width: DriveWidth * 0.25,
+    height: DriveWidth * 0.255,
     borderTopLeftRadius: 15,
   },
   content: {
-    width: DriveWidth * 0.68,
+    width: DriveWidth * 0.66,
     marginLeft: 10,
     justifyContent: 'space-around',
   },
@@ -135,7 +168,7 @@ const styles = StyleSheet.create({
   footerItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   button: {
     width: 44,

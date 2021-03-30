@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState, useEffect} from 'react';
+import React, {useLayoutEffect, useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -16,22 +17,26 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import {BlurView} from '@react-native-community/blur';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Toast from 'react-native-easy-toast';
 
 //others
 import {FoodItem} from './components/FoodItem';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {ItemFilter} from './components/ItemFilter';
 import {fetchListFoodByCategory, fetchListHotFood} from './slice/listFoodSlice';
-import {LIST_FOOD} from '../../constants/StackNavigation';
 import {getErrorMessage} from '../../utils/HandleError';
-import {CardFood} from '../Home/components/CardFood';
 import {Spinner} from '../../components/Spinner';
+import {addItemToCart} from '../Cart/slice/cartSlice';
 
 const ListFood = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const route = useRoute();
   const {category_id, category_name} = route.params;
+  const toastRef = useRef();
+
+  const listFoodInCart = useSelector((state) => state.cart.cartFood);
   const {listFood, currentPage, hasNextPage} = useSelector((state) => {
     const {list, page, hasNext} = state.listFoodByCategory.listFood;
     return {
@@ -134,6 +139,31 @@ const ListFood = () => {
     setToggle(!toggle);
   };
 
+  const onClickAddCart = async (item) => {
+    if (listFoodInCart.find((o) => o.product.id === item.id)) {
+      Alert.alert('Thông báo', `Đã có ${item.name} trong giỏ hàng !`, [
+        {text: 'OK'},
+      ]);
+      return;
+    }
+    await dispatch(addItemToCart({product: item, quantity: 1}));
+    toastRef.current.show(
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 130,
+          height: 80,
+        }}>
+        <AntDesign name={'check'} size={40} color={'white'} />
+        <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+          Thêm Thành Công
+        </Text>
+      </View>,
+      700,
+    );
+  };
+
   const renderItem = ({item, index}) => {
     return (
       <FoodItem
@@ -147,6 +177,7 @@ const ListFood = () => {
         like={item.like}
         dislike={item.dislike}
         description={item.description}
+        onClickAddCart={() => onClickAddCart(item)}
       />
     );
   };
@@ -224,6 +255,15 @@ const ListFood = () => {
           </Collapsible>
         </View>
       )}
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };
