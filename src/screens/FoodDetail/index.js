@@ -16,6 +16,7 @@ import {Image} from 'react-native-animatable';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-easy-toast';
+import ImageView from 'react-native-image-viewing';
 
 //others
 import {InformationFoodTab} from './components/InformationFoodTab';
@@ -38,6 +39,7 @@ const FoodDetail = () => {
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
 
   const [product, setProduct] = useState({});
+  const [visible, setIsVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -127,13 +129,21 @@ const FoodDetail = () => {
     );
   };
 
+  const mapSubPhoto = (photos) => {
+    return photos.map((item) => {
+      return {
+        uri: item.image,
+      };
+    });
+  };
+
   const renderItemSubImage = ({item, index}) => {
     return (
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity onPress={() => setIsVisible(true)}>
         <FastImage
           style={styles.subImage}
           source={{
-            uri: product?.image,
+            uri: item?.image,
             priority: FastImage.priority.normal,
           }}
         />
@@ -143,6 +153,14 @@ const FoodDetail = () => {
 
   return (
     <View style={styles.flexContainer}>
+      {visible && (
+        <ImageView
+          images={mapSubPhoto(product?.photos)}
+          imageIndex={0}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
+        />
+      )}
       <FastImage
         style={styles.imageBackground}
         source={{
@@ -237,7 +255,7 @@ const FoodDetail = () => {
             horizontal
             maxToRenderPerBatch={50}
             initialNumToRender={30}
-            data={[1, 2, 3]}
+            data={product.photos}
             keyExtractor={(item, index) => index.toString()}
             numColumns={1}
             renderItem={renderItemSubImage}
