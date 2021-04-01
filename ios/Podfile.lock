@@ -78,6 +78,10 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
+  - lottie-ios (3.1.9)
+  - lottie-react-native (3.5.0):
+    - lottie-ios (~> 3.1.8)
+    - React
   - OpenSSL-Universal (1.0.2.20):
     - OpenSSL-Universal/Static (= 1.0.2.20)
   - OpenSSL-Universal/Static (1.0.2.20)
@@ -377,6 +381,7 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (~> 0.54.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - lottie-react-native (from `../node_modules/lottie-react-native`)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
   - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -429,6 +434,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - libwebp
+    - lottie-ios
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -447,6 +453,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  lottie-react-native:
+    :path: "../node_modules/lottie-react-native"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera"
   Permission-PhotoLibrary:
@@ -538,6 +546,8 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  lottie-ios: 3a3758ef5a008e762faec9c9d50a39842f26d124
+  lottie-react-native: 1fb4ce21d6ad37dab8343eaff8719df76035bd93
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
   Permission-Camera: 119b01de97a5b3edb637999e38476b68143b9d17
   Permission-PhotoLibrary: cb9cdc1e3744e26ab404297a8e289d50c8ee27e8
@@ -581,4 +591,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ba59dfac4ac5121f091537e5b4e735a2099c2a30
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1
