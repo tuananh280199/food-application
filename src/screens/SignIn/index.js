@@ -123,7 +123,10 @@ const SignInScreen = () => {
         };
         const response = await authAPI.login(params);
         await dispatch(
-          login({token: response.access_token, profile: response.profile}),
+          login({
+            token: response.profile.access_token,
+            profile: response.profile,
+          }),
         );
         navigation.navigate(PROFILE_USER_SCREEN);
       } catch (e) {

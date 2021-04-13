@@ -26,10 +26,20 @@ const authSlice = createSlice({
       const {profile} = action.payload;
       state.profile = profile;
     },
+    setNewToken(state, action) {
+      const {newToken} = action.payload;
+      state.token = newToken;
+    },
     // logout: () => initState,
   },
 });
 
-export const {firstIsLaunch, login, logout, updateProfile} = authSlice.actions;
+export const {
+  firstIsLaunch,
+  login,
+  logout,
+  updateProfile,
+  setNewToken,
+} = authSlice.actions;
 
 export default authSlice.reducer;

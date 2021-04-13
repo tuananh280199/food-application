@@ -28,3 +28,6 @@ export const FAVOURITE_FOOD = 'FavouriteFood';
 export const ORDER_HISTORY = 'OrderHistory';
 export const PAYMENT = 'Payment';
 export const FOOD_DETAIL_FAVOURITE = 'FoodDetailFavourite';
+
+//Cart
+export const CHECKOUT = 'Checkout';

@@ -2,6 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 import Config from 'react-native-config';
 import {store} from '../store';
+import {logout} from '../slices/authSlice';
 
 const axiosClient = axios.create({
   baseURL: Config.API_SERVER,
@@ -34,7 +35,17 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     // Handle errors
-    throw error;
+    if (error.response?.status === 500) {
+      return Promise.reject(error);
+    }
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.name === 'TokenExpiredError'
+    ) {
+      store.dispatch(logout());
+      return Promise.reject(error);
+    }
+    return Promise.reject(error);
   },
 );
 

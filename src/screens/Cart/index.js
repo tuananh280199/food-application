@@ -18,6 +18,7 @@ import {
   deleteItemToCart,
   incrementQuantity,
 } from './slice/cartSlice';
+import {CHECKOUT} from '../../constants/StackNavigation';
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -31,7 +32,7 @@ const CartScreen = () => {
   }, [navigation]);
 
   const handleOrder = () => {
-    console.log('order');
+    navigation.navigate(CHECKOUT);
   };
 
   const handleRemove = (id) => {

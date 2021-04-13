@@ -37,6 +37,7 @@ import {logout, updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
+import orderAPI from '../../services/order';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -50,9 +51,13 @@ const ProfileUserScreen = () => {
   });
 
   const [avatar, setAvatar] = useState(profile?.avatar);
+  const [numberOrder, setNumberOrder] = useState(0);
 
   useEffect(() => {
     setAvatar(profile?.avatar);
+    if (profile.id) {
+      getNumberOrder();
+    }
   }, [profile]);
 
   useLayoutEffect(() => {
@@ -60,6 +65,19 @@ const ProfileUserScreen = () => {
       headerShown: false,
     });
   }, [navigation]);
+
+  const getNumberOrder = async () => {
+    try {
+      const {data} = await orderAPI.getNumberOrder(profile.id);
+      setNumberOrder(data.numberOder);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
 
   const chooseFile = (type) => {
     let option = {
@@ -168,6 +186,7 @@ const ProfileUserScreen = () => {
       navigation.navigate(SIGN_IN);
       return;
     }
+    setNumberOrder(0);
     dispatch(logout());
   };
 
@@ -220,7 +239,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              {profile?.address ? profile.address : 'Hà Nội'}
+              {profile?.address ? profile.address : 'Địa Chỉ'}
             </Text>
           </View>
           <View style={styles.commonInfo}>
@@ -228,7 +247,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              {profile?.phone ? profile.phone : '0123456789'}
+              {profile?.phone ? profile.phone : 'Số Điện Thoại'}
             </Text>
           </View>
           <View style={styles.commonInfo}>
@@ -236,7 +255,7 @@ const ProfileUserScreen = () => {
             <Text
               style={[styles.subText, {marginHorizontal: 15}]}
               numberOfLine={2}>
-              {profile?.email ? profile.email : 'example@gmail.com'}
+              {profile?.email ? profile.email : 'Email'}
             </Text>
           </View>
         </View>
@@ -247,7 +266,7 @@ const ProfileUserScreen = () => {
           <Text style={styles.subText}>Wallet</Text>
         </View>
         <View style={styles.rightWalletAndOrder}>
-          <Text style={styles.textWalletAndOrder}>12</Text>
+          <Text style={styles.textWalletAndOrder}>{numberOrder}</Text>
           <Text style={styles.subText}>Order</Text>
         </View>
       </View>
