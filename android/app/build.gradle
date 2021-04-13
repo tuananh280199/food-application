@@ -212,6 +212,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-linear-gradient')
+    implementation project(':lottie-react-native')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
