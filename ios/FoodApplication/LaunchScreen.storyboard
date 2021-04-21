@@ -42,16 +42,29 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-khoaikhau" translatesAutoresizingMaskIntoConstraints="NO" id="Z8H-58-dCM">
+                                <rect key="frame" x="87.5" y="233.5" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="Kgc-lm-dvO"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="250" id="Uiy-eo-JcW"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="bxH-6l-FMy"/>
+                                    <constraint firstAttribute="width" constant="200" id="ylv-07-osd"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.062352588741939968" green="0.64194057642487046" blue="0.11056705492863092" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Z8H-58-dCM" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="3sA-hC-6D5"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="obG-Y5-kRd" secondAttribute="centerX" id="5cz-MP-9tL"/>
+                            <constraint firstItem="Z8H-58-dCM" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="OEK-wa-aa3"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="MN2-I3-ftu" secondAttribute="bottom" constant="20" id="OZV-Vh-mqD"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="centerX" secondItem="GJd-Yh-RWb" secondAttribute="centerX" id="Q3B-4B-g5h"/>
                             <constraint firstItem="obG-Y5-kRd" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="SfN-ll-jLj"/>
+                            <constraint firstItem="Z8H-58-dCM" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="XsD-ya-BOn"/>
                             <constraint firstAttribute="bottom" secondItem="obG-Y5-kRd" secondAttribute="bottom" constant="20" id="Y44-ml-fuU"/>
                             <constraint firstItem="MN2-I3-ftu" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="akx-eg-2ui"/>
+                            <constraint firstItem="Z8H-58-dCM" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="hpW-tW-XCK"/>
                             <constraint firstItem="MN2-I3-ftu" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="i1E-0Y-4RG"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="bottom" multiplier="1/3" constant="1" id="moa-c2-u7t"/>
                             <constraint firstItem="GJd-Yh-RWb" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" symbolic="YES" id="x7j-FC-K8j"/>
@@ -64,6 +77,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="logo-khoaikhau" width="600" height="165"/>
         <systemColor name="tertiarySystemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

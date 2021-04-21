@@ -5,10 +5,12 @@ import {persistor, store} from './src/store';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import LottieView from 'lottie-react-native';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
+    SplashScreen.hide();
     const data = setTimeout(() => {
       setLoading(false);
     }, 2000);

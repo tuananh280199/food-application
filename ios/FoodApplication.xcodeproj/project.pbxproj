@@ -161,7 +161,6 @@
 				1FC6DF63E80E7458DA4F904A /* Pods-FoodApplication-tvOSTests.debug.xcconfig */,
 				CFF0B409D23EF7BB5AE6612B /* Pods-FoodApplication-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

@@ -151,7 +151,10 @@ const HomeScreen = () => {
           styles.header,
           Platform.OS === 'android' ? {paddingBottom: 20} : null,
         ]}>
-        <Ionicons name={'fast-food'} size={35} color={'#c3e8f7'} />
+        <Image
+          source={require('./../../assets/logo-khoaikhau.png')}
+          style={{height: 38, width: 38}}
+        />
         <Text style={styles.titleHeader}>TRANG CHỦ</Text>
         <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
       </View>
