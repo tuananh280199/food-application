@@ -37,6 +37,7 @@ import {
   setListKeyWordSearch,
 } from './slice/historySearchSlice';
 import {addItemToCart} from '../Cart/slice/cartSlice';
+import {Image} from 'react-native-animatable';
 
 const checkIndexIsEven = (n) => n % 2 === 0;
 
@@ -379,6 +380,14 @@ const SearchScreen = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
+                    <Image
+                      source={require('../../assets/logo-khoaikhau.png')}
+                      style={{
+                        width: DriveHeight * 0.065,
+                        height: DriveHeight * 0.065,
+                        marginBottom: 10,
+                      }}
+                    />
                     <Text
                       style={{
                         color: '#43bb6c',

@@ -28,6 +28,7 @@ import {fetchListFoodByCategory, fetchListHotFood} from './slice/listFoodSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import {Spinner} from '../../components/Spinner';
 import {addItemToCart} from '../Cart/slice/cartSlice';
+import {Image} from 'react-native-animatable';
 
 const ListFood = () => {
   const navigation = useNavigation();
@@ -204,6 +205,14 @@ const ListFood = () => {
         </View>
       ) : listFood.length === 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            source={require('../../assets/logo-khoaikhau.png')}
+            style={{
+              width: DriveHeight * 0.065,
+              height: DriveHeight * 0.065,
+              marginBottom: 10,
+            }}
+          />
           <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
             Không Có Sản Phẩm
           </Text>

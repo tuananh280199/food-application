@@ -10,10 +10,13 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Divider} from '../../components/Divider';
-import {useSelector} from 'react-redux';
+import {RadioButton} from './components/RadioButton';
+import LinearGradient from 'react-native-linear-gradient';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export const Checkout = () => {
   const navigation = useNavigation();
@@ -23,6 +26,7 @@ export const Checkout = () => {
   const [address, setAddress] = useState(profile.address || '');
   const [phone, setPhone] = useState(profile.phone || '');
   const [note, setNote] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState(0);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -133,6 +137,12 @@ export const Checkout = () => {
             </Text>
           </View>
         </View>
+        <TouchableOpacity style={styles.voucher}>
+          <Text style={{color: 'tomato', fontSize: 16}}>
+            Thêm voucher giảm giá{' '}
+          </Text>
+          <AntDesign name={'forward'} size={15} color={'tomato'} />
+        </TouchableOpacity>
         <View style={styles.cart}>
           <Text style={styles.title}>Đơn Hàng</Text>
           <View style={styles.wrapItemCart}>
@@ -203,7 +213,6 @@ export const Checkout = () => {
                   width: DriveWidth * 0.3,
                   textAlign: 'right',
                   fontSize: 16,
-                  color: 'red',
                 },
               ]}>
               Thành Tiền :
@@ -215,7 +224,7 @@ export const Checkout = () => {
                   width: DriveWidth * 0.2,
                   textAlign: 'right',
                   fontSize: 16,
-                  color: 'red',
+                  color: 'tomato',
                 },
               ]}>
               {totalPrice.toLocaleString('vi', {
@@ -225,7 +234,47 @@ export const Checkout = () => {
             </Text>
           </View>
         </View>
+        <View>
+          <Text style={styles.title}>Phương Thức Thanh Toán</Text>
+          <View style={styles.wrapRbtn}>
+            <RadioButton
+              styleContainer={{
+                height: DriveHeight * 0.09,
+                width: DriveWidth * 0.9,
+                borderRadius: 10,
+                borderWidth: 2,
+                borderColor: 'silver',
+                marginVertical: 5,
+              }}
+              styleItem={{marginHorizontal: 10}}
+              styleText={{color: '#000', fontSize: 16}}
+              styleOutlineCircle={{borderColor: '#43bb6c'}}
+              styleInnerCircle={{backgroundColor: '#20c969'}}
+              options={['Tiền Mặt', 'Chuyển Khoản']}
+              selected={selectedPayment}
+              horizontal
+              onChangeSelect={(opt, index) => {
+                setSelectedPayment(index);
+              }}
+            />
+          </View>
+        </View>
       </ScrollView>
+      <View style={styles.btnOrder}>
+        <TouchableOpacity style={styles.order} onPress={() => {}}>
+          <LinearGradient colors={['#43bb6c', '#20c969']} style={styles.order}>
+            <Text
+              style={[
+                styles.textOrder,
+                {
+                  color: '#fff',
+                },
+              ]}>
+              ĐẶT HÀNG
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -269,7 +318,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginVertical: 7,
-    color: '#20c969',
+    color: '#43bb6c',
   },
   text: {
     width: DriveWidth * 0.3,
@@ -281,5 +330,40 @@ const styles = StyleSheet.create({
   },
   titleItem: {
     fontSize: 14,
+  },
+  voucher: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  wrapRbtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btnOrder: {
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+    shadowColor: 'silver',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.9,
+    shadowRadius: 1.5,
+    elevation: 1,
+  },
+  order: {
+    width: '95%',
+    height: DriveHeight * 0.05,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  textOrder: {
+    fontSize: 20,
+    fontWeight: '500',
   },
 });

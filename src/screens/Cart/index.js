@@ -20,6 +20,7 @@ import {
   incrementQuantity,
 } from './slice/cartSlice';
 import {CHECKOUT} from '../../constants/StackNavigation';
+import {Image} from 'react-native-animatable';
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -103,6 +104,14 @@ const CartScreen = () => {
       </SafeAreaView>
       {listFoodInCart.length === 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            source={require('../../assets/logo-khoaikhau.png')}
+            style={{
+              width: DriveHeight * 0.065,
+              height: DriveHeight * 0.065,
+              marginBottom: 10,
+            }}
+          />
           <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
             Chưa Có Sản Phẩm Trong Giỏ
           </Text>
@@ -198,11 +207,19 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   order: {
-    width: '95%',
-    height: 50,
+    width: '100%',
+    height: DriveHeight * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    shadowColor: 'silver',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.9,
+    shadowRadius: 1.5,
+    elevation: 1,
   },
   textOrder: {
     fontSize: 20,

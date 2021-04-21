@@ -20,6 +20,7 @@ import orderAPI from '../../services/order';
 import {getErrorMessage} from '../../utils/HandleError';
 import {fetchFavouriteFood} from '../FavouriteFood/slide/favouriteSlide';
 import {Spinner} from '../../components/Spinner';
+import {Image} from 'react-native-animatable';
 
 const OrderHistoryScreen = () => {
   const navigation = useNavigation();
@@ -106,6 +107,14 @@ const OrderHistoryScreen = () => {
         </View>
       ) : listOrder.length === 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            source={require('../../assets/logo-khoaikhau.png')}
+            style={{
+              width: DriveHeight * 0.065,
+              height: DriveHeight * 0.065,
+              marginBottom: 10,
+            }}
+          />
           <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
             Chưa Có Lịch Sử Mua Hàng
           </Text>
