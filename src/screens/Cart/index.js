@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -32,6 +33,10 @@ const CartScreen = () => {
   }, [navigation]);
 
   const handleOrder = () => {
+    if (!listFoodInCart.length) {
+      Alert.alert('Chưa có sản phẩm trong giỏ để đặt hàng !');
+      return;
+    }
     navigation.navigate(CHECKOUT);
   };
 
