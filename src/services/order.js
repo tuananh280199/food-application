@@ -9,6 +9,17 @@ const orderAPI = {
     const data = await axios.get(`/order/count-order/${uid}`);
     return data;
   },
+  sendOrder: async (uid, shipping, payment_id, products) => {
+    const data = await axios.post('/order/send-order', {
+      data: {
+        user_id: uid,
+        shipping,
+        payment_id,
+        products,
+      },
+    });
+    return data;
+  },
 };
 
 export default orderAPI;

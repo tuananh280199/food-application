@@ -26,6 +26,7 @@ const CartScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
+  const profile = useSelector((state) => state.auth.profile);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,6 +37,10 @@ const CartScreen = () => {
   const handleOrder = () => {
     if (!listFoodInCart.length) {
       Alert.alert('Chưa có sản phẩm trong giỏ để đặt hàng !');
+      return;
+    }
+    if (!profile.id) {
+      Alert.alert('Bạn cần đăng nhập để đặt hàng !');
       return;
     }
     navigation.navigate(CHECKOUT);

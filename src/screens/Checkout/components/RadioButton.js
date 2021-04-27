@@ -28,7 +28,7 @@ export const RadioButton = (props: RadioButtonProps) => {
   return (
     <View style={[horizontal && styles.horizontal, styleContainer]}>
       {options.map((opt, index) => (
-        <View style={[{flexDirection: 'row'}, styleItem]}>
+        <View style={[{flexDirection: 'row'}, styleItem]} key={index}>
           <TouchableOpacity
             onPress={() => onChangeSelect(opt, index)}
             style={styles.optContainer}>

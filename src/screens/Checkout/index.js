@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,19 +7,27 @@ import {
   View,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Toast from 'react-native-easy-toast';
 
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Divider} from '../../components/Divider';
 import {RadioButton} from './components/RadioButton';
-import LinearGradient from 'react-native-linear-gradient';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {validatePhone} from '../../utils/ValidatePhone';
+import orderAPI from '../../services/order';
+import {clearCart} from '../Cart/slice/cartSlice';
+import {Spinner} from '../../components/Spinner';
 
 export const Checkout = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const toastRef = useRef();
   const profile = useSelector((state) => state.auth.profile);
   const cart = useSelector((state) => state.cart.cartFood);
   const [name, setName] = useState(profile.name || '');
@@ -27,6 +35,7 @@ export const Checkout = () => {
   const [phone, setPhone] = useState(profile.phone || '');
   const [note, setNote] = useState('');
   const [selectedPayment, setSelectedPayment] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,6 +71,60 @@ export const Checkout = () => {
     }
   });
   const totalPrice = arrayTotalPriceItem.reduce((a, b) => a + b, 0);
+
+  const handleOrder = async () => {
+    let paymentMethod = 1;
+    if (!name.length) {
+      Alert.alert('Vui lòng nhập tên của bạn !');
+      return;
+    }
+    if (phone.trim().length !== 10 || !validatePhone(phone)) {
+      Alert.alert('Số điện thoại không hợp lệ. Vui lòng kiểm tra lại !');
+      return;
+    }
+    if (!address.length) {
+      Alert.alert('Vui lòng nhập địa chỉ giao hàng !');
+      return;
+    }
+    try {
+      if (selectedPayment !== 0) {
+        paymentMethod = 2;
+      }
+      const shipping = {name, address, phone, note};
+      setLoading(true);
+      const response = await orderAPI.sendOrder(
+        profile.id,
+        shipping,
+        paymentMethod,
+        cart,
+      );
+      if (response.status === 201) {
+        setLoading(false);
+        dispatch(clearCart());
+        toastRef.current.show(
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 130,
+              height: 80,
+            }}>
+            <AntDesign name={'check'} size={40} color={'white'} />
+            <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+              Đặt Hàng Thành Công
+            </Text>
+          </View>,
+          700,
+          () => {
+            navigation.goBack();
+          },
+        );
+      }
+    } catch (e) {
+      setLoading(false);
+      Alert.alert('Thanh toán thất bại. Vui lòng thử lại sau !');
+    }
+  };
 
   return (
     <View style={styles.flexContainer}>
@@ -99,7 +162,7 @@ export const Checkout = () => {
           </View>
           <View style={styles.wrapItem}>
             <Text style={styles.text}>
-              Địa Chỉ <Text style={{color: 'red'}}>*</Text>
+              Đ/C Giao Hàng <Text style={{color: 'red'}}>*</Text>
             </Text>
             <TextInput
               style={[styles.input, {borderBottomWidth: 1}]}
@@ -144,7 +207,7 @@ export const Checkout = () => {
           <AntDesign name={'forward'} size={15} color={'tomato'} />
         </TouchableOpacity>
         <View style={styles.cart}>
-          <Text style={styles.title}>Đơn Hàng</Text>
+          <Text style={styles.title}>Thông Tin Đơn Hàng</Text>
           <View style={styles.wrapItemCart}>
             <Text
               style={[
@@ -221,7 +284,7 @@ export const Checkout = () => {
               style={[
                 styles.titleItem,
                 {
-                  width: DriveWidth * 0.2,
+                  width: DriveWidth * 0.25,
                   textAlign: 'right',
                   fontSize: 16,
                   color: 'tomato',
@@ -261,12 +324,17 @@ export const Checkout = () => {
         </View>
       </ScrollView>
       <View style={styles.btnOrder}>
-        <TouchableOpacity style={styles.order} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.order}
+          onPress={handleOrder}
+          disabled={loading}>
           <LinearGradient colors={['#43bb6c', '#20c969']} style={styles.order}>
+            {loading && <Spinner color={'#fff'} />}
             <Text
               style={[
                 styles.textOrder,
                 {
+                  marginLeft: 9,
                   color: '#fff',
                 },
               ]}>
@@ -275,6 +343,15 @@ export const Checkout = () => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };
@@ -321,11 +398,11 @@ const styles = StyleSheet.create({
     color: '#43bb6c',
   },
   text: {
-    width: DriveWidth * 0.3,
+    width: DriveWidth * 0.35,
   },
   input: {
     borderColor: 'gray',
-    width: DriveWidth * 0.6,
+    width: DriveWidth * 0.55,
     padding: 1,
   },
   titleItem: {
@@ -356,6 +433,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   order: {
+    flexDirection: 'row',
     width: '95%',
     height: DriveHeight * 0.05,
     justifyContent: 'center',
