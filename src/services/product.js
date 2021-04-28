@@ -10,6 +10,9 @@ const productAPI = {
     );
     return data;
   },
+  getHintProductHomeScreen: () => {
+    return axios.get('/product/get-hint-product');
+  },
   getListFoodByCategory: async (category_id, page, filter) => {
     const data = await axios.get(
       `/product/get-product-by-category/${category_id}/${filter}?page=${page}`,

@@ -34,6 +34,8 @@ import {addItemToCart} from '../Cart/slice/cartSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-easy-toast';
 
+const checkIndexIsEven = (n) => n % 2 === 0;
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -42,8 +44,10 @@ const HomeScreen = () => {
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
 
   const [listHotProduct, setListHotProduct] = useState([]);
+  const [listHintProduct, setListHintProduct] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [loadingListHotProduct, setLoadingListHotProduct] = useState(true);
+  const [loadingListHintProduct, setLoadingListHintProduct] = useState(true);
   const [loadingListCategory, setLoadingListCategory] = useState(true);
 
   useLayoutEffect(() => {
@@ -59,10 +63,13 @@ const HomeScreen = () => {
   const getInitData = async () => {
     try {
       const hotProducts = await productAPI.getHotProductHomeScreen();
+      const hintProduct = await productAPI.getHintProductHomeScreen();
       const categories = await categoryAPI.getCategoryHomeScreen();
       setListHotProduct(hotProducts.data);
+      setListHintProduct(hintProduct.data);
       setListCategory(categories.data);
       setLoadingListHotProduct(false);
+      setLoadingListHintProduct(false);
       setLoadingListCategory(false);
     } catch (e) {
       Snackbar.show({
@@ -140,6 +147,36 @@ const HomeScreen = () => {
     return (
       <TouchableOpacity onPress={() => handleClickCategoryFood(item)}>
         <CategoryFood name={item.name} image={item.image} />
+      </TouchableOpacity>
+    );
+  };
+
+  const renderItemHint = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => handleClickCardFood(item)}
+        style={{paddingLeft: checkIndexIsEven(index) ? 5 : 0}}>
+        <CardFood
+          product_id={item.id}
+          name={item.name}
+          image={item.image}
+          price={item.price}
+          priceSale={item.priceSale}
+          newFood={item.new}
+          saleFood={item.sale}
+          like={item.like}
+          dislike={item.dislike}
+          styleContainer={{
+            width: DriveWidth * 0.45,
+            height: DriveWidth * 0.51,
+            margin: 8,
+          }}
+          styleImage={{
+            width: DriveWidth * 0.45,
+            height: DriveWidth * 0.32,
+          }}
+          onClickAddCart={() => onClickAddCart(item)}
+        />
       </TouchableOpacity>
     );
   };
@@ -247,6 +284,21 @@ const HomeScreen = () => {
               data={listCategory}
               renderItem={renderCategory}
               keyExtractor={(item) => `category-${item.id}`}
+            />
+          </View>
+        </View>
+        <View style={styles.listRecommend}>
+          <View style={styles.headerRecommend}>
+            <Text style={styles.titleItem}>GỢI Ý CHO BẠN</Text>
+          </View>
+          <View>
+            <FlatList
+              maxToRenderPerBatch={50}
+              initialNumToRender={30}
+              data={listHintProduct}
+              keyExtractor={(item) => `hint-${item.id}`}
+              numColumns={2}
+              renderItem={renderItemHint}
             />
           </View>
         </View>
