@@ -31,8 +31,6 @@ const styles = StyleSheet.create({
   container: {
     width: DriveWidth / 3 - 30,
     marginHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 10,
   },
   absoluteView: {

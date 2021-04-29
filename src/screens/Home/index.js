@@ -33,6 +33,12 @@ import {getErrorMessage} from '../../utils/HandleError';
 import {addItemToCart} from '../Cart/slice/cartSlice';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-easy-toast';
+import {
+  AdvertisementPlaceholder,
+  CardPlaceholderProductHint,
+  CardPlaceholderProductHot,
+  CategoryPlaceholder,
+} from '../../components/PlaceholderLoading';
 
 const checkIndexIsEven = (n) => n % 2 === 0;
 
@@ -46,6 +52,7 @@ const HomeScreen = () => {
   const [listHotProduct, setListHotProduct] = useState([]);
   const [listHintProduct, setListHintProduct] = useState([]);
   const [listCategory, setListCategory] = useState([]);
+  const [loadingAdvertisement, setLoadingAdvertisement] = useState(true);
   const [loadingListHotProduct, setLoadingListHotProduct] = useState(true);
   const [loadingListHintProduct, setLoadingListHintProduct] = useState(true);
   const [loadingListCategory, setLoadingListCategory] = useState(true);
@@ -68,6 +75,7 @@ const HomeScreen = () => {
       setListHotProduct(hotProducts.data);
       setListHintProduct(hintProduct.data);
       setListCategory(categories.data);
+      setLoadingAdvertisement(false);
       setLoadingListHotProduct(false);
       setLoadingListHintProduct(false);
       setLoadingListCategory(false);
@@ -214,34 +222,38 @@ const HomeScreen = () => {
       </TouchableOpacity>
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.sliderContainer}>
-          <Swiper
-            autoplay
-            horizontal
-            height={DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24)}
-            width={DriveWidth * 0.92}
-            activeDotColor="#43bb6c">
-            <View style={styles.slide}>
-              <Image
-                source={require('../../assets/banner3.jpg')}
-                resizeMode="stretch"
-                style={styles.sliderImage}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                source={require('../../assets/banner2.jpg')}
-                resizeMode="stretch"
-                style={styles.sliderImage}
-              />
-            </View>
-            <View style={styles.slide}>
-              <Image
-                source={require('../../assets/banner1.jpg')}
-                resizeMode="stretch"
-                style={styles.sliderImage}
-              />
-            </View>
-          </Swiper>
+          {loadingAdvertisement ? (
+            <AdvertisementPlaceholder />
+          ) : (
+            <Swiper
+              autoplay
+              horizontal
+              height={DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24)}
+              width={DriveWidth * 0.92}
+              activeDotColor="#43bb6c">
+              <View style={styles.slide}>
+                <Image
+                  source={require('../../assets/banner3.jpg')}
+                  resizeMode="stretch"
+                  style={styles.sliderImage}
+                />
+              </View>
+              <View style={styles.slide}>
+                <Image
+                  source={require('../../assets/banner2.jpg')}
+                  resizeMode="stretch"
+                  style={styles.sliderImage}
+                />
+              </View>
+              <View style={styles.slide}>
+                <Image
+                  source={require('../../assets/banner1.jpg')}
+                  resizeMode="stretch"
+                  style={styles.sliderImage}
+                />
+              </View>
+            </Swiper>
+          )}
         </View>
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
@@ -254,52 +266,97 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </View>
           <View>
-            <FlatList
-              horizontal
-              maxToRenderPerBatch={50}
-              initialNumToRender={30}
-              showsHorizontalScrollIndicator={false}
-              data={listHotProduct}
-              keyExtractor={(item) => `hot-${item.id}`}
-              numColumns={1}
-              renderItem={renderItemRecommend}
-            />
+            {loadingListHotProduct ? (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {[1, 2, 3, 4, 5, 6].map(() => (
+                  <CardPlaceholderProductHot />
+                ))}
+              </ScrollView>
+            ) : (
+              <FlatList
+                horizontal
+                maxToRenderPerBatch={50}
+                initialNumToRender={30}
+                showsHorizontalScrollIndicator={false}
+                data={listHotProduct}
+                keyExtractor={(item) => `hot-${item.id}`}
+                numColumns={1}
+                renderItem={renderItemRecommend}
+              />
+            )}
           </View>
         </View>
         <View style={styles.category}>
           <View style={[styles.headerRecommend, {justifyContent: 'center'}]}>
             <Text style={[styles.titleItem]}>DANH MỤC</Text>
           </View>
-          <View
-            style={{
-              marginTop: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <FlatList
-              contentContainerStyle={{
-                flexDirection: 'column',
-              }}
-              numColumns={3}
-              data={listCategory}
-              renderItem={renderCategory}
-              keyExtractor={(item) => `category-${item.id}`}
-            />
-          </View>
+          {loadingListCategory ? (
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {[1, 2, 3].map(() => (
+                  <CategoryPlaceholder />
+                ))}
+              </View>
+              <View
+                style={{
+                  marginTop: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {[1, 2, 3].map(() => (
+                  <CategoryPlaceholder />
+                ))}
+              </View>
+            </View>
+          ) : (
+            <View
+              style={{
+                marginTop: 15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FlatList
+                contentContainerStyle={{
+                  flexDirection: 'column',
+                }}
+                numColumns={3}
+                data={listCategory}
+                renderItem={renderCategory}
+                keyExtractor={(item) => `category-${item.id}`}
+              />
+            </View>
+          )}
         </View>
         <View style={styles.listRecommend}>
           <View style={styles.headerRecommend}>
             <Text style={styles.titleItem}>GỢI Ý CHO BẠN</Text>
           </View>
           <View>
-            <FlatList
-              maxToRenderPerBatch={50}
-              initialNumToRender={30}
-              data={listHintProduct}
-              keyExtractor={(item) => `hint-${item.id}`}
-              numColumns={2}
-              renderItem={renderItemHint}
-            />
+            {loadingListHintProduct ? (
+              <FlatList
+                maxToRenderPerBatch={50}
+                initialNumToRender={30}
+                data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                keyExtractor={(index) => `hint-${index}`}
+                numColumns={2}
+                renderItem={() => <CardPlaceholderProductHint />}
+              />
+            ) : (
+              <FlatList
+                maxToRenderPerBatch={50}
+                initialNumToRender={30}
+                data={listHintProduct}
+                keyExtractor={(item) => `hint-${item.id}`}
+                numColumns={2}
+                renderItem={renderItemHint}
+              />
+            )}
           </View>
         </View>
       </ScrollView>
@@ -395,7 +452,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   category: {
-    marginTop: 5,
+    marginTop: 10,
   },
   headerRecommend: {
     flexDirection: 'row',
@@ -407,6 +464,7 @@ const styles = StyleSheet.create({
   titleItem: {
     fontSize: 20,
     fontWeight: '600',
+    marginVertical: 5,
   },
   seeMore: {
     flexDirection: 'row',

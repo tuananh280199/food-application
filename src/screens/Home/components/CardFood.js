@@ -1,5 +1,5 @@
 //import node_modules
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -45,6 +45,8 @@ const CardFood = (props: CardFoodProps) => {
     onClickAddCart,
   } = props;
 
+  const [loading, setLoading] = useState(false);
+
   return (
     <View style={[styles.container, styleContainer]}>
       <View>
@@ -53,7 +55,9 @@ const CardFood = (props: CardFoodProps) => {
           source={{
             uri: image,
             priority: FastImage.priority.normal,
-          }}>
+          }}
+          onLoadStart={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}>
           <View style={styles.containNew}>
             {newFood === 1 && (
               <>
@@ -71,6 +75,12 @@ const CardFood = (props: CardFoodProps) => {
             )}
           </View>
         </FastImage>
+        {loading && (
+          <Image
+            source={require('../../../assets/default-placeholder-image.png')}
+            style={[styles.cardImage, styleImage]}
+          />
+        )}
       </View>
       <View style={styles.cardDetail}>
         <Text style={styles.titleName}>{name}</Text>
