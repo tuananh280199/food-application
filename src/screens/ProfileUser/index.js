@@ -38,6 +38,7 @@ import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import orderAPI from '../../services/order';
+import Config from 'react-native-config';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -218,7 +219,7 @@ const ProfileUserScreen = () => {
           <TouchableOpacity onPress={handleUploadFile}>
             <Image
               style={styles.image}
-              source={avatar ? {uri: avatar} : IMAGE_DEFAULT}
+              source={avatar ? {uri: `${Config.HOST + avatar}`} : IMAGE_DEFAULT}
             />
             <View style={styles.wrapperIcon}>
               <Entypo name={'camera'} size={16} color={'white'} />

@@ -22,6 +22,8 @@ export const SIGN_UP = 'SignUp';
 export const FORGOT_PASSWORD = 'ForgotPassword';
 export const CHANGE_PASSWORD = 'ChangePassword';
 export const CHANGE_PROFILE_USER = 'ChangeProfileUser';
+export const OTP_VERIFY = 'OtpVerify';
+export const NEW_PASSWORD = 'NewPassword';
 
 //user
 export const FAVOURITE_FOOD = 'FavouriteFood';

@@ -24,6 +24,16 @@ const authAPI = {
       refreshToken: refresh_token,
     });
   },
+  checkExistsUser: (username) => {
+    return axios.post('auth/check-exists-user', {
+      username,
+    });
+  },
+  forgotPassword: (id, passwordNew) => {
+    return axios.put(`auth/forgot-password/${id}`, {
+      passwordNew,
+    });
+  },
 };
 
 export default authAPI;

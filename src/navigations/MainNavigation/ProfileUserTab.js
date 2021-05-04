@@ -17,6 +17,8 @@ import {
   ORDER_HISTORY,
   PAYMENT,
   FOOD_DETAIL_FAVOURITE,
+  OTP_VERIFY,
+  NEW_PASSWORD,
 } from '../../constants/StackNavigation';
 import {SignInScreen} from '../../screens/SignIn';
 import {SignUpScreen} from '../../screens/SignUp';
@@ -27,6 +29,8 @@ import {FavouriteFoodScreen} from '../../screens/FavouriteFood';
 import {OrderHistoryScreen} from '../../screens/OrderHistory';
 import {PaymentScreen} from '../../screens/Payment';
 import {FoodDetail} from '../../screens/FoodDetail';
+import {OTPVerify} from '../../screens/OTPVerify';
+import {NewPassword} from '../../screens/ForgotPassword/NewPassword';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +50,8 @@ const ProfileUserTab = () => {
       <Stack.Screen name={ORDER_HISTORY} component={OrderHistoryScreen} />
       <Stack.Screen name={PAYMENT} component={PaymentScreen} />
       <Stack.Screen name={FOOD_DETAIL_FAVOURITE} component={FoodDetail} />
+      <Stack.Screen name={OTP_VERIFY} component={OTPVerify} />
+      <Stack.Screen name={NEW_PASSWORD} component={NewPassword} />
     </Stack.Navigator>
   );
 };
