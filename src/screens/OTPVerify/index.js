@@ -41,9 +41,6 @@ export const OTPVerify = () => {
 
   useEffect(() => {
     verifyCodeOTP();
-    return () => {
-      clearInterval(clockCall);
-    };
   }, []);
 
   const verifyCodeOTP = async () => {
@@ -52,9 +49,6 @@ export const OTPVerify = () => {
         route.params?.phone,
       );
       setConfirmCodeOTP(confirmation);
-      clockCall = setInterval(() => {
-        decrementTime();
-      }, 1000);
     } catch (e) {
       Alert.alert('Có lỗi xảy ra. Vui lòng thử lại sau !');
     }
@@ -73,15 +67,15 @@ export const OTPVerify = () => {
     }
   };
 
-  // useEffect(() => {
-  //   clockCall = setInterval(() => {
-  //     decrementTime();
-  //   }, 1000);
-  //
-  //   return () => {
-  //     clearInterval(clockCall);
-  //   };
-  // });
+  useEffect(() => {
+    clockCall = setInterval(() => {
+      decrementTime();
+    }, 1000);
+
+    return () => {
+      clearInterval(clockCall);
+    };
+  });
 
   const decrementTime = () => {
     if (countdown === 0) {
