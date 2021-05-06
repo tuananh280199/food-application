@@ -70,14 +70,14 @@ const HomeScreen = () => {
   const getInitData = async () => {
     try {
       const hotProducts = await productAPI.getHotProductHomeScreen();
-      const hintProduct = await productAPI.getHintProductHomeScreen();
-      const categories = await categoryAPI.getCategoryHomeScreen();
       setListHotProduct(hotProducts.data);
-      setListHintProduct(hintProduct.data);
-      setListCategory(categories.data);
       setLoadingAdvertisement(false);
       setLoadingListHotProduct(false);
+      const hintProduct = await productAPI.getHintProductHomeScreen();
+      setListHintProduct(hintProduct.data);
       setLoadingListHintProduct(false);
+      const categories = await categoryAPI.getCategoryHomeScreen();
+      setListCategory(categories.data);
       setLoadingListCategory(false);
     } catch (e) {
       Snackbar.show({
