@@ -39,6 +39,7 @@ import profileUserAPI from '../../services/profileUser';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import orderAPI from '../../services/order';
 import Config from 'react-native-config';
+import {Spinner} from '../../components/Spinner';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -51,6 +52,7 @@ const ProfileUserScreen = () => {
     };
   });
 
+  const [loadingChangeAvatar, setLoadingChangeAvatar] = useState(false);
   const [avatar, setAvatar] = useState(profile?.avatar);
   const [numberOrder, setNumberOrder] = useState(0);
 
@@ -116,9 +118,12 @@ const ProfileUserScreen = () => {
               ? fileBlob.uri
               : fileBlob.uri.replace('file://', ''),
         });
+        setLoadingChangeAvatar(true);
         const filePath = await profileUserAPI.uploadAvatar(profile.id, data);
         await dispatch(updateProfile({profile: filePath.data}));
+        setLoadingChangeAvatar(false);
       } catch (e) {
+        setLoadingChangeAvatar(false);
         Snackbar.show({
           text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
@@ -214,6 +219,23 @@ const ProfileUserScreen = () => {
           <FontAwesome5 name={'user-edit'} size={20} color={'#fff'} />
         </TouchableOpacity>
       </SafeAreaView>
+      {loadingChangeAvatar && (
+        <View
+          style={{
+            position: 'absolute',
+            top: DriveHeight * 0.12 - 5,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#d9d9d9',
+            opacity: 0.5,
+          }}>
+          <Spinner color={'#43bb6c'} />
+        </View>
+      )}
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity onPress={handleUploadFile}>
