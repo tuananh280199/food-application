@@ -23,6 +23,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SIGN_IN} from '../../constants/StackNavigation';
 import {getErrorMessage} from '../../utils/HandleError';
 import authAPI from '../../services/auth';
+import {DriveHeight} from '../../constants/Dimensions';
+import {Spinner} from '../../components/Spinner';
 
 export const NewPassword = () => {
   const navigation = useNavigation();
@@ -35,6 +37,7 @@ export const NewPassword = () => {
     confirmSecureTextEntry: true,
     isValidPasswordNew: true,
   });
+  const [loading, setLoading] = React.useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -94,7 +97,9 @@ export const NewPassword = () => {
       );
     } else {
       try {
+        setLoading(true);
         await authAPI.forgotPassword(route.params?.uid, data.passwordNew);
+        setLoading(false);
         Alert.alert('Thông báo', 'Lấy lại mật khẩu thành công !', [
           {
             text: 'Huỷ',
@@ -107,6 +112,7 @@ export const NewPassword = () => {
           },
         ]);
       } catch (e) {
+        setLoading(false);
         Snackbar.show({
           text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
@@ -194,14 +200,17 @@ export const NewPassword = () => {
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={handleChangePasswordSubmit}>
+              onPress={handleChangePasswordSubmit}
+              disabled={loading}>
               <LinearGradient
                 colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
+                {loading && <Spinner color={'#fff'} />}
                 <Text
                   style={[
                     styles.textSign,
                     {
+                      marginLeft: 9,
                       color: '#fff',
                     },
                   ]}>
@@ -297,8 +306,9 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   signIn: {
+    flexDirection: 'row',
     width: '100%',
-    height: 50,
+    height: DriveHeight * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

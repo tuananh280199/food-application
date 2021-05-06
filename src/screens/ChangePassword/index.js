@@ -25,6 +25,8 @@ import {PROFILE_USER_SCREEN} from '../../constants/StackNavigation';
 import {updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import authAPI from '../../services/auth';
+import {DriveHeight} from '../../constants/Dimensions';
+import {Spinner} from '../../components/Spinner';
 
 const ChangePasswordScreen = () => {
   const navigation = useNavigation();
@@ -39,6 +41,7 @@ const ChangePasswordScreen = () => {
     confirmSecureTextEntry: true,
     isValidPasswordNew: true,
   });
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -109,11 +112,13 @@ const ChangePasswordScreen = () => {
       );
     } else {
       try {
+        setLoading(true);
         const params = {
           passwordOld: data.passwordOld,
           passwordNew: data.passwordNew,
         };
         await authAPI.resetPassword(uid, params);
+        setLoading(false);
         Alert.alert('Thông báo', 'Đổi mật khẩu thành công !', [
           {
             text: 'OK',
@@ -123,6 +128,7 @@ const ChangePasswordScreen = () => {
           },
         ]);
       } catch (e) {
+        setLoading(false);
         Snackbar.show({
           text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
@@ -224,14 +230,17 @@ const ChangePasswordScreen = () => {
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={handleChangePasswordSubmit}>
+              onPress={handleChangePasswordSubmit}
+              disabled={loading}>
               <LinearGradient
                 colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
+                {loading && <Spinner color={'#fff'} />}
                 <Text
                   style={[
                     styles.textSign,
                     {
+                      marginLeft: 9,
                       color: '#fff',
                     },
                   ]}>
@@ -327,8 +336,9 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   signIn: {
+    flexDirection: 'row',
     width: '100%',
-    height: 50,
+    height: DriveHeight * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

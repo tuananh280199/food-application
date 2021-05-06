@@ -1,5 +1,5 @@
 //import node_modules
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -30,6 +30,8 @@ import {validateEmail} from '../../utils/ValidateEmail';
 import profileUserAPI from '../../services/profileUser';
 import {getErrorMessage} from '../../utils/HandleError';
 import {updateProfile} from '../../slices/authSlice';
+import {Spinner} from '../../components/Spinner';
+import { DriveHeight } from "../../constants/Dimensions";
 
 const ChangeProfileScreen = () => {
   const navigation = useNavigation();
@@ -67,6 +69,7 @@ const ChangeProfileScreen = () => {
     isValidPhone: true,
     isValidEmail: true,
   });
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -171,6 +174,7 @@ const ChangeProfileScreen = () => {
       ]);
     } else {
       try {
+        setLoading(true);
         const params = {
           name: data.name,
           nickname: data.nickname,
@@ -180,8 +184,10 @@ const ChangeProfileScreen = () => {
         };
         const response = await profileUserAPI.changeProfileUser(uid, params);
         await dispatch(updateProfile({profile: response.data}));
+        setLoading(false);
         navigation.navigate(PROFILE_USER_SCREEN);
       } catch (e) {
+        setLoading(false);
         Snackbar.show({
           text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
@@ -330,14 +336,17 @@ const ChangeProfileScreen = () => {
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={handleChangePasswordSubmit}>
+              onPress={handleChangePasswordSubmit}
+              disabled={loading}>
               <LinearGradient
                 colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
+                {loading && <Spinner color={'#fff'} />}
                 <Text
                   style={[
                     styles.textSign,
                     {
+                      marginLeft: 9,
                       color: '#fff',
                     },
                   ]}>
@@ -433,8 +442,9 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   signIn: {
+    flexDirection: 'row',
     width: '100%',
-    height: 50,
+    height: DriveHeight * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

@@ -1,5 +1,5 @@
 //import node_modules
-import React, {useLayoutEffect} from 'react';
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -24,6 +24,8 @@ import Snackbar from 'react-native-snackbar';
 import authAPI from '../../services/auth';
 import {getErrorMessage} from '../../utils/HandleError';
 import {SIGN_IN} from '../../constants/StackNavigation';
+import {DriveHeight} from '../../constants/Dimensions';
+import {Spinner} from '../../components/Spinner';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -38,6 +40,7 @@ const SignUpScreen = () => {
     isValidUser: true,
     isValidPassword: true,
   });
+  const [loading, setLoading] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -137,17 +140,20 @@ const SignUpScreen = () => {
       );
     } else {
       try {
+        setLoading(true);
         const params = {
           username: data.username,
           password: data.password,
         };
         const response = await authAPI.register(params);
         if (response) {
+          setLoading(false);
           Alert.alert('Thông báo', 'Đăng ký thành công !', [
             {text: 'OK', onPress: () => navigation.navigate(SIGN_IN)},
           ]);
         }
       } catch (e) {
+        setLoading(false);
         Snackbar.show({
           text: getErrorMessage(e),
           duration: Snackbar.LENGTH_SHORT,
@@ -260,14 +266,17 @@ const SignUpScreen = () => {
           <View style={styles.button}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={handleSignUpSubmit}>
+              onPress={handleSignUpSubmit}
+              disabled={loading}>
               <LinearGradient
                 colors={['#43bb6c', '#20c969']}
                 style={styles.signIn}>
+                {loading && <Spinner color={'#fff'} />}
                 <Text
                   style={[
                     styles.textSign,
                     {
+                      marginLeft: 9,
                       color: '#fff',
                     },
                   ]}>
@@ -359,8 +368,9 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 30 : 15,
   },
   signIn: {
+    flexDirection: 'row',
     width: '100%',
-    height: 50,
+    height: DriveHeight * 0.05,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
