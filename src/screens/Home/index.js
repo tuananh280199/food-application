@@ -70,13 +70,13 @@ const HomeScreen = () => {
   const getInitData = async () => {
     try {
       const hotProducts = await productAPI.getHotProductHomeScreen();
-      setListHotProduct(hotProducts.data);
-      setLoadingAdvertisement(false);
-      setLoadingListHotProduct(false);
       const hintProduct = await productAPI.getHintProductHomeScreen();
+      const categories = await categoryAPI.getCategoryHomeScreen();
+      setLoadingAdvertisement(false);
+      setListHotProduct(hotProducts.data);
+      setLoadingListHotProduct(false);
       setListHintProduct(hintProduct.data);
       setLoadingListHintProduct(false);
-      const categories = await categoryAPI.getCategoryHomeScreen();
       setListCategory(categories.data);
       setLoadingListCategory(false);
     } catch (e) {

@@ -6,6 +6,7 @@ import ActionButton from 'react-native-action-button';
 import MapView, {Marker} from 'react-native-maps';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 
 //others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
@@ -47,8 +48,8 @@ const ContactScreen = () => {
     });
   }, [navigation]);
 
-  const handleGoBack = () => {
-    navigation.goBack();
+  const handleCallPhone = () => {
+    RNImmediatePhoneCall.immediatePhoneCall('0372842282');
   };
 
   return (
@@ -113,12 +114,6 @@ const ContactScreen = () => {
         </View>
         <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item
-            buttonColor="#9b59b6"
-            title="Gửi Email"
-            onPress={() => console.log('notes tapped!')}>
-            <Fontisto name="email" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item
             buttonColor="#3498db"
             title="Gửi Tin Nhắn"
             onPress={() => {}}>
@@ -127,7 +122,7 @@ const ContactScreen = () => {
           <ActionButton.Item
             buttonColor="#1abc9c"
             title="Gọi Điện"
-            onPress={() => {}}>
+            onPress={handleCallPhone}>
             <FontAwesome5 name="phone" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>

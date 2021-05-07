@@ -214,6 +214,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-linear-gradient')
     implementation project(':lottie-react-native')
+    implementation project(':react-native-immediate-phone-call')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
