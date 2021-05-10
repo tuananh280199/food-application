@@ -1,5 +1,5 @@
 //import node_modules
-import React, { useLayoutEffect, useState } from "react";
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -164,150 +165,156 @@ const SignUpScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.flexContainer}>
-        <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <SafeAreaView style={styles.header}>
-          <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
-        </SafeAreaView>
-        <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Tài khoản"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleUsernameChange(value)}
-            />
-            {data.checkUsernameChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.flexContainer}>
+          <StatusBar backgroundColor="#20c997" barStyle="light-content" />
+          <SafeAreaView style={styles.header}>
+            <Text style={styles.textHeader}>Đăng Ký Ngay</Text>
+          </SafeAreaView>
+          <Animatable.View style={styles.footer} animation="fadeInUpBig">
+            <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
+            <View style={styles.action}>
+              <FontAwesome name="user-o" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Tài khoản"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleUsernameChange(value)}
+              />
+              {data.checkUsernameChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            {data.isValidUser ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Tài khoản chứa ít nhất 4 ký tự
+                </Text>
               </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidUser ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>
-                Tài khoản chứa ít nhất 4 ký tự
+            )}
+            <Text style={styles.textFooter}>Mật Khẩu</Text>
+            <View style={styles.action}>
+              <Feather name="lock" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Mật khẩu"
+                placeholderTextColor="#666666"
+                secureTextEntry={data.secureTextEntry ? true : false}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handlePasswordChange(value)}
+                onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+              />
+              <TouchableOpacity onPress={changeSecureTextEntry}>
+                {data.secureTextEntry ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ) : (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+            {data.isValidPassword ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Mật khẩu chứa ít nhất 8 kí tự
+                </Text>
+              </Animatable.View>
+            )}
+            <Text style={styles.textFooter}>Xác Nhận Mật Khẩu</Text>
+            <View style={styles.action}>
+              <Feather name="lock" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Xác nhận mật khẩu"
+                placeholderTextColor="#666666"
+                secureTextEntry={data.confirmSecureTextEntry ? true : false}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleConfirmPasswordChange(value)}
+              />
+              <TouchableOpacity onPress={changeConfirmSecureTextEntry}>
+                {data.confirmSecureTextEntry ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ) : (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.textPrivate}>
+              <Text style={styles.color_textPrivate}>
+                Bằng cách đăng ký, bạn đồng ý với
               </Text>
-            </Animatable.View>
-          )}
-          <Text style={styles.textFooter}>Mật Khẩu</Text>
-          <View style={styles.action}>
-            <Feather name="lock" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Mật khẩu"
-              placeholderTextColor="#666666"
-              secureTextEntry={data.secureTextEntry ? true : false}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handlePasswordChange(value)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-            />
-            <TouchableOpacity onPress={changeSecureTextEntry}>
-              {data.secureTextEntry ? (
-                <Feather name="eye-off" color="grey" size={20} />
-              ) : (
-                <Feather name="eye" color="grey" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          {data.isValidPassword ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>Mật khẩu chứa ít nhất 8 kí tự</Text>
-            </Animatable.View>
-          )}
-          <Text style={styles.textFooter}>Xác Nhận Mật Khẩu</Text>
-          <View style={styles.action}>
-            <Feather name="lock" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Xác nhận mật khẩu"
-              placeholderTextColor="#666666"
-              secureTextEntry={data.confirmSecureTextEntry ? true : false}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleConfirmPasswordChange(value)}
-            />
-            <TouchableOpacity onPress={changeConfirmSecureTextEntry}>
-              {data.confirmSecureTextEntry ? (
-                <Feather name="eye-off" color="grey" size={20} />
-              ) : (
-                <Feather name="eye" color="grey" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.textPrivate}>
-            <Text style={styles.color_textPrivate}>
-              Bằng cách đăng ký, bạn đồng ý với
-            </Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              <TouchableOpacity>
-                <Text>Điều khoản dịch vụ</Text>
+              <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
+                {' '}
+                <TouchableOpacity>
+                  <Text>Điều khoản dịch vụ</Text>
+                </TouchableOpacity>
+              </Text>
+              <Text style={styles.color_textPrivate}> và</Text>
+              <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
+                {' '}
+                <TouchableOpacity>
+                  <Text>Chính sách bảo mật</Text>
+                </TouchableOpacity>
+              </Text>
+              <Text style={styles.color_textPrivate}> của chúng tôi</Text>
+            </View>
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={handleSignUpSubmit}
+                disabled={loading}>
+                <LinearGradient
+                  colors={['#43bb6c', '#20c969']}
+                  style={styles.signIn}>
+                  {loading && <Spinner color={'#fff'} />}
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        marginLeft: 9,
+                        color: '#fff',
+                      },
+                    ]}>
+                    Đăng Ký
+                  </Text>
+                </LinearGradient>
               </TouchableOpacity>
-            </Text>
-            <Text style={styles.color_textPrivate}> và</Text>
-            <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>
-              {' '}
-              <TouchableOpacity>
-                <Text>Chính sách bảo mật</Text>
-              </TouchableOpacity>
-            </Text>
-            <Text style={styles.color_textPrivate}> của chúng tôi</Text>
-          </View>
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signIn}
-              onPress={handleSignUpSubmit}
-              disabled={loading}>
-              <LinearGradient
-                colors={['#43bb6c', '#20c969']}
-                style={styles.signIn}>
-                {loading && <Spinner color={'#fff'} />}
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={[
+                  styles.signIn,
+                  {
+                    borderColor: '#43bb6c',
+                    borderWidth: 1,
+                    marginTop: 7,
+                  },
+                ]}>
                 <Text
                   style={[
                     styles.textSign,
                     {
-                      marginLeft: 9,
-                      color: '#fff',
+                      color: '#43bb6c',
                     },
                   ]}>
-                  Đăng Ký
+                  Đăng Nhập
                 </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#43bb6c',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#43bb6c',
-                  },
-                ]}>
-                Đăng Nhập
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animatable.View>
-      </View>
-    </TouchableWithoutFeedback>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -326,8 +333,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    padding: 20,
   },
   textHeader: {
     color: '#fff',
@@ -337,7 +343,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
-    marginTop: Platform.OS === 'ios' ? 30 : 15,
+    marginTop: 15,
   },
   action: {
     flexDirection: 'row',
@@ -370,7 +376,7 @@ const styles = StyleSheet.create({
   signIn: {
     flexDirection: 'row',
     width: '100%',
-    height: DriveHeight * 0.05,
+    paddingVertical: 11,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

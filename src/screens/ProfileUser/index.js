@@ -22,6 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import Snackbar from 'react-native-snackbar';
+import ImageResizer from 'react-native-image-resizer';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
@@ -110,14 +111,33 @@ const ProfileUserScreen = () => {
     async (fileBlob) => {
       try {
         const data = new FormData();
+        const resizedImage = await ImageResizer.createResizedImage(
+          fileBlob.uri,
+          70,
+          70,
+          'JPEG',
+          100,
+          0,
+          undefined,
+          false,
+          {mode: 'contain', onlyScaleDown: false},
+        );
         data.append('file', {
-          name: fileBlob.fileName,
-          type: fileBlob.type,
-          uri:
-            Platform.OS === 'android'
-              ? fileBlob.uri
-              : fileBlob.uri.replace('file://', ''),
+          name: resizedImage.name,
+          // type: resizedImage.type,
+          uri: resizedImage.uri,
+          // Platform.OS === 'android'
+          //   ? resizedImage.uri
+          //   : resizedImage.uri.replace('file://', ''),
         });
+
+        // data.append('file', {
+        //   name: fileBlob.name,
+        //   type: fileBlob.type,
+        //   uri: Platform.OS === 'android'
+        //       ? fileBlob.uri
+        //       : fileBlob.uri.replace('file://', ''),
+        // });
         setLoadingChangeAvatar(true);
         const filePath = await profileUserAPI.uploadAvatar(profile.id, data);
         await dispatch(updateProfile({profile: filePath.data}));

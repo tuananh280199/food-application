@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   order: {
     flexDirection: 'row',
     width: '95%',
-    height: DriveHeight * 0.05,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

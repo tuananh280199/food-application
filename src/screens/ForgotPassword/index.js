@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -149,113 +150,119 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.flexContainer}>
-        <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <View style={styles.header}>
-          <Text style={styles.textHeader}>Quên Mật Khẩu</Text>
-        </View>
-        <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
-          <Ionicons name="arrow-back" color={'white'} size={30} />
-        </TouchableOpacity>
-        <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
-          <View style={styles.action}>
-            <FontAwesome name="user-o" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Tài khoản"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleUsernameChange(value)}
-              onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-            />
-            {data.checkUsernameChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.flexContainer}>
+          <StatusBar backgroundColor="#20c997" barStyle="light-content" />
+          <SafeAreaView style={styles.header}>
+            <Text style={styles.textHeader}>Quên Mật Khẩu</Text>
+          </SafeAreaView>
+          <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+            <Ionicons name="arrow-back" color={'white'} size={30} />
+          </TouchableOpacity>
+          <Animatable.View style={styles.footer} animation="fadeInUpBig">
+            <Text style={[styles.textFooter, {marginTop: 0}]}>Tài Khoản</Text>
+            <View style={styles.action}>
+              <FontAwesome name="user-o" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Tài khoản"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleUsernameChange(value)}
+                onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
+              />
+              {data.checkUsernameChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            {data.isValidUser ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Tài khoản chứa ít nhất 4 ký tự
+                </Text>
               </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidUser ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>
-                Tài khoản chứa ít nhất 4 ký tự
-              </Text>
-            </Animatable.View>
-          )}
-          <Text style={[styles.textFooter, {marginTop: 15}]}>
-            Số Điện Thoại
-          </Text>
-          <View style={styles.action}>
-            <FontAwesome name="phone" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Số điện thoại"
-              placeholderTextColor="#666666"
-              keyboardType={'numeric'}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handlePhoneChange(value)}
-              value={data.phone}
-            />
-            {data.checkPhoneChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+            )}
+            <Text style={[styles.textFooter, {marginTop: 15}]}>
+              Số Điện Thoại
+            </Text>
+            <View style={styles.action}>
+              <FontAwesome name="phone" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Số điện thoại"
+                placeholderTextColor="#666666"
+                keyboardType={'numeric'}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handlePhoneChange(value)}
+                value={data.phone}
+              />
+              {data.checkPhoneChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            {data.isValidPhone ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Số điện thoại phải đúng 10 số
+                </Text>
               </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidPhone ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>Số điện thoại phải đúng 10 số</Text>
-            </Animatable.View>
-          )}
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signIn}
-              onPress={handleChangePasswordSubmit}>
-              <LinearGradient
-                colors={['#43bb6c', '#20c969']}
-                style={styles.signIn}>
+            )}
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={handleChangePasswordSubmit}>
+                <LinearGradient
+                  colors={['#43bb6c', '#20c969']}
+                  style={styles.signIn}>
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        color: '#fff',
+                      },
+                    ]}>
+                    Lấy Lại Mật Khẩu
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCancel}
+                style={[
+                  styles.signIn,
+                  {
+                    borderColor: '#43bb6c',
+                    borderWidth: 1,
+                    marginTop: 7,
+                  },
+                ]}>
                 <Text
                   style={[
                     styles.textSign,
                     {
-                      color: '#fff',
+                      color: '#43bb6c',
                     },
                   ]}>
-                  Lấy Lại Mật Khẩu
+                  Huỷ
                 </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCancel}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#43bb6c',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#43bb6c',
-                  },
-                ]}>
-                Huỷ
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animatable.View>
-      </View>
-    </TouchableWithoutFeedback>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -279,8 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    padding: 20,
   },
   textHeader: {
     color: '#fff',
@@ -290,7 +296,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
-    marginTop: Platform.OS === 'ios' ? 30 : 15,
+    marginTop: 15,
   },
   action: {
     flexDirection: 'row',
@@ -322,7 +328,7 @@ const styles = StyleSheet.create({
   },
   signIn: {
     width: '100%',
-    height: 50,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

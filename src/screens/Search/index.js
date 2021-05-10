@@ -39,8 +39,6 @@ import {
 import {addItemToCart} from '../Cart/slice/cartSlice';
 import {Image} from 'react-native-animatable';
 
-const checkIndexIsEven = (n) => n % 2 === 0;
-
 const SearchScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -199,9 +197,7 @@ const SearchScreen = () => {
 
   const renderItemRecommend = ({item, index}) => {
     return (
-      <TouchableOpacity
-        onPress={() => handleClickCardFood(item)}
-        style={{paddingLeft: checkIndexIsEven(index) ? 5 : 0}}>
+      <TouchableOpacity onPress={() => handleClickCardFood(item)}>
         <CardFood
           product_id={item.id}
           name={item.name}

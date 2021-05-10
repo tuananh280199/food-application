@@ -33,21 +33,21 @@ export const CardPlaceholderProductHot = () => {
         flex: 1,
         margin: 11,
         width: DriveWidth * 0.47,
-        height: DriveWidth * 0.54,
+        height: DriveWidth * 0.52,
       }}>
       <SkeletonPlaceholder>
         <View>
           <View
             style={{
               width: DriveWidth * 0.47,
-              height: DriveWidth * 0.35,
+              height: DriveWidth * 0.33,
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             }}
           />
           <View
             style={{
-              marginTop: 5,
+              marginTop: 3,
               width: DriveWidth * 0.47,
               height: DriveWidth * 0.06,
             }}
@@ -55,14 +55,14 @@ export const CardPlaceholderProductHot = () => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 width: DriveWidth * 0.21,
                 height: DriveWidth * 0.06,
               }}
             />
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 width: DriveWidth * 0.25,
                 height: DriveWidth * 0.06,
               }}
@@ -71,7 +71,7 @@ export const CardPlaceholderProductHot = () => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 width: DriveWidth * 0.18,
                 height: DriveWidth * 0.06,
                 borderBottomLeftRadius: 5,
@@ -79,14 +79,14 @@ export const CardPlaceholderProductHot = () => {
             />
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 width: DriveWidth * 0.18,
                 height: DriveWidth * 0.06,
               }}
             />
             <View
               style={{
-                marginTop: 5,
+                marginTop: 3,
                 width: DriveWidth * 0.09,
                 height: DriveWidth * 0.06,
                 borderBottomRightRadius: 5,

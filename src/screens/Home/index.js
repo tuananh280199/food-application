@@ -40,8 +40,6 @@ import {
   CategoryPlaceholder,
 } from '../../components/PlaceholderLoading';
 
-const checkIndexIsEven = (n) => n % 2 === 0;
-
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -161,9 +159,7 @@ const HomeScreen = () => {
 
   const renderItemHint = ({item, index}) => {
     return (
-      <TouchableOpacity
-        onPress={() => handleClickCardFood(item)}
-        style={{paddingLeft: checkIndexIsEven(index) ? 5 : 0}}>
+      <TouchableOpacity onPress={() => handleClickCardFood(item)}>
         <CardFood
           product_id={item.id}
           name={item.name}
@@ -198,7 +194,7 @@ const HomeScreen = () => {
         ]}>
         <Image
           source={require('./../../assets/logo-khoaikhau.png')}
-          style={{height: 38, width: 38}}
+          style={{height: 38, width: 38, marginTop: -10}}
         />
         <Text style={styles.titleHeader}>TRANG CHỦ</Text>
         <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
@@ -207,7 +203,7 @@ const HomeScreen = () => {
         style={[
           styles.search,
           Platform.OS === 'android' ? {height: 42} : null,
-          Platform.OS === 'ios' ? {padding: 11} : null,
+          Platform.OS === 'ios' ? {padding: 10} : null,
         ]}
         onPress={() => navigation.navigate(SEARCH)}>
         <View style={styles.searchWrapper}>
@@ -396,11 +392,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'white',
     backgroundColor: '#c3e8f7',
+    marginTop: -10,
   },
   titleHeader: {
     color: 'white',
     fontSize: 22,
     fontWeight: '700',
+    marginTop: -10,
   },
   search: {
     marginHorizontal: 20,
@@ -458,8 +456,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 5,
+    paddingVertical: 5,
   },
   titleItem: {
     fontSize: 20,

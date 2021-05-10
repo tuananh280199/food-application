@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   order: {
     width: '100%',
-    height: DriveHeight * 0.05,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

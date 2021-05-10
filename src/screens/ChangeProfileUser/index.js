@@ -12,6 +12,7 @@ import {
   Keyboard,
   Alert,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,7 +32,6 @@ import profileUserAPI from '../../services/profileUser';
 import {getErrorMessage} from '../../utils/HandleError';
 import {updateProfile} from '../../slices/authSlice';
 import {Spinner} from '../../components/Spinner';
-import { DriveHeight } from "../../constants/Dimensions";
 
 const ChangeProfileScreen = () => {
   const navigation = useNavigation();
@@ -219,165 +219,169 @@ const ChangeProfileScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.flexContainer}>
-        <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <SafeAreaView style={styles.header}>
-          <Text style={styles.textHeader}>Sửa Thông Tin</Text>
-          <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" color={'white'} size={30} />
-          </TouchableOpacity>
-        </SafeAreaView>
-        <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={[styles.textFooter]}>Tên Khách Hàng</Text>
-          <View style={styles.action}>
-            <FontAwesome name="user" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Tên khách hàng"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleNameChange(value)}
-              value={data.name}
-            />
-            {data.checkNameChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.flexContainer}>
+          <StatusBar backgroundColor="#20c997" barStyle="light-content" />
+          <SafeAreaView style={styles.header}>
+            <Text style={styles.textHeader}>Sửa Thông Tin</Text>
+            <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+              <Ionicons name="arrow-back" color={'white'} size={30} />
+            </TouchableOpacity>
+          </SafeAreaView>
+          <Animatable.View style={styles.footer} animation="fadeInUpBig">
+            <Text style={[styles.textFooter]}>Tên Khách Hàng</Text>
+            <View style={styles.action}>
+              <FontAwesome name="user" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Tên khách hàng"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleNameChange(value)}
+                value={data.name}
+              />
+              {data.checkNameChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            <Text style={styles.textFooter}>Bí Danh</Text>
+            <View style={styles.action}>
+              <FontAwesome name="user-secret" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Bí danh"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleNickNameChange(value)}
+                value={data.nickname}
+              />
+              {data.checkNickNameChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            <Text style={styles.textFooter}>Số Điện Thoại</Text>
+            <View style={styles.action}>
+              <FontAwesome name="phone" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Số điện thoại"
+                placeholderTextColor="#666666"
+                keyboardType={'numeric'}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handlePhoneChange(value)}
+                value={data.phone}
+              />
+              {data.checkPhoneChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            {data.isValidPhone ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Số điện thoại phải đúng 10 số
+                </Text>
               </Animatable.View>
-            ) : null}
-          </View>
-          <Text style={[styles.textFooter, {marginTop: 15}]}>Bí Danh</Text>
-          <View style={styles.action}>
-            <FontAwesome name="user-secret" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Bí danh"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleNickNameChange(value)}
-              value={data.nickname}
-            />
-            {data.checkNickNameChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
+            )}
+            <Text style={styles.textFooter}>Địa Chỉ</Text>
+            <View style={styles.action}>
+              <Entypo name="address" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Địa chỉ"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleAddressChange(value)}
+                value={data.address}
+              />
+              {data.checkAddressChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            <Text style={styles.textFooter}>Email</Text>
+            <View style={styles.action}>
+              <Entypo name="email" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="example@gmail.com"
+                placeholderTextColor="#666666"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleEmailChange(value)}
+                value={data.email}
+              />
+              {data.checkEmailChange ? (
+                <Animatable.View animation="bounceIn">
+                  <Feather name="check-circle" color="green" size={20} />
+                </Animatable.View>
+              ) : null}
+            </View>
+            {data.isValidEmail ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>Email chưa đúng định dạng</Text>
               </Animatable.View>
-            ) : null}
-          </View>
-          <Text style={[styles.textFooter, {marginTop: 15}]}>
-            Số Điện Thoại
-          </Text>
-          <View style={styles.action}>
-            <FontAwesome name="phone" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Số điện thoại"
-              placeholderTextColor="#666666"
-              keyboardType={'numeric'}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handlePhoneChange(value)}
-              value={data.phone}
-            />
-            {data.checkPhoneChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidPhone ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>Số điện thoại phải đúng 10 số</Text>
-            </Animatable.View>
-          )}
-          <Text style={[styles.textFooter, {marginTop: 15}]}>Địa Chỉ</Text>
-          <View style={styles.action}>
-            <Entypo name="address" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Địa chỉ"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleAddressChange(value)}
-              value={data.address}
-            />
-            {data.checkAddressChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          <Text style={[styles.textFooter, {marginTop: 15}]}>Email</Text>
-          <View style={styles.action}>
-            <Entypo name="email" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="example@gmail.com"
-              placeholderTextColor="#666666"
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleEmailChange(value)}
-              value={data.email}
-            />
-            {data.checkEmailChange ? (
-              <Animatable.View animation="bounceIn">
-                <Feather name="check-circle" color="green" size={20} />
-              </Animatable.View>
-            ) : null}
-          </View>
-          {data.isValidEmail ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>Email chưa đúng định dạng</Text>
-            </Animatable.View>
-          )}
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signIn}
-              onPress={handleChangePasswordSubmit}
-              disabled={loading}>
-              <LinearGradient
-                colors={['#43bb6c', '#20c969']}
-                style={styles.signIn}>
-                {loading && <Spinner color={'#fff'} />}
+            )}
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={handleChangePasswordSubmit}
+                disabled={loading}>
+                <LinearGradient
+                  colors={['#43bb6c', '#20c969']}
+                  style={styles.signIn}>
+                  {loading && <Spinner color={'#fff'} />}
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        marginLeft: 9,
+                        color: '#fff',
+                      },
+                    ]}>
+                    Đổi Thông Tin
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCancel}
+                style={[
+                  styles.signIn,
+                  {
+                    borderColor: '#43bb6c',
+                    borderWidth: 1,
+                    marginTop: 7,
+                  },
+                ]}>
                 <Text
                   style={[
                     styles.textSign,
                     {
-                      marginLeft: 9,
-                      color: '#fff',
+                      color: '#43bb6c',
                     },
                   ]}>
-                  Đổi Thông Tin
+                  Huỷ
                 </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCancel}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#43bb6c',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#43bb6c',
-                  },
-                ]}>
-                Huỷ
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animatable.View>
-      </View>
-    </TouchableWithoutFeedback>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -402,7 +406,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 15,
   },
   textHeader: {
     color: '#fff',
@@ -411,20 +415,14 @@ const styles = StyleSheet.create({
   },
   textFooter: {
     color: '#05375a',
-    fontSize: 18,
+    fontSize: 15,
+    marginTop: 10,
   },
   action: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 7,
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
     paddingBottom: 5,
   },
   textInput: {
@@ -439,12 +437,12 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   signIn: {
     flexDirection: 'row',
     width: '100%',
-    height: DriveHeight * 0.05,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

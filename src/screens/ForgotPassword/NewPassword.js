@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -23,7 +24,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SIGN_IN} from '../../constants/StackNavigation';
 import {getErrorMessage} from '../../utils/HandleError';
 import authAPI from '../../services/auth';
-import {DriveHeight} from '../../constants/Dimensions';
 import {Spinner} from '../../components/Spinner';
 
 export const NewPassword = () => {
@@ -137,111 +137,119 @@ export const NewPassword = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.flexContainer}>
-        <StatusBar backgroundColor="#20c997" barStyle="light-content" />
-        <View style={styles.header}>
-          <Text style={styles.textHeader}>Mật Khẩu Mới</Text>
-        </View>
-        <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
-          <Ionicons name="arrow-back" color={'white'} size={30} />
-        </TouchableOpacity>
-        <Animatable.View style={styles.footer} animation="fadeInUpBig">
-          <Text style={[styles.textFooter, {marginTop: 30}]}>Mật Khẩu Mới</Text>
-          <View style={styles.action}>
-            <Feather name="lock" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Mật khẩu mới"
-              placeholderTextColor="#666666"
-              secureTextEntry={data.secureTextEntryNew ? true : false}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handlePasswordNewChange(value)}
-              value={data.passwordNew}
-            />
-            <TouchableOpacity onPress={changeSecureTextEntryNew}>
-              {data.secureTextEntryNew ? (
-                <Feather name="eye-off" color="grey" size={20} />
-              ) : (
-                <Feather name="eye" color="grey" size={20} />
-              )}
-            </TouchableOpacity>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.flexContainer}>
+          <StatusBar backgroundColor="#20c997" barStyle="light-content" />
+          <View style={styles.header}>
+            <Text style={styles.textHeader}>Mật Khẩu Mới</Text>
           </View>
-          {data.isValidPasswordNew ? null : (
-            <Animatable.View
-              animation="fadeInLeft"
-              duration={500}
-              style={{marginTop: 5}}>
-              <Text style={styles.errorMsg}>Mật khẩu chứa ít nhất 8 kí tự</Text>
-            </Animatable.View>
-          )}
-          <Text style={[styles.textFooter, {marginTop: 30}]}>
-            Xác Nhận Mật Khẩu
-          </Text>
-          <View style={styles.action}>
-            <Feather name="lock" color={'#05375a'} size={20} />
-            <TextInput
-              placeholder="Xác nhận mật khẩu"
-              placeholderTextColor="#666666"
-              secureTextEntry={data.confirmSecureTextEntry ? true : false}
-              style={styles.textInput}
-              autoCapitalize="none"
-              onChangeText={(value) => handleConfirmPasswordChange(value)}
-              value={data.confirmPassword}
-            />
-            <TouchableOpacity onPress={changeConfirmSecureTextEntry}>
-              {data.confirmSecureTextEntry ? (
-                <Feather name="eye-off" color="grey" size={20} />
-              ) : (
-                <Feather name="eye" color="grey" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.button}>
-            <TouchableOpacity
-              style={styles.signIn}
-              onPress={handleChangePasswordSubmit}
-              disabled={loading}>
-              <LinearGradient
-                colors={['#43bb6c', '#20c969']}
-                style={styles.signIn}>
-                {loading && <Spinner color={'#fff'} />}
+          <TouchableOpacity style={styles.iconBack} onPress={handleGoBack}>
+            <Ionicons name="arrow-back" color={'white'} size={30} />
+          </TouchableOpacity>
+          <Animatable.View style={styles.footer} animation="fadeInUpBig">
+            <Text style={[styles.textFooter, {marginTop: 30}]}>
+              Mật Khẩu Mới
+            </Text>
+            <View style={styles.action}>
+              <Feather name="lock" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Mật khẩu mới"
+                placeholderTextColor="#666666"
+                secureTextEntry={data.secureTextEntryNew ? true : false}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handlePasswordNewChange(value)}
+                value={data.passwordNew}
+              />
+              <TouchableOpacity onPress={changeSecureTextEntryNew}>
+                {data.secureTextEntryNew ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ) : (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+            {data.isValidPasswordNew ? null : (
+              <Animatable.View
+                animation="fadeInLeft"
+                duration={500}
+                style={{marginTop: 5}}>
+                <Text style={styles.errorMsg}>
+                  Mật khẩu chứa ít nhất 8 kí tự
+                </Text>
+              </Animatable.View>
+            )}
+            <Text style={[styles.textFooter, {marginTop: 30}]}>
+              Xác Nhận Mật Khẩu
+            </Text>
+            <View style={styles.action}>
+              <Feather name="lock" color={'#05375a'} size={20} />
+              <TextInput
+                placeholder="Xác nhận mật khẩu"
+                placeholderTextColor="#666666"
+                secureTextEntry={data.confirmSecureTextEntry ? true : false}
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(value) => handleConfirmPasswordChange(value)}
+                value={data.confirmPassword}
+              />
+              <TouchableOpacity onPress={changeConfirmSecureTextEntry}>
+                {data.confirmSecureTextEntry ? (
+                  <Feather name="eye-off" color="grey" size={20} />
+                ) : (
+                  <Feather name="eye" color="grey" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.signIn}
+                onPress={handleChangePasswordSubmit}
+                disabled={loading}>
+                <LinearGradient
+                  colors={['#43bb6c', '#20c969']}
+                  style={styles.signIn}>
+                  {loading && <Spinner color={'#fff'} />}
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        marginLeft: 9,
+                        color: '#fff',
+                      },
+                    ]}>
+                    ĐỒNG Ý
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleCancel}
+                style={[
+                  styles.signIn,
+                  {
+                    borderColor: '#43bb6c',
+                    borderWidth: 1,
+                    marginTop: 7,
+                  },
+                ]}>
                 <Text
                   style={[
                     styles.textSign,
                     {
-                      marginLeft: 9,
-                      color: '#fff',
+                      color: '#43bb6c',
                     },
                   ]}>
-                  ĐỒNG Ý
+                  Huỷ
                 </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleCancel}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#43bb6c',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#43bb6c',
-                  },
-                ]}>
-                Huỷ
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </Animatable.View>
-      </View>
-    </TouchableWithoutFeedback>
+              </TouchableOpacity>
+            </View>
+          </Animatable.View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -265,8 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    padding: 20,
   },
   textHeader: {
     color: '#fff',
@@ -276,6 +283,7 @@ const styles = StyleSheet.create({
   textFooter: {
     color: '#05375a',
     fontSize: 18,
+    marginTop: 15,
   },
   action: {
     flexDirection: 'row',
@@ -308,7 +316,7 @@ const styles = StyleSheet.create({
   signIn: {
     flexDirection: 'row',
     width: '100%',
-    height: DriveHeight * 0.05,
+    paddingVertical: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

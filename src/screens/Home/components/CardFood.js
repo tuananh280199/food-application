@@ -78,7 +78,11 @@ const CardFood = (props: CardFoodProps) => {
         {loading && (
           <Image
             source={require('../../../assets/default-placeholder-image.png')}
-            style={[styles.cardImage, styleImage]}
+            style={[
+              styles.cardImage,
+              {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0},
+              styleImage,
+            ]}
           />
         )}
       </View>
@@ -153,7 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: DriveWidth * 0.47,
     height: DriveWidth * 0.54,
-    margin: 11,
+    marginHorizontal: 11,
+    marginVertical: 9,
   },
   cardImage: {
     width: DriveWidth * 0.47,
