@@ -1,5 +1,5 @@
 //import node_modules
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -55,12 +55,13 @@ const FoodItem = (props: FoodItemProps) => {
     newFood = true,
     saleFood = true,
     screen,
-    onClickAddCart
+    onClickAddCart,
   } = props;
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const {id} = useSelector((state) => state.auth.profile);
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteItem = () => {
     Alert.alert(
@@ -111,7 +112,18 @@ const FoodItem = (props: FoodItemProps) => {
             uri: image,
             priority: FastImage.priority.normal,
           }}
+          onLoadStart={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}
         />
+        {loading && (
+          <Image
+            source={require('../../../assets/default-placeholder-image.png')}
+            style={[
+              styles.image,
+              {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0},
+            ]}
+          />
+        )}
         <View style={styles.content}>
           <View
             style={{

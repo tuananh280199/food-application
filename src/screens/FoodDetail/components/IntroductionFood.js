@@ -1,11 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import { DriveWidth } from "../../../constants/Dimensions";
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {DriveWidth} from '../../../constants/Dimensions';
 
 const IntroductionFood = (props) => {
   const {product} = props;
   return (
-    <View style={styles.flexContainer}>
+    <ScrollView
+      style={styles.flexContainer}
+      showsVerticalScrollIndicator={false}>
       <View style={{flexDirection: 'row'}}>
         <Text style={styles.dadText}>Xuất xứ : </Text>
         <Text style={styles.subText}>{product?.origin}</Text>
@@ -36,7 +38,7 @@ const IntroductionFood = (props) => {
           {product?.note}
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

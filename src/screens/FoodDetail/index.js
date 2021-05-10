@@ -349,14 +349,14 @@ const styles = StyleSheet.create({
     paddingTop: 18,
   },
   subImage: {
-    width: DriveWidth / 4 - 20,
-    height: DriveWidth / 4 - 20,
+    width: DriveWidth / 4 - 25,
+    height: DriveWidth / 4 - 25,
     marginRight: 10,
   },
   line: {
     width: DriveWidth * 0.9,
     height: 39,
-    marginBottom: 20,
+    marginBottom: 15,
   },
 });
 

@@ -1,17 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {ScrollView, Text, StyleSheet} from 'react-native';
 
 const DescriptionFood = (props) => {
   const {product} = props;
   return (
-    <View style={styles.flexContainer}>
+    <ScrollView
+      style={styles.flexContainer}
+      showsVerticalScrollIndicator={false}>
       <Text
         style={{
           fontSize: 14,
         }}>
         {product.description}
       </Text>
-    </View>
+    </ScrollView>
   );
 };
 
