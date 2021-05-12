@@ -23,6 +23,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import Snackbar from 'react-native-snackbar';
 import ImageResizer from 'react-native-image-resizer';
+import Config from 'react-native-config';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
@@ -39,8 +40,8 @@ import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import orderAPI from '../../services/order';
-import Config from 'react-native-config';
 import {Spinner} from '../../components/Spinner';
+import productAPI from '../../services/product';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -56,11 +57,13 @@ const ProfileUserScreen = () => {
   const [loadingChangeAvatar, setLoadingChangeAvatar] = useState(false);
   const [avatar, setAvatar] = useState(profile?.avatar);
   const [numberOrder, setNumberOrder] = useState(0);
+  const [numberFavourite, setNumberFavourite] = useState(0);
 
   useEffect(() => {
     setAvatar(profile?.avatar);
     if (profile.id) {
       getNumberOrder();
+      getNumberFavouriteProduct();
     }
   }, [profile]);
 
@@ -74,6 +77,19 @@ const ProfileUserScreen = () => {
     try {
       const {data} = await orderAPI.getNumberOrder(profile.id);
       setNumberOrder(data.numberOder);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
+  const getNumberFavouriteProduct = async () => {
+    try {
+      const {data} = await productAPI.getNumberFavouriteProduct(profile.id);
+      setNumberFavourite(data.numberFavorite);
     } catch (e) {
       Snackbar.show({
         text: getErrorMessage(e),
@@ -305,12 +321,12 @@ const ProfileUserScreen = () => {
       </View>
       <View style={styles.walletAndOrder}>
         <View style={styles.leftWalletAndOrder}>
-          <Text style={styles.textWalletAndOrder}>$281</Text>
-          <Text style={styles.subText}>Wallet</Text>
+          <Text style={styles.textWalletAndOrder}>{numberFavourite}</Text>
+          <Text style={styles.subText}>Đồ Ăn Yêu Thích</Text>
         </View>
         <View style={styles.rightWalletAndOrder}>
           <Text style={styles.textWalletAndOrder}>{numberOrder}</Text>
-          <Text style={styles.subText}>Order</Text>
+          <Text style={styles.subText}>Đơn Hàng</Text>
         </View>
       </View>
       <View style={styles.other}>

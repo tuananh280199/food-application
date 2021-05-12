@@ -33,3 +33,4 @@ export const FOOD_DETAIL_FAVOURITE = 'FoodDetailFavourite';
 
 //Cart
 export const CHECKOUT = 'Checkout';
+export const VOUCHER = 'Voucher';

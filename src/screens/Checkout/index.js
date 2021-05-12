@@ -23,6 +23,9 @@ import {validatePhone} from '../../utils/ValidatePhone';
 import orderAPI from '../../services/order';
 import {clearCart} from '../Cart/slice/cartSlice';
 import {Spinner} from '../../components/Spinner';
+import {VOUCHER} from '../../constants/StackNavigation';
+
+const moneyShip = 15000;
 
 export const Checkout = () => {
   const navigation = useNavigation();
@@ -70,7 +73,7 @@ export const Checkout = () => {
       return item.product.price * item.quantity;
     }
   });
-  const totalPrice = arrayTotalPriceItem.reduce((a, b) => a + b, 0);
+  const totalPrice = moneyShip + arrayTotalPriceItem.reduce((a, b) => a + b, 0);
 
   const handleOrder = async () => {
     let paymentMethod = 1;
@@ -200,7 +203,9 @@ export const Checkout = () => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.voucher}>
+        <TouchableOpacity
+          style={styles.voucher}
+          onPress={() => navigation.navigate(VOUCHER)}>
           <Text style={{color: 'tomato', fontSize: 16}}>
             Thêm voucher giảm giá{' '}
           </Text>
@@ -267,6 +272,26 @@ export const Checkout = () => {
               </Text>
             </View>
           ))}
+          <View style={styles.wrapItemCart}>
+            <Text
+              style={[
+                styles.titleItem,
+                {width: DriveWidth * 0.55, textAlign: 'center', fontSize: 15},
+              ]}>
+              Phí Giao Hàng :{' '}
+            </Text>
+            <Text
+              style={[
+                styles.titleItem,
+                {width: DriveWidth * 0.25, textAlign: 'right'},
+              ]}>
+              {' '}
+              {moneyShip.toLocaleString('vi', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </Text>
+          </View>
           <Divider style={{borderWidth: 1, margin: 10}} />
           <View style={styles.wrapItemCart}>
             <Text

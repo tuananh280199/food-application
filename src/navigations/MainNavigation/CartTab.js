@@ -7,7 +7,8 @@ import {CartScreen} from '../../screens/Cart';
 import {Checkout} from '../../screens/Checkout';
 
 //import other
-import {CART_SCREEN, CHECKOUT} from '../../constants/StackNavigation';
+import {CART_SCREEN, CHECKOUT, VOUCHER} from '../../constants/StackNavigation';
+import {VoucherScreen} from '../../screens/Voucher';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ const CartTab = () => {
       }}>
       <Stack.Screen name={CART_SCREEN} component={CartScreen} />
       <Stack.Screen name={CHECKOUT} component={Checkout} />
+      <Stack.Screen name={VOUCHER} component={VoucherScreen} />
     </Stack.Navigator>
   );
 };

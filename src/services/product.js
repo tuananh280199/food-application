@@ -39,6 +39,10 @@ const productAPI = {
   deleteFavouriteProduct: (uid, product_id) => {
     return axios.delete(`/product/favorite-product/${uid}/${product_id}`);
   },
+  getNumberFavouriteProduct: async (uid) => {
+    const data = await axios.get(`/product/count-favorite-product/${uid}`);
+    return data;
+  },
 };
 
 export default productAPI;

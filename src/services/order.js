@@ -20,6 +20,10 @@ const orderAPI = {
     });
     return data;
   },
+  getVoucher: async () => {
+    const data = await axios.get('/order/get-voucher');
+    return data;
+  },
 };
 
 export default orderAPI;
