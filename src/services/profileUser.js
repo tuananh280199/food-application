@@ -10,13 +10,16 @@ const profileUserAPI = {
       email: params.email,
     });
   },
-  uploadAvatar: (id, file) => {
-    return axios({
-      method: 'put',
-      url: `files/public/${id}`,
-      data: file,
-      headers: {'Content-Type': 'multipart/form-data'},
-    });
+  // uploadAvatar: (id, file) => {
+  //   return axios({
+  //     method: 'put',
+  //     url: `files/public/${id}`,
+  //     data: file,
+  //     headers: {'Content-Type': 'multipart/form-data'},
+  //   });
+  // },
+  uploadAvatar: (id, url) => {
+    return axios.put(`/files/public/${id}`, {url});
   },
 };
 
