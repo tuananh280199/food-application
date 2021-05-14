@@ -40,7 +40,7 @@ export const VoucherItem = (props: VoucherItemProps) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, {marginVertical: 10}]}>{name}</Text>
+      <Text style={[styles.title, {marginVertical: 5}]}>{name}</Text>
       {(discount_percent || discount_price) && (
         <View style={styles.wrapItem}>
           <Text>Giảm Giá :</Text>
@@ -79,12 +79,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 15,
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     borderRadius: 20,
     borderWidth: 0.9,
     borderColor: '#32a852',
-    paddingTop: 5,
-    paddingBottom: 10,
+    paddingVertical: 5,
     shadowColor: 'gray',
     shadowOffset: {
       width: 0,
@@ -92,14 +91,13 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 8,
+    elevation: 1,
   },
   wrapItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 4,
     marginLeft: 5,
-    paddingBottom: 5,
     paddingHorizontal: 10,
   },
   title: {

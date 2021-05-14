@@ -23,7 +23,6 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import Snackbar from 'react-native-snackbar';
 import ImageResizer from 'react-native-image-resizer';
-import Config from 'react-native-config';
 
 //import other
 import IMAGE_DEFAULT from '../../assets/default-placeholder-image.png';
@@ -61,11 +60,18 @@ const ProfileUserScreen = () => {
 
   useEffect(() => {
     setAvatar(profile?.avatar);
-    if (profile.id) {
-      getNumberOrder();
-      getNumberFavouriteProduct();
-    }
   }, [profile]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (profile.id) {
+        getNumberOrder();
+        getNumberFavouriteProduct();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, profile]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
