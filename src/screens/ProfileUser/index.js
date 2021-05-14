@@ -39,7 +39,6 @@ import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import orderAPI from '../../services/order';
-import Config from 'react-native-config';
 import {Spinner} from '../../components/Spinner';
 
 const ProfileUserScreen = () => {
@@ -113,8 +112,8 @@ const ProfileUserScreen = () => {
         const data = new FormData();
         const resizedImage = await ImageResizer.createResizedImage(
           fileBlob.uri,
-          70,
-          70,
+          100,
+          100,
           'JPEG',
           100,
           0,
@@ -122,14 +121,33 @@ const ProfileUserScreen = () => {
           false,
           {mode: 'contain', onlyScaleDown: false},
         );
+
         data.append('file', {
           name: resizedImage.name,
-          // type: resizedImage.type,
-          uri: resizedImage.uri,
-          // Platform.OS === 'android'
-          //   ? resizedImage.uri
-          //   : resizedImage.uri.replace('file://', ''),
+          uri:
+            Platform.OS === 'android'
+              ? resizedImage.uri
+              : resizedImage.uri.replace('file://', ''),
         });
+
+        data.append('upload_preset', 'food-app');
+        data.append('cloud_name', 'dh4nrrwvy');
+
+        fetch('https://api.cloudinary.com/v1_1/dh4nrrwvy/image/upload', {
+          method: 'post',
+          body: data,
+        })
+          .then((res) => res.json())
+          .then(async (data) => {
+            setLoadingChangeAvatar(true);
+            const filePath = await profileUserAPI.uploadAvatar(
+              profile.id,
+              data?.secure_url,
+            );
+            await dispatch(updateProfile({profile: filePath.data}));
+            setLoadingChangeAvatar(false);
+          })
+          .catch((e) => alert('Xảy ra lỗi. Vui lòng thử lại sau !'));
 
         // data.append('file', {
         //   name: fileBlob.name,
@@ -138,10 +156,6 @@ const ProfileUserScreen = () => {
         //       ? fileBlob.uri
         //       : fileBlob.uri.replace('file://', ''),
         // });
-        setLoadingChangeAvatar(true);
-        const filePath = await profileUserAPI.uploadAvatar(profile.id, data);
-        await dispatch(updateProfile({profile: filePath.data}));
-        setLoadingChangeAvatar(false);
       } catch (e) {
         setLoadingChangeAvatar(false);
         Snackbar.show({
@@ -261,7 +275,7 @@ const ProfileUserScreen = () => {
           <TouchableOpacity onPress={handleUploadFile}>
             <Image
               style={styles.image}
-              source={avatar ? {uri: `${Config.HOST + avatar}`} : IMAGE_DEFAULT}
+              source={avatar ? {uri: avatar} : IMAGE_DEFAULT}
             />
             <View style={styles.wrapperIcon}>
               <Entypo name={'camera'} size={16} color={'white'} />
