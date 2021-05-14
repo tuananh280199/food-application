@@ -6,19 +6,22 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Snackbar from 'react-native-snackbar';
 
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {VoucherItem} from './components/VoucherItem';
-import productAPI from '../../services/product';
 import {getErrorMessage} from '../../utils/HandleError';
 import orderAPI from '../../services/order';
-import {Image} from 'react-native-animatable';
 import {Spinner} from '../../components/Spinner';
+import {useDispatch, useSelector} from 'react-redux';
+import {addVoucher} from './slices/voucherSlice';
 
 const VoucherScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart.cartFood);
   const [listVoucher, setListVoucher] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -52,6 +55,24 @@ const VoucherScreen = ({navigation}) => {
     navigation.goBack();
   };
 
+  const arrayTotalPriceItem = cart.map((item) => {
+    if (item.product.priceSale) {
+      return item.product.priceSale * item.quantity;
+    } else {
+      return item.product.price * item.quantity;
+    }
+  });
+  const totalPrice = arrayTotalPriceItem.reduce((a, b) => a + b, 0);
+
+  const handleVoucherClick = (item) => {
+    if (totalPrice >= item.min_price_to_use) {
+      dispatch(addVoucher({item}));
+      navigation.goBack();
+    } else {
+      alert(`Áp dụng với đơn hàng từ ${item.min_price_to_use} trở lên`);
+    }
+  };
+
   const renderVoucher = ({item, index}) => {
     return (
       <VoucherItem
@@ -60,7 +81,7 @@ const VoucherScreen = ({navigation}) => {
         discount_percent={item.discount_percent}
         min_price_to_use={item.min_price_to_use}
         expired_in={item.expired_in}
-        handleUseVoucher={() => {}}
+        handleUseVoucher={() => handleVoucherClick(item)}
       />
     );
   };

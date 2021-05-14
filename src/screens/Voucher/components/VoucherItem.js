@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Divider} from '../../../components/Divider';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import moment from 'moment';
 
 type VoucherItemProps = {
   name?: string,
@@ -62,7 +61,10 @@ export const VoucherItem = (props: VoucherItemProps) => {
       </View>
       <View style={[styles.wrapItem, {marginBottom: 10}]}>
         <Text>Hết Hạn Vào :</Text>
-        <Text style={[styles.txt, {color: '#ff5b45'}]}> {expired_in}</Text>
+        <Text style={[styles.txt, {color: '#ff5b45'}]}>
+          {' '}
+          {moment.unix(expired_in).format('DD-MM-YYYY')}
+        </Text>
       </View>
       <TouchableOpacity onPress={handleUseVoucher} style={styles.btnUse}>
         <Text style={[styles.txt, {color: '#43bb6c', fontWeight: '500'}]}>
@@ -77,13 +79,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 15,
-    marginHorizontal: 10,
+    marginHorizontal: 15,
     borderRadius: 20,
     borderWidth: 0.9,
     borderColor: '#32a852',
     paddingTop: 5,
     paddingBottom: 10,
-    paddingHorizontal: 10,
     shadowColor: 'gray',
     shadowOffset: {
       width: 0,
@@ -98,11 +99,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 4,
     marginLeft: 5,
+    paddingBottom: 5,
+    paddingHorizontal: 10,
   },
   title: {
     fontSize: 19,
     textAlign: 'center',
-    color: '#984beb',
+    color: '#32a852',
     fontWeight: '500',
   },
   btnUse: {

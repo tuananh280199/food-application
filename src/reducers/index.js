@@ -6,6 +6,7 @@ import searchReducer from '../screens/Search/slice/searchSlide';
 import historySearchReducer from '../screens/Search/slice/historySearchSlice';
 import favouriteReducer from '../screens/FavouriteFood/slide/favouriteSlide';
 import cartReducer from '../screens/Cart/slice/cartSlice';
+import voucherReducer from '../screens/Voucher/slices/voucherSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   historySearch: historySearchReducer,
   favourite: favouriteReducer,
   cart: cartReducer,
+  voucher: voucherReducer,
 });
 
 export default rootReducer;

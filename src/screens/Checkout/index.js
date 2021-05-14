@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-easy-toast';
+import {isEmpty} from 'lodash';
 
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Divider} from '../../components/Divider';
@@ -33,6 +34,7 @@ export const Checkout = () => {
   const toastRef = useRef();
   const profile = useSelector((state) => state.auth.profile);
   const cart = useSelector((state) => state.cart.cartFood);
+  const {voucher} = useSelector((state) => state.voucher);
   const [name, setName] = useState(profile.name || '');
   const [address, setAddress] = useState(profile.address || '');
   const [phone, setPhone] = useState(profile.phone || '');
@@ -73,7 +75,29 @@ export const Checkout = () => {
       return item.product.price * item.quantity;
     }
   });
+
   const totalPrice = moneyShip + arrayTotalPriceItem.reduce((a, b) => a + b, 0);
+
+  const priceWhenUseVoucher = (price) => {
+    if (isEmpty(voucher)) {
+      return price;
+    }
+    if (price - moneyShip < voucher.min_price_to_use) {
+      return price;
+    }
+    if (!voucher.discount_percent && !voucher.discount_price) {
+      return price - moneyShip;
+    }
+    if (voucher.discount_price) {
+      return price - voucher.discount_price;
+    }
+    if (voucher.discount_percent) {
+      return (
+        price -
+        Math.round((price * (voucher.discount_percent / 100)) / 1000) * 1000
+      );
+    }
+  };
 
   const handleOrder = async () => {
     let paymentMethod = 1;
@@ -272,26 +296,66 @@ export const Checkout = () => {
               </Text>
             </View>
           ))}
-          <View style={styles.wrapItemCart}>
-            <Text
-              style={[
-                styles.titleItem,
-                {width: DriveWidth * 0.55, textAlign: 'center', fontSize: 15},
-              ]}>
-              Phí Giao Hàng :{' '}
-            </Text>
-            <Text
-              style={[
-                styles.titleItem,
-                {width: DriveWidth * 0.25, textAlign: 'right'},
-              ]}>
-              {' '}
-              {moneyShip.toLocaleString('vi', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-          </View>
+          <Divider style={{borderWidth: 1, margin: 10}} />
+          {
+            <View style={styles.wrapItemCart}>
+              <Text
+                style={[
+                  styles.titleItem,
+                  {
+                    width: DriveWidth * 0.65,
+                    textAlign: 'left',
+                    fontSize: 15,
+                  },
+                ]}>
+                Phí Giao Hàng :{' '}
+              </Text>
+              <Text
+                style={[
+                  styles.titleItem,
+                  {width: DriveWidth * 0.25, textAlign: 'right'},
+                ]}>
+                {' '}
+                {moneyShip.toLocaleString('vi', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}
+              </Text>
+            </View>
+          }
+          {voucher && priceWhenUseVoucher(totalPrice) - totalPrice !== 0 && (
+            <View style={styles.wrapItemCart}>
+              <Text
+                style={[
+                  styles.titleItem,
+                  {
+                    width: DriveWidth * 0.65,
+                    textAlign: 'left',
+                    fontSize: 15,
+                  },
+                ]}>
+                Voucher :{' '}
+              </Text>
+              <Text
+                style={[
+                  styles.titleItem,
+                  {
+                    width: DriveWidth * 0.25,
+                    textAlign: 'right',
+                    color: 'tomato',
+                  },
+                ]}>
+                {' '}
+                {(priceWhenUseVoucher(totalPrice) - totalPrice).toLocaleString(
+                  'vi',
+                  {
+                    style: 'currency',
+                    currency: 'VND',
+                  },
+                )}
+              </Text>
+            </View>
+          )}
           <Divider style={{borderWidth: 1, margin: 10}} />
           <View style={styles.wrapItemCart}>
             <Text
@@ -315,7 +379,7 @@ export const Checkout = () => {
                   color: 'tomato',
                 },
               ]}>
-              {totalPrice.toLocaleString('vi', {
+              {priceWhenUseVoucher(totalPrice).toLocaleString('vi', {
                 style: 'currency',
                 currency: 'VND',
               })}
