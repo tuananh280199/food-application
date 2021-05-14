@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: 10,
     shadowColor: '#43bb6c',
     shadowOffset: {
       width: 0,
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   order: {
     width: '100%',
-    paddingVertical: 12,
+    paddingVertical: 9,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,

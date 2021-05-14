@@ -194,7 +194,7 @@ const HomeScreen = () => {
         ]}>
         <Image
           source={require('./../../assets/logo-khoaikhau.png')}
-          style={{height: 38, width: 38, marginTop: -10}}
+          style={{height: 38, width: 38, marginTop: -8}}
         />
         <Text style={styles.titleHeader}>TRANG CHỦ</Text>
         <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
@@ -392,13 +392,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'white',
     backgroundColor: '#c3e8f7',
-    marginTop: -10,
+    marginTop: -8,
   },
   titleHeader: {
     color: 'white',
     fontSize: 22,
     fontWeight: '700',
-    marginTop: -10,
+    marginTop: -7,
   },
   search: {
     marginHorizontal: 20,

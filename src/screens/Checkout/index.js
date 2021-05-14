@@ -511,7 +511,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
     shadowColor: 'silver',
     shadowOffset: {
       width: 0,
@@ -524,7 +523,7 @@ const styles = StyleSheet.create({
   order: {
     flexDirection: 'row',
     width: '95%',
-    paddingVertical: 12,
+    paddingVertical: 9,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
