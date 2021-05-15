@@ -208,6 +208,7 @@ const SearchScreen = () => {
           saleFood={item.sale}
           like={item.like}
           dislike={item.dislike}
+          outOfProduct={item.out_of_product}
           styleContainer={{
             width: DriveWidth * 0.45,
             height: DriveWidth * 0.51,

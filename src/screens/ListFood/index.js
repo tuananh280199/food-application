@@ -178,6 +178,7 @@ const ListFood = () => {
         like={item.like}
         dislike={item.dislike}
         description={item.description}
+        outOfProduct={item.out_of_product}
         onClickAddCart={() => onClickAddCart(item)}
       />
     );

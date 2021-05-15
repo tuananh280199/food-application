@@ -196,56 +196,74 @@ const FoodDetail = () => {
               size={19}
               maxRate={5}
             />
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {product.out_of_product === 1 ? (
               <Text
                 style={[
                   styles.text,
-                  {fontSize: 18, fontWeight: '600', marginTop: 7},
-                  product?.sale === 1
-                    ? {
-                        textDecorationLine: 'line-through',
-                        textDecorationStyle: 'solid',
-                      }
-                    : null,
+                  {
+                    fontSize: 21,
+                    fontWeight: '600',
+                    marginTop: 11,
+                    marginBottom: 36,
+                    color: 'red',
+                  },
                 ]}>
-                {product?.price?.toLocaleString('vi', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
+                Hết Hàng
               </Text>
-              {product?.sale === 1 ? (
+            ) : (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Text
                   style={[
                     styles.text,
-                    {
-                      fontSize: 21,
-                      fontWeight: '600',
-                      marginTop: 7,
-                      marginLeft: 5,
-                      color: 'red',
-                    },
+                    {fontSize: 18, fontWeight: '600', marginTop: 9},
+                    product?.sale === 1
+                      ? {
+                          textDecorationLine: 'line-through',
+                          textDecorationStyle: 'solid',
+                        }
+                      : null,
                   ]}>
-                  {product?.priceSale?.toLocaleString('vi', {
+                  {product?.price?.toLocaleString('vi', {
                     style: 'currency',
                     currency: 'VND',
                   })}
                 </Text>
-              ) : (
-                <></>
-              )}
-            </View>
+                {product?.sale === 1 ? (
+                  <Text
+                    style={[
+                      styles.text,
+                      {
+                        fontSize: 21,
+                        fontWeight: '600',
+                        marginTop: 9,
+                        marginLeft: 5,
+                        color: 'red',
+                      },
+                    ]}>
+                    {product?.priceSale?.toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </View>
+            )}
           </View>
-          <TouchableOpacity
-            style={styles.buttonAddCart}
-            onPress={() => onClickAddCart(product)}>
-            <Text
-              style={[
-                styles.text,
-                {fontSize: 16, fontWeight: '600', color: 'purple'},
-              ]}>
-              THÊM VÀO GIỎ HÀNG
-            </Text>
-          </TouchableOpacity>
+          {product.out_of_product === 0 && (
+            <TouchableOpacity
+              style={styles.buttonAddCart}
+              onPress={() => onClickAddCart(product)}>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 16, fontWeight: '600', color: 'purple'},
+                ]}>
+                THÊM VÀO GIỎ HÀNG
+              </Text>
+            </TouchableOpacity>
+          )}
         </SafeAreaView>
       </FastImage>
       <View style={styles.footer}>
@@ -302,8 +320,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   bodyImage: {
-    marginTop: DriveHeight * 0.12,
-    marginBottom: 28,
+    marginTop: DriveHeight * 0.11,
+    marginBottom: 21,
     paddingLeft: 32,
   },
   text: {

@@ -27,6 +27,7 @@ type CardFoodProps = {
   dislike?: number,
   styleContainer?: any,
   styleImage?: any,
+  outOfProduct?: number,
   onClickAddCart?: Function,
 };
 
@@ -43,6 +44,7 @@ const CardFood = (props: CardFoodProps) => {
     styleContainer,
     styleImage,
     onClickAddCart,
+    outOfProduct,
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -98,44 +100,50 @@ const CardFood = (props: CardFoodProps) => {
           maxRate={5}
         />
         <View style={styles.footerItem}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={[
-                styles.titleCost,
-                saleFood === 1
-                  ? {
-                      textDecorationLine: 'line-through',
-                      textDecorationStyle: 'solid',
-                    }
-                  : null,
-              ]}>
-              {price?.toLocaleString('vi', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-            {saleFood === 1 ? (
-              <Text
-                style={[
-                  styles.titleCost,
-                  {marginLeft: 5, color: 'red', fontSize: 16},
-                ]}>
-                {priceSale?.toLocaleString('vi', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
-              </Text>
-            ) : (
-              <></>
-            )}
-          </View>
-          <TouchableOpacity onPress={onClickAddCart}>
-            <MaterialCommunityIcons
-              name={'cart-plus'}
-              size={20}
-              color={'#43bb6c'}
-            />
-          </TouchableOpacity>
+          {outOfProduct === 1 ? (
+            <Text style={[styles.titleCost, {color: 'red'}]}>Hết Hàng</Text>
+          ) : (
+            <>
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={[
+                    styles.titleCost,
+                    saleFood === 1
+                      ? {
+                          textDecorationLine: 'line-through',
+                          textDecorationStyle: 'solid',
+                        }
+                      : null,
+                  ]}>
+                  {price?.toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
+                {saleFood === 1 ? (
+                  <Text
+                    style={[
+                      styles.titleCost,
+                      {marginLeft: 5, color: 'red', fontSize: 16},
+                    ]}>
+                    {priceSale?.toLocaleString('vi', {
+                      style: 'currency',
+                      currency: 'VND',
+                    })}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+              </View>
+              <TouchableOpacity onPress={onClickAddCart}>
+                <MaterialCommunityIcons
+                  name={'cart-plus'}
+                  size={20}
+                  color={'#43bb6c'}
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </View>

@@ -26,6 +26,7 @@ import {roundHalfRate} from '../../../utils/RoundHalfRate';
 import {getErrorMessage} from '../../../utils/HandleError';
 import productAPI from '../../../services/product';
 import {deleteFavouriteFood} from '../../FavouriteFood/slide/favouriteSlide';
+import {CardFood} from '../../Home/components/CardFood';
 
 type FoodItemProps = {
   newFood?: boolean,
@@ -38,6 +39,7 @@ type FoodItemProps = {
   like?: number,
   dislike?: number,
   description?: string,
+  outOfProduct?: number,
   screen?: string,
   onClickAddCart?: Function,
 };
@@ -54,6 +56,7 @@ const FoodItem = (props: FoodItemProps) => {
     description,
     newFood = true,
     saleFood = true,
+    outOfProduct,
     screen,
     onClickAddCart,
   } = props;
@@ -151,13 +154,15 @@ const FoodItem = (props: FoodItemProps) => {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity onPress={onClickAddCart}>
-                <MaterialCommunityIcons
-                  name={'cart-plus'}
-                  size={21}
-                  color={'#43bb6c'}
-                />
-              </TouchableOpacity>
+              {outOfProduct === 0 && (
+                <TouchableOpacity onPress={onClickAddCart}>
+                  <MaterialCommunityIcons
+                    name={'cart-plus'}
+                    size={21}
+                    color={'#43bb6c'}
+                  />
+                </TouchableOpacity>
+              )}
               {screen === 'Favourite' && (
                 <TouchableOpacity
                   onPress={handleDeleteItem}
@@ -176,37 +181,41 @@ const FoodItem = (props: FoodItemProps) => {
             size={15}
             maxRate={5}
           />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-              style={[
-                styles.titleCost,
-                saleFood === 1
-                  ? {
-                      textDecorationLine: 'line-through',
-                      textDecorationStyle: 'solid',
-                    }
-                  : null,
-              ]}>
-              {price?.toLocaleString('vi', {
-                style: 'currency',
-                currency: 'VND',
-              })}
-            </Text>
-            {saleFood === 1 ? (
+          {outOfProduct === 1 ? (
+            <Text style={[styles.titleCost, {color: 'red'}]}>Hết Hàng</Text>
+          ) : (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text
                 style={[
                   styles.titleCost,
-                  {marginLeft: 5, color: 'red', fontSize: 16},
+                  saleFood === 1
+                    ? {
+                        textDecorationLine: 'line-through',
+                        textDecorationStyle: 'solid',
+                      }
+                    : null,
                 ]}>
-                {priceSale?.toLocaleString('vi', {
+                {price?.toLocaleString('vi', {
                   style: 'currency',
                   currency: 'VND',
                 })}
               </Text>
-            ) : (
-              <></>
-            )}
-          </View>
+              {saleFood === 1 ? (
+                <Text
+                  style={[
+                    styles.titleCost,
+                    {marginLeft: 5, color: 'red', fontSize: 16},
+                  ]}>
+                  {priceSale?.toLocaleString('vi', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}
+                </Text>
+              ) : (
+                <></>
+              )}
+            </View>
+          )}
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text
               numberOfLines={1}
