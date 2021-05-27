@@ -67,16 +67,16 @@ const HomeScreen = () => {
 
   const getInitData = async () => {
     try {
-      const hotProducts = await productAPI.getHotProductHomeScreen();
-      const hintProduct = await productAPI.getHintProductHomeScreen();
-      const categories = await categoryAPI.getCategoryHomeScreen();
       setLoadingAdvertisement(false);
+      const hotProducts = await productAPI.getHotProductHomeScreen();
       setListHotProduct(hotProducts.data);
       setLoadingListHotProduct(false);
-      setListHintProduct(hintProduct.data);
-      setLoadingListHintProduct(false);
+      const categories = await categoryAPI.getCategoryHomeScreen();
       setListCategory(categories.data);
       setLoadingListCategory(false);
+      const hintProduct = await productAPI.getHintProductHomeScreen();
+      setListHintProduct(hintProduct.data);
+      setLoadingListHintProduct(false);
     } catch (e) {
       Snackbar.show({
         text: getErrorMessage(e),
@@ -229,27 +229,48 @@ const HomeScreen = () => {
               height={DriveHeight * (Platform.OS === 'ios' ? 0.21 : 0.24)}
               width={DriveWidth * 0.92}
               activeDotColor="#43bb6c">
-              <View style={styles.slide}>
+              <TouchableOpacity
+                style={styles.slide}
+                onPress={() =>
+                  handleClickCategoryFood({
+                    id: 1,
+                    name: 'Đồ Ăn Vặt',
+                  })
+                }>
                 <Image
                   source={require('../../assets/banner3.jpg')}
                   resizeMode="stretch"
                   style={styles.sliderImage}
                 />
-              </View>
-              <View style={styles.slide}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.slide}
+                onPress={() =>
+                  handleClickCategoryFood({
+                    id: 6,
+                    name: 'Cơm Văn Phòng',
+                  })
+                }>
                 <Image
                   source={require('../../assets/banner2.jpg')}
                   resizeMode="stretch"
                   style={styles.sliderImage}
                 />
-              </View>
-              <View style={styles.slide}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.slide}
+                onPress={() =>
+                  handleClickCategoryFood({
+                    id: 3,
+                    name: 'Nước Uống',
+                  })
+                }>
                 <Image
                   source={require('../../assets/banner1.jpg')}
                   resizeMode="stretch"
                   style={styles.sliderImage}
                 />
-              </View>
+              </TouchableOpacity>
             </Swiper>
           )}
         </View>
