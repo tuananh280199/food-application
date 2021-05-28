@@ -67,8 +67,8 @@ const HomeScreen = () => {
 
   const getInitData = async () => {
     try {
-      setLoadingAdvertisement(false);
       const hotProducts = await productAPI.getHotProductHomeScreen();
+      setLoadingAdvertisement(false);
       setListHotProduct(hotProducts.data);
       setLoadingListHotProduct(false);
       const categories = await categoryAPI.getCategoryHomeScreen();
