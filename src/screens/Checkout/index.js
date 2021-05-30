@@ -386,7 +386,7 @@ export const Checkout = () => {
             </Text>
           </View>
         </View>
-        <View>
+        <View style={{marginBottom: 20}}>
           <Text style={styles.title}>Phương Thức Thanh Toán</Text>
           <View style={styles.wrapRbtn}>
             <RadioButton

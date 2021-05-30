@@ -26,7 +26,12 @@ import {CategoryFood} from './components/CategoryFood';
 //import others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import USER_PLACEHOLDER from '../../assets/user-placeholder.png';
-import {FOOD_DETAIL, LIST_FOOD, SEARCH} from '../../constants/StackNavigation';
+import {
+  FOOD_DETAIL,
+  LIST_FOOD,
+  PROFILE_USER_NAVIGATION,
+  SEARCH,
+} from '../../constants/StackNavigation';
 import productAPI from '../../services/product';
 import categoryAPI from '../../services/category';
 import {getErrorMessage} from '../../utils/HandleError';
@@ -46,6 +51,11 @@ const HomeScreen = () => {
   const toastRef = useRef();
 
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
+  const {profile} = useSelector((state) => {
+    return {
+      profile: state.auth.profile,
+    };
+  });
 
   const [listHotProduct, setListHotProduct] = useState([]);
   const [listHintProduct, setListHintProduct] = useState([]);
@@ -68,10 +78,10 @@ const HomeScreen = () => {
   const getInitData = async () => {
     try {
       const hotProducts = await productAPI.getHotProductHomeScreen();
+      const categories = await categoryAPI.getCategoryHomeScreen();
       setLoadingAdvertisement(false);
       setListHotProduct(hotProducts.data);
       setLoadingListHotProduct(false);
-      const categories = await categoryAPI.getCategoryHomeScreen();
       setListCategory(categories.data);
       setLoadingListCategory(false);
       const hintProduct = await productAPI.getHintProductHomeScreen();
@@ -199,7 +209,13 @@ const HomeScreen = () => {
           style={{height: 38, width: 38, marginTop: -8}}
         />
         <Text style={styles.titleHeader}>TRANG CHỦ</Text>
-        <FastImage style={styles.avatar} source={USER_PLACEHOLDER} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate(PROFILE_USER_NAVIGATION)}>
+          <FastImage
+            style={styles.avatar}
+            source={profile?.avatar ? {uri: profile.avatar} : USER_PLACEHOLDER}
+          />
+        </TouchableOpacity>
       </View>
       <TouchableOpacity
         style={[

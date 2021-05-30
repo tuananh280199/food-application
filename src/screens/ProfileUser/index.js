@@ -381,32 +381,32 @@ const ProfileUserScreen = () => {
             Đổi Mật Khẩu
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.commonOther}
-          onPress={() => handleOptionClick('Thanh Toán', PAYMENT)}>
-          <MaterialIcons
-            name={'payment'}
-            size={20}
-            color={'rgb(245, 54, 37)'}
-          />
-          <Text
-            style={[styles.subTextOther, {marginHorizontal: 15}]}
-            numberOfLine={2}>
-            Thanh Toán
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}>
-          <MaterialIcons
-            name={'contact-support'}
-            size={20}
-            color={'rgb(245, 54, 37)'}
-          />
-          <Text
-            style={[styles.subTextOther, {marginHorizontal: 15}]}
-            numberOfLine={2}>
-            Hỗ Trợ
-          </Text>
-        </TouchableOpacity>
+        {/*<TouchableOpacity*/}
+        {/*  style={styles.commonOther}*/}
+        {/*  onPress={() => handleOptionClick('Thanh Toán', PAYMENT)}>*/}
+        {/*  <MaterialIcons*/}
+        {/*    name={'payment'}*/}
+        {/*    size={20}*/}
+        {/*    color={'rgb(245, 54, 37)'}*/}
+        {/*  />*/}
+        {/*  <Text*/}
+        {/*    style={[styles.subTextOther, {marginHorizontal: 15}]}*/}
+        {/*    numberOfLine={2}>*/}
+        {/*    Thanh Toán*/}
+        {/*  </Text>*/}
+        {/*</TouchableOpacity>*/}
+        {/*<TouchableOpacity style={styles.commonOther}>*/}
+        {/*  <MaterialIcons*/}
+        {/*    name={'contact-support'}*/}
+        {/*    size={20}*/}
+        {/*    color={'rgb(245, 54, 37)'}*/}
+        {/*  />*/}
+        {/*  <Text*/}
+        {/*    style={[styles.subTextOther, {marginHorizontal: 15}]}*/}
+        {/*    numberOfLine={2}>*/}
+        {/*    Hỗ Trợ*/}
+        {/*  </Text>*/}
+        {/*</TouchableOpacity>*/}
         <TouchableOpacity
           style={styles.commonOther}
           onPress={handleClickSignInOrSignUp}>
@@ -457,8 +457,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileUser: {
-    flex: 3.5,
-    paddingBottom: 10,
+    flex: 4,
+    paddingVertical: 10,
     paddingHorizontal: 20,
   },
   image: {
@@ -515,11 +515,12 @@ const styles = StyleSheet.create({
   textWalletAndOrder: {
     fontSize: 18,
     fontWeight: '400',
-    marginVertical: 5,
+    marginTop: 5,
+    marginBottom: 10,
   },
   other: {
-    flex: 5,
-    justifyContent: 'space-around',
+    flex: 4.5,
+    justifyContent: 'space-evenly',
     paddingHorizontal: 20,
     marginVertical: 5,
   },

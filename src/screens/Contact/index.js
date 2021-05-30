@@ -116,7 +116,7 @@ const ContactScreen = () => {
           <ActionButton.Item
             buttonColor="#3498db"
             title="Gửi Tin Nhắn"
-            onPress={() => {}}>
+            onPress={() => alert('Chức năng này sẽ sớm ra mắt !')}>
             <Fontisto name="messenger" style={styles.actionButtonIcon} />
           </ActionButton.Item>
           <ActionButton.Item
