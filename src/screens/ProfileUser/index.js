@@ -16,7 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -32,7 +32,6 @@ import {
   ORDER_HISTORY,
   SIGN_IN,
   FAVOURITE_FOOD,
-  PAYMENT,
 } from '../../constants/StackNavigation';
 import {logout, updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
@@ -64,7 +63,7 @@ const ProfileUserScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (profile.id) {
+      if (profile?.id) {
         getNumberOrder();
         getNumberFavouriteProduct();
       }
@@ -296,9 +295,13 @@ const ProfileUserScreen = () => {
       <View style={styles.profileUser}>
         <View style={{flex: 4, flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity onPress={handleUploadFile}>
-            <Image
+            <FastImage
               style={styles.image}
-              source={avatar ? {uri: avatar} : IMAGE_DEFAULT}
+              source={
+                avatar
+                  ? {uri: avatar, priority: FastImage.priority.normal}
+                  : IMAGE_DEFAULT
+              }
             />
             <View style={styles.wrapperIcon}>
               <Entypo name={'camera'} size={16} color={'white'} />
