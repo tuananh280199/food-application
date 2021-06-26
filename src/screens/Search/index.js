@@ -238,7 +238,7 @@ const SearchScreen = () => {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                width: DriveWidth * 0.65,
+                width: DriveWidth * 0.7,
               }}>
               <TouchableOpacity
                 onPress={() => handleSearchByName(valueTextInput)}>
@@ -448,6 +448,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   textInput: {
+    flex: 1,
     height: 40,
     backgroundColor: '#fff',
     textAlignVertical: 'top',

@@ -35,7 +35,7 @@ const FoodDetail = () => {
   const toastRef = useRef(null);
   const {product_id} = route.params;
 
-  const {id} = useSelector((state) => state.auth.profile);
+  const id = useSelector((state) => state.auth.profile?.id);
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
 
   const [product, setProduct] = useState({});

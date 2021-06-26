@@ -63,7 +63,7 @@ const FoodItem = (props: FoodItemProps) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const {id} = useSelector((state) => state.auth.profile);
+  const id = useSelector((state) => state.auth.profile?.id);
   const [loading, setLoading] = useState(false);
 
   const handleDeleteItem = () => {

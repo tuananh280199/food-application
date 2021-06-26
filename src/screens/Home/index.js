@@ -197,6 +197,8 @@ const HomeScreen = () => {
     );
   };
 
+  console.log(profile?.avatar);
+
   return (
     <View style={styles.flexContainer}>
       <View
@@ -213,7 +215,11 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate(PROFILE_USER_NAVIGATION)}>
           <FastImage
             style={styles.avatar}
-            source={profile?.avatar ? {uri: profile.avatar} : USER_PLACEHOLDER}
+            source={
+              profile?.avatar
+                ? {uri: profile.avatar, priority: FastImage.priority.normal}
+                : USER_PLACEHOLDER
+            }
           />
         </TouchableOpacity>
       </View>
