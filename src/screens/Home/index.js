@@ -197,8 +197,6 @@ const HomeScreen = () => {
     );
   };
 
-  console.log(profile?.avatar);
-
   return (
     <View style={styles.flexContainer}>
       <View
