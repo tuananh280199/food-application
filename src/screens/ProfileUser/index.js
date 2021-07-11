@@ -261,7 +261,6 @@ const ProfileUserScreen = () => {
     }
     navigation.navigate(screen);
   };
-
   return (
     <View style={styles.flexContainer}>
       <SafeAreaView style={[styles.header]}>

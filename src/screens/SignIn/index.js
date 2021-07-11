@@ -20,7 +20,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 
 //import other
@@ -33,10 +33,12 @@ import authAPI from '../../services/auth';
 import {login} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import {Spinner} from '../../components/Spinner';
+import { sendDeviceToken } from "../../notifications/slice/notificationSlice";
 
 const SignInScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const deviceToken = useSelector((state) => state.notification.deviceToken);
 
   const [data, setData] = React.useState({
     username: '',
@@ -133,6 +135,9 @@ const SignInScreen = () => {
           }),
         );
         setLoading(false);
+        if (deviceToken) {
+          dispatch(sendDeviceToken(deviceToken));
+        }
         navigation.navigate(PROFILE_USER_SCREEN);
       } catch (e) {
         setLoading(false);
