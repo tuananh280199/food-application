@@ -4,6 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Snackbar from 'react-native-snackbar';
+import PushNotification, {Importance} from 'react-native-push-notification';
 
 //import navigation
 import MainNavigation from './MainNavigation';
@@ -12,18 +13,32 @@ import MainNavigation from './MainNavigation';
 import {OnboardingScreen} from '../screens/Onboarding';
 
 //import other
-import {HOME_SCREEN, ONBOARDING_SCREEN} from '../constants/StackNavigation';
+import {
+  CHANGE_PASSWORD,
+  CHANGE_PROFILE_USER,
+  FORGOT_PASSWORD,
+  HOME_SCREEN,
+  NEW_PASSWORD,
+  ONBOARDING_SCREEN,
+  OTP_VERIFY,
+  SIGN_IN,
+  SIGN_UP,
+} from '../constants/StackNavigation';
 import authAPI from '../services/auth';
 import {getErrorMessage} from '../utils/HandleError';
 import {setNewToken} from '../slices/authSlice';
-import {useNotifications} from '../notifications/useNotifications';
-import PushNotification, {Importance} from 'react-native-push-notification';
 import {setDeviceToken} from '../notifications/slice/notificationSlice';
+import {SignInScreen} from '../screens/SignIn';
+import {SignUpScreen} from '../screens/SignUp';
+import {ChangePasswordScreen} from '../screens/ChangePassword';
+import {ForgotPasswordScreen} from '../screens/ForgotPassword';
+import {ChangeProfileScreen} from '../screens/ChangeProfileUser';
+import {OTPVerify} from '../screens/OTPVerify';
+import {NewPassword} from '../screens/ForgotPassword/NewPassword';
 
 const Stack = createStackNavigator();
 
 const AppNavigation = () => {
-  // useNotifications();
   const dispatch = useDispatch();
 
   const firstIsLaunch = useSelector((state) => state.auth.firstIsLaunch);
@@ -123,6 +138,16 @@ const AppNavigation = () => {
           name={HOME_SCREEN}
           component={MainNavigation}
         />
+        <Stack.Screen name={SIGN_IN} component={SignInScreen} />
+        <Stack.Screen name={SIGN_UP} component={SignUpScreen} />
+        <Stack.Screen name={CHANGE_PASSWORD} component={ChangePasswordScreen} />
+        <Stack.Screen name={FORGOT_PASSWORD} component={ForgotPasswordScreen} />
+        <Stack.Screen
+          name={CHANGE_PROFILE_USER}
+          component={ChangeProfileScreen}
+        />
+        <Stack.Screen name={OTP_VERIFY} component={OTPVerify} />
+        <Stack.Screen name={NEW_PASSWORD} component={NewPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );
