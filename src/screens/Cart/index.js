@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   footer: {
-    backgroundColor: '#fff',
-    height: DriveHeight * 0.15,
+    backgroundColor: 'antiquewhite',
+    height: DriveHeight * 0.17,
     justifyContent: 'space-around',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -217,14 +217,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    shadowColor: 'silver',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.9,
-    shadowRadius: 1.5,
-    elevation: 1,
   },
   textOrder: {
     fontSize: 20,
