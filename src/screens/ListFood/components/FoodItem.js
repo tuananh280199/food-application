@@ -27,6 +27,7 @@ import {getErrorMessage} from '../../../utils/HandleError';
 import productAPI from '../../../services/product';
 import {deleteFavouriteFood} from '../../FavouriteFood/slide/favouriteSlide';
 import {CardFood} from '../../Home/components/CardFood';
+import { formatNumber } from "../../../utils/formatNumberVND";
 
 type FoodItemProps = {
   newFood?: boolean,
@@ -195,10 +196,7 @@ const FoodItem = (props: FoodItemProps) => {
                       }
                     : null,
                 ]}>
-                {price?.toLocaleString('vi', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
+                {`${formatNumber(price || 0)} ₫`}
               </Text>
               {saleFood === 1 ? (
                 <Text
@@ -206,10 +204,7 @@ const FoodItem = (props: FoodItemProps) => {
                     styles.titleCost,
                     {marginLeft: 5, color: 'red', fontSize: 16},
                   ]}>
-                  {priceSale?.toLocaleString('vi', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {`${formatNumber(priceSale || 0)} ₫`}
                 </Text>
               ) : (
                 <></>
@@ -245,7 +240,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 8,
+    elevation: 1,
     marginBottom: 12,
   },
   container: {

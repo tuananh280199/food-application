@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
+  Platform,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -220,11 +221,8 @@ const ListFood = () => {
         </View>
       ) : (
         <View style={[styles.flexContainer]}>
-          <BlurView
-            style={styles.blur}
-            blurType={toggle ? 'ultraThinMaterialDark' : 'light'}
-            blurAmount={10}
-            reducedTransparencyFallbackColor="white">
+          <View
+            style={styles.blur}>
             <FlatList
               pointerEvents={toggle ? 'none' : 'auto'}
               style={{paddingTop: 9}}
@@ -238,7 +236,7 @@ const ListFood = () => {
               onEndReachedThreshold={0.5}
               onEndReached={handleLoadMore}
             />
-          </BlurView>
+          </View>
           <Collapsible
             style={{backgroundColor: '#f8fffa', marginTop: -3}}
             collapsed={!toggle}>
@@ -281,7 +279,7 @@ const ListFood = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#f8fffa',
+    backgroundColor: Platform.OS === 'ios' ? '#f0fcff' : '#edfbff',
   },
   header: {
     flexDirection: 'row',

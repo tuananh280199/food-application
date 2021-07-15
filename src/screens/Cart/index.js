@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  Alert,
-} from 'react-native';
+  Alert, Platform,
+} from "react-native";
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,6 +21,7 @@ import {
 } from './slice/cartSlice';
 import {CHECKOUT} from '../../constants/StackNavigation';
 import {Image} from 'react-native-animatable';
+import { formatNumber } from "../../utils/formatNumberVND";
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -137,10 +138,7 @@ const CartScreen = () => {
         <View style={styles.headerFooter}>
           <Text style={styles.textFooter}>Tổng Tiền : </Text>
           <Text style={[styles.textFooter, {fontSize: 28}]}>
-            {totalPrice?.toLocaleString('vi', {
-              style: 'currency',
-              currency: 'VND',
-            })}
+            {`${formatNumber(totalPrice || 0)} ₫`}
           </Text>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -168,7 +166,7 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   flexContainer: {
     flex: 1,
-    backgroundColor: '#f8fffa',
+    backgroundColor: Platform.OS === 'ios' ? '#f0fcff' : '#edfbff',
   },
   header: {
     flexDirection: 'row',
@@ -187,21 +185,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   footer: {
-    backgroundColor: 'antiquewhite',
+    backgroundColor: '#f6edff',
     height: DriveHeight * 0.17,
     justifyContent: 'space-around',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    shadowColor: '#43bb6c',
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
-    shadowOpacity: 0.9,
-    shadowRadius: 1.5,
-    elevation: 1,
   },
   headerFooter: {
     flexDirection: 'row',

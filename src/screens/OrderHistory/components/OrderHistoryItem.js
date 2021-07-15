@@ -15,6 +15,7 @@ import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
 import {roundHalfRate} from '../../../utils/RoundHalfRate';
 import {convertDate} from '../../../utils/convertDate';
+import { formatNumber } from "../../../utils/formatNumberVND";
 
 type OrderHistoryItemProps = {
   date?: number,
@@ -44,10 +45,7 @@ const OrderHistoryItem = (props: OrderHistoryItemProps) => {
       <View style={styles.innerItems}>
         <Text style={styles.title}>Tổng Tiền</Text>
         <Text style={styles.detail}>
-          {totalPrice?.toLocaleString('vi', {
-            style: 'currency',
-            currency: 'VND',
-          })}
+          {`${formatNumber(totalPrice || 0)} ₫`}
         </Text>
       </View>
       <View style={styles.innerItems}>

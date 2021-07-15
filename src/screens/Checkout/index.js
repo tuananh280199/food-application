@@ -25,6 +25,7 @@ import orderAPI from '../../services/order';
 import {clearCart} from '../Cart/slice/cartSlice';
 import {Spinner} from '../../components/Spinner';
 import {VOUCHER} from '../../constants/StackNavigation';
+import {formatNumber} from '../../utils/formatNumberVND';
 
 const moneyShip = 15000;
 
@@ -282,17 +283,12 @@ export const Checkout = () => {
                   {width: DriveWidth * 0.25, textAlign: 'right'},
                 ]}>
                 {item.product.priceSale
-                  ? (item.product.priceSale * item.quantity).toLocaleString(
-                      'vi',
-                      {
-                        style: 'currency',
-                        currency: 'VND',
-                      },
-                    )
-                  : (item.product.price * item.quantity).toLocaleString('vi', {
-                      style: 'currency',
-                      currency: 'VND',
-                    })}
+                  ? `${formatNumber(
+                      item.product.priceSale * item.quantity || 0,
+                    )} ₫`
+                  : `${formatNumber(
+                      item.product.price * item.quantity || 0,
+                    )} ₫`}
               </Text>
             </View>
           ))}
@@ -316,10 +312,7 @@ export const Checkout = () => {
                   {width: DriveWidth * 0.25, textAlign: 'right'},
                 ]}>
                 {' '}
-                {moneyShip.toLocaleString('vi', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
+                {`${formatNumber(moneyShip || 0)} ₫`}
               </Text>
             </View>
           }
@@ -346,13 +339,9 @@ export const Checkout = () => {
                   },
                 ]}>
                 {' '}
-                {(priceWhenUseVoucher(totalPrice) - totalPrice).toLocaleString(
-                  'vi',
-                  {
-                    style: 'currency',
-                    currency: 'VND',
-                  },
-                )}
+                {`${formatNumber(
+                  priceWhenUseVoucher(totalPrice) - totalPrice || 0,
+                )} ₫`}
               </Text>
             </View>
           )}
@@ -379,10 +368,7 @@ export const Checkout = () => {
                   color: 'tomato',
                 },
               ]}>
-              {priceWhenUseVoucher(totalPrice).toLocaleString('vi', {
-                style: 'currency',
-                currency: 'VND',
-              })}
+              {`${formatNumber(priceWhenUseVoucher(totalPrice) || 0)} ₫`}
             </Text>
           </View>
         </View>

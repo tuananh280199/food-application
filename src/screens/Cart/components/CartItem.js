@@ -14,6 +14,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
 import {roundHalfRate} from '../../../utils/RoundHalfRate';
+import { formatNumber } from "../../../utils/formatNumberVND";
 
 type CartItemProps = {
   image?: string,
@@ -81,10 +82,7 @@ const CartItem = (props: CartItemProps) => {
             <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
               <Text style={{fontSize: 16}}>Giá : </Text>
               <Text style={styles.titleCost}>
-                {price?.toLocaleString('vi', {
-                  style: 'currency',
-                  currency: 'VND',
-                })}
+                {`${formatNumber(price || 0)} ₫`}
               </Text>
             </View>
             <View
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 8,
+    elevation: 1,
     marginBottom: 12,
   },
   container: {

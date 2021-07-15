@@ -15,6 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {DriveWidth} from '../../../constants/Dimensions';
 import {Rating} from '../../../components/Rating';
 import {roundHalfRate} from '../../../utils/RoundHalfRate';
+import { formatNumber } from "../../../utils/formatNumberVND";
 
 type CardFoodProps = {
   newFood?: number,
@@ -115,10 +116,7 @@ const CardFood = (props: CardFoodProps) => {
                         }
                       : null,
                   ]}>
-                  {price?.toLocaleString('vi', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {`${formatNumber(price || 0)} ₫`}
                 </Text>
                 {saleFood === 1 ? (
                   <Text
@@ -126,10 +124,7 @@ const CardFood = (props: CardFoodProps) => {
                       styles.titleCost,
                       {marginLeft: 5, color: 'red', fontSize: 16},
                     ]}>
-                    {priceSale?.toLocaleString('vi', {
-                      style: 'currency',
-                      currency: 'VND',
-                    })}
+                    {`${formatNumber(priceSale || 0)} ₫`}
                   </Text>
                 ) : (
                   <></>

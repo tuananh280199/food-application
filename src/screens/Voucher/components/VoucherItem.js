@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import moment from 'moment';
+import { formatNumber } from "../../../utils/formatNumberVND";
 
 type VoucherItemProps = {
   name?: string,
@@ -26,10 +27,7 @@ export const VoucherItem = (props: VoucherItemProps) => {
       return (
         <Text style={[styles.txt, {color: '#ff5b45'}]}>
           {' '}
-          {discount_price.toLocaleString('vi', {
-            style: 'currency',
-            currency: 'VND',
-          })}
+          {`${formatNumber(discount_price || 0)} ₫`}
         </Text>
       );
     }
@@ -51,10 +49,7 @@ export const VoucherItem = (props: VoucherItemProps) => {
         <Text>
           Áp Dụng Với Đơn Hàng Từ{' '}
           <Text style={[styles.txt, {color: '#ff5b45'}]}>
-            {min_price_to_use.toLocaleString('vi', {
-              style: 'currency',
-              currency: 'VND',
-            })}
+            {`${formatNumber(min_price_to_use || 0)} ₫`}
           </Text>{' '}
           Trở Lên
         </Text>

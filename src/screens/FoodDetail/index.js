@@ -27,6 +27,7 @@ import productAPI from '../../services/product';
 import {roundHalfRate} from '../../utils/RoundHalfRate';
 import {addFavouriteFood} from '../FavouriteFood/slide/favouriteSlide';
 import {addItemToCart} from '../Cart/slice/cartSlice';
+import { formatNumber } from "../../utils/formatNumberVND";
 
 const FoodDetail = () => {
   const navigation = useNavigation();
@@ -223,10 +224,7 @@ const FoodDetail = () => {
                         }
                       : null,
                   ]}>
-                  {product?.price?.toLocaleString('vi', {
-                    style: 'currency',
-                    currency: 'VND',
-                  })}
+                  {`${formatNumber(product?.price || 0)} ₫`}
                 </Text>
                 {product?.sale === 1 ? (
                   <Text
@@ -240,10 +238,7 @@ const FoodDetail = () => {
                         color: 'red',
                       },
                     ]}>
-                    {product?.priceSale?.toLocaleString('vi', {
-                      style: 'currency',
-                      currency: 'VND',
-                    })}
+                    {`${formatNumber(product?.priceSale || 0)} ₫`}
                   </Text>
                 ) : (
                   <></>
