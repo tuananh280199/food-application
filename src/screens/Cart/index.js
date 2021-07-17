@@ -185,8 +185,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   footer: {
-    backgroundColor: '#f6edff',
-    height: DriveHeight * 0.17,
+    backgroundColor: '#ffff99',
+    height: DriveHeight * 0.16,
     justifyContent: 'space-around',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

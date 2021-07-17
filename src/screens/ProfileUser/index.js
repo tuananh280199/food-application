@@ -16,6 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Octicons from 'react-native-vector-icons/Octicons';
 import FastImage from 'react-native-fast-image';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -32,7 +33,8 @@ import {
   ORDER_HISTORY,
   SIGN_IN,
   FAVOURITE_FOOD,
-} from '../../constants/StackNavigation';
+  TRACK_ORDER, CONFIRM_ORDER,
+} from "../../constants/StackNavigation";
 import {logout, updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
@@ -365,8 +367,22 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
+          onPress={() => handleOptionClick('Theo Dõi Đơn Hàng', TRACK_ORDER)}>
+          <Octicons
+            name={'list-ordered'}
+            size={20}
+            color={'rgb(245, 54, 37)'}
+          />
+          <Text
+            style={[styles.subTextOther, {marginHorizontal: 15}]}
+            numberOfLine={2}>
+            Theo Dõi Đơn Hàng
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.commonOther}
           onPress={() => handleOptionClick('Lịch Sử Mua Hàng', ORDER_HISTORY)}>
-          <Entypo name={'list'} size={20} color={'rgb(245, 54, 37)'} />
+          <FontAwesome name={'history'} size={20} color={'rgb(245, 54, 37)'} />
           <Text
             style={[styles.subTextOther, {marginHorizontal: 15}]}
             numberOfLine={2}>
@@ -383,32 +399,15 @@ const ProfileUserScreen = () => {
             Đổi Mật Khẩu
           </Text>
         </TouchableOpacity>
-        {/*<TouchableOpacity*/}
-        {/*  style={styles.commonOther}*/}
-        {/*  onPress={() => handleOptionClick('Thanh Toán', PAYMENT)}>*/}
-        {/*  <MaterialIcons*/}
-        {/*    name={'payment'}*/}
-        {/*    size={20}*/}
-        {/*    color={'rgb(245, 54, 37)'}*/}
-        {/*  />*/}
-        {/*  <Text*/}
-        {/*    style={[styles.subTextOther, {marginHorizontal: 15}]}*/}
-        {/*    numberOfLine={2}>*/}
-        {/*    Thanh Toán*/}
-        {/*  </Text>*/}
-        {/*</TouchableOpacity>*/}
-        {/*<TouchableOpacity style={styles.commonOther}>*/}
-        {/*  <MaterialIcons*/}
-        {/*    name={'contact-support'}*/}
-        {/*    size={20}*/}
-        {/*    color={'rgb(245, 54, 37)'}*/}
-        {/*  />*/}
-        {/*  <Text*/}
-        {/*    style={[styles.subTextOther, {marginHorizontal: 15}]}*/}
-        {/*    numberOfLine={2}>*/}
-        {/*    Hỗ Trợ*/}
-        {/*  </Text>*/}
-        {/*</TouchableOpacity>*/}
+        <TouchableOpacity style={styles.commonOther}
+                          onPress={() => handleOptionClick('ConfirmOrder', CONFIRM_ORDER)}>
+          <FontAwesome name={'key'} size={20} color={'rgb(245, 54, 37)'} />
+          <Text
+            style={[styles.subTextOther, {marginHorizontal: 15}]}
+            numberOfLine={2}>
+            Hỗ Trợ
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
           onPress={handleClickSignInOrSignUp}>

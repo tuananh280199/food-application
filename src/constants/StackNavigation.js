@@ -16,7 +16,7 @@ export const FOOD_DETAIL = 'FoodDetail';
 export const LIST_FOOD = 'ListFood';
 export const SEARCH = 'Search';
 
-//Auth
+//Auth - Hide Tab Bar
 export const SIGN_IN = 'SignIn';
 export const SIGN_UP = 'SignUp';
 export const FORGOT_PASSWORD = 'ForgotPassword';
@@ -34,3 +34,5 @@ export const FOOD_DETAIL_FAVOURITE = 'FoodDetailFavourite';
 //Cart
 export const CHECKOUT = 'Checkout';
 export const VOUCHER = 'Voucher';
+export const CONFIRM_ORDER = 'ConfirmOrder';
+export const TRACK_ORDER = 'TrackOrder';
