@@ -1,5 +1,5 @@
 //import modules
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,25 +7,61 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import Toast from 'react-native-easy-toast';
+import LinearGradient from 'react-native-linear-gradient';
 
 //Others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
-import LinearGradient from 'react-native-linear-gradient';
 import {Spinner} from '../../components/Spinner';
-import { SIGN_UP, TRACK_ORDER } from "../../constants/StackNavigation";
-import * as Animatable from 'react-native-animatable';
+import {TRACK_ORDER} from '../../constants/StackNavigation';
+import orderAPI from '../../services/order';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export const ConfirmOrder = () => {
   const navigation = useNavigation();
+  const toastRef = useRef();
+  const route = useRoute();
+  const order_id = route?.params?.order_id;
+
+  const [loadingCancel, setLoadingCancel] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
+
+  const handleCancelOrder = async () => {
+    try {
+      setLoadingCancel(true);
+      await orderAPI.updateOrderStatus(order_id);
+      setLoadingCancel(false);
+      toastRef.current.show(
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 130,
+            height: 80,
+          }}>
+          <AntDesign name={'check'} size={40} color={'white'} />
+          <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
+            Đặt Hàng Thành Công
+          </Text>
+        </View>,
+        700,
+        () => {
+          navigation.popToTop();
+        },
+      );
+    } catch (e) {
+      setLoadingCancel(false);
+      Alert.alert('Huỷ đơn thất bại');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -58,7 +94,9 @@ export const ConfirmOrder = () => {
           {'Vui lòng chờ để chúng tôi xác nhận \n đơn hàng của bạn'}
         </Text>
         <View style={styles.button}>
-          <TouchableOpacity style={styles.signIn} onPress={() => navigation.navigate(TRACK_ORDER)}>
+          <TouchableOpacity
+            style={styles.signIn}
+            onPress={() => navigation.navigate(TRACK_ORDER)}>
             <LinearGradient
               colors={['#43bb6c', '#20c969']}
               style={styles.signIn}>
@@ -75,7 +113,8 @@ export const ConfirmOrder = () => {
             </LinearGradient>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => navigation.navigate(SIGN_UP)}
+            onPress={() => handleCancelOrder()}
+            disabled={loadingCancel}
             style={[
               styles.signIn,
               {
@@ -84,10 +123,12 @@ export const ConfirmOrder = () => {
                 marginTop: 7,
               },
             ]}>
+            {loadingCancel && <Spinner color={'#43bb6c'} />}
             <Text
               style={[
                 styles.textSign,
                 {
+                  marginLeft: 9,
                   color: '#43bb6c',
                 },
               ]}>
@@ -96,6 +137,15 @@ export const ConfirmOrder = () => {
           </TouchableOpacity>
         </View>
       </View>
+      <Toast
+        ref={toastRef}
+        style={{backgroundColor: '#000'}}
+        position="top"
+        fadeInDuration={200}
+        fadeOutDuration={700}
+        positionValue={320}
+        opacity={0.8}
+      />
     </View>
   );
 };

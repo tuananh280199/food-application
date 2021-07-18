@@ -4,7 +4,7 @@ import {ADD_DEVICE} from '../../SocketIO/constants';
 
 const initState = {
   deviceToken: '',
-  order: {},
+  orderStatus: '',
 };
 
 const notificationSlice = createSlice({
@@ -18,9 +18,9 @@ const notificationSlice = createSlice({
         deviceToken: token,
       };
     },
-    updateOrderStatus(state, action) {
-      const {data} = action.payload;
-      state.order = {...data};
+    setOrderStatus(state, action) {
+      const {status} = action.payload;
+      state.orderStatus = status;
     },
   },
 });
@@ -34,6 +34,6 @@ export const sendDeviceToken = (deviceToken) => async (dispatch, getState) => {
   });
 };
 
-export const {updateOrderStatus, setDeviceToken} = notificationSlice.actions;
+export const {setOrderStatus, setDeviceToken} = notificationSlice.actions;
 
 export default notificationSlice.reducer;

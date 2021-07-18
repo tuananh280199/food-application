@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  Alert, Platform,
-} from "react-native";
+  Alert,
+  Platform,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,7 +22,7 @@ import {
 } from './slice/cartSlice';
 import {CHECKOUT} from '../../constants/StackNavigation';
 import {Image} from 'react-native-animatable';
-import { formatNumber } from "../../utils/formatNumberVND";
+import {formatNumber} from '../../utils/formatNumberVND';
 
 const CartScreen = () => {
   const navigation = useNavigation();

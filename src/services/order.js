@@ -24,6 +24,12 @@ const orderAPI = {
     const data = await axios.get('/order/get-voucher');
     return data;
   },
+  updateOrderStatus: async (id) => {
+    return await axios.put(`/order/update-status/${id}`, {
+      status: 'Huỷ Đơn Hàng',
+      user_id: -1,
+    });
+  },
 };
 
 export default orderAPI;

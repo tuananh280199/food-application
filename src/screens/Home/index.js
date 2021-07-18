@@ -307,8 +307,8 @@ const HomeScreen = () => {
           <View>
             {loadingListHotProduct ? (
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {[1, 2, 3, 4, 5, 6].map(() => (
-                  <CardPlaceholderProductHot />
+                {[1, 2, 3, 4, 5, 6].map((index) => (
+                  <CardPlaceholderProductHot key={'CPH' + index.toString()} />
                 ))}
               </ScrollView>
             ) : (
@@ -337,8 +337,8 @@ const HomeScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                {[1, 2, 3].map(() => (
-                  <CategoryPlaceholder />
+                {[1, 2, 3].map((index) => (
+                  <CategoryPlaceholder key={'CP1' + index.toString()} />
                 ))}
               </View>
               <View
@@ -348,8 +348,8 @@ const HomeScreen = () => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                {[1, 2, 3].map(() => (
-                  <CategoryPlaceholder />
+                {[1, 2, 3].map((index) => (
+                  <CategoryPlaceholder key={'CP2' + index.toString()} />
                 ))}
               </View>
             </View>

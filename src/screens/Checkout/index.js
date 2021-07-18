@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Toast from 'react-native-easy-toast';
 import {isEmpty} from 'lodash';
 
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
@@ -24,15 +23,16 @@ import {validatePhone} from '../../utils/ValidatePhone';
 import orderAPI from '../../services/order';
 import {clearCart} from '../Cart/slice/cartSlice';
 import {Spinner} from '../../components/Spinner';
-import {VOUCHER} from '../../constants/StackNavigation';
+import {CONFIRM_ORDER, VOUCHER} from '../../constants/StackNavigation';
 import {formatNumber} from '../../utils/formatNumberVND';
+import { setOrderStatus } from "../../notifications/slice/notificationSlice";
+import { OrderStatus } from "../../utils/OrderStatus";
 
 const moneyShip = 15000;
 
 export const Checkout = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const toastRef = useRef();
   const profile = useSelector((state) => state.auth.profile);
   const cart = useSelector((state) => state.cart.cartFood);
   const {voucher} = useSelector((state) => state.voucher);
@@ -129,28 +129,12 @@ export const Checkout = () => {
       if (response.status === 201) {
         setLoading(false);
         dispatch(clearCart());
-        toastRef.current.show(
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 130,
-              height: 80,
-            }}>
-            <AntDesign name={'check'} size={40} color={'white'} />
-            <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
-              Đặt Hàng Thành Công
-            </Text>
-          </View>,
-          700,
-          () => {
-            navigation.goBack();
-          },
-        );
+        dispatch(setOrderStatus({status: OrderStatus.pending}));
+        navigation.navigate(CONFIRM_ORDER, {order_id: response.order_id});
       }
     } catch (e) {
       setLoading(false);
-      Alert.alert('Thanh toán thất bại. Vui lòng thử lại sau !');
+      Alert.alert('Đặt Hàng thất bại. Vui lòng thử lại sau !');
     }
   };
 
@@ -418,15 +402,6 @@ export const Checkout = () => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-      <Toast
-        ref={toastRef}
-        style={{backgroundColor: '#000'}}
-        position="top"
-        fadeInDuration={200}
-        fadeOutDuration={700}
-        positionValue={320}
-        opacity={0.8}
-      />
     </View>
   );
 };

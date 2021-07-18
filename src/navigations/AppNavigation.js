@@ -27,7 +27,10 @@ import {
 import authAPI from '../services/auth';
 import {getErrorMessage} from '../utils/HandleError';
 import {setNewToken} from '../slices/authSlice';
-import {setDeviceToken} from '../notifications/slice/notificationSlice';
+import {
+  setDeviceToken,
+  setOrderStatus,
+} from '../notifications/slice/notificationSlice';
 import {SignInScreen} from '../screens/SignIn';
 import {SignUpScreen} from '../screens/SignUp';
 import {ChangePasswordScreen} from '../screens/ChangePassword';
@@ -35,6 +38,7 @@ import {ForgotPasswordScreen} from '../screens/ForgotPassword';
 import {ChangeProfileScreen} from '../screens/ChangeProfileUser';
 import {OTPVerify} from '../screens/OTPVerify';
 import {NewPassword} from '../screens/ForgotPassword/NewPassword';
+import {changeDescriptionToStatus} from '../utils/OrderStatus';
 
 const Stack = createStackNavigator();
 
@@ -42,9 +46,9 @@ const AppNavigation = () => {
   const dispatch = useDispatch();
 
   const firstIsLaunch = useSelector((state) => state.auth.firstIsLaunch);
-  const refresh_token = useSelector(
-    (state) => state.auth.profile?.refresh_token,
-  );
+  // const refresh_token = useSelector(
+  //   (state) => state.auth.profile?.refresh_token,
+  // );
   const token = useSelector((state) => state.auth.token);
 
   PushNotification.createChannel({
@@ -65,6 +69,11 @@ const AppNavigation = () => {
 
     onNotification: function (notification) {
       // console.log('NOTIFICATION:', notification);
+      dispatch(
+        setOrderStatus({
+          status: changeDescriptionToStatus(notification.data.message),
+        }),
+      );
       if (token !== '') {
         PushNotification.localNotification({
           /* Android Only Properties */
@@ -95,27 +104,27 @@ const AppNavigation = () => {
     requestPermissions: true,
   });
 
-  useEffect(() => {
-    const refresh = setTimeout(() => {
-      refreshToken();
-    }, 600000); //10 phut
-    return () => clearTimeout(refresh);
-  });
-
-  const refreshToken = async () => {
-    try {
-      if (refresh_token) {
-        const newToken = await authAPI.refreshToken(refresh_token);
-        dispatch(setNewToken({newToken: newToken.token}));
-      }
-    } catch (e) {
-      Snackbar.show({
-        text: getErrorMessage(e),
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: 'rgba(245, 101, 101, 1)',
-      });
-    }
-  };
+  // useEffect(() => {
+  //   const refresh = setTimeout(() => {
+  //     refreshToken();
+  //   }, 600000); //10 phut
+  //   return () => clearTimeout(refresh);
+  // });
+  //
+  // const refreshToken = async () => {
+  //   try {
+  //     if (refresh_token) {
+  //       const newToken = await authAPI.refreshToken(refresh_token);
+  //       dispatch(setNewToken({newToken: newToken.token}));
+  //     }
+  //   } catch (e) {
+  //     Snackbar.show({
+  //       text: getErrorMessage(e),
+  //       duration: Snackbar.LENGTH_SHORT,
+  //       backgroundColor: 'rgba(245, 101, 101, 1)',
+  //     });
+  //   }
+  // };
 
   return (
     <NavigationContainer>

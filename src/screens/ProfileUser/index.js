@@ -399,15 +399,6 @@ const ProfileUserScreen = () => {
             Đổi Mật Khẩu
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.commonOther}
-                          onPress={() => handleOptionClick('ConfirmOrder', CONFIRM_ORDER)}>
-          <FontAwesome name={'key'} size={20} color={'rgb(245, 54, 37)'} />
-          <Text
-            style={[styles.subTextOther, {marginHorizontal: 15}]}
-            numberOfLine={2}>
-            Hỗ Trợ
-          </Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
           onPress={handleClickSignInOrSignUp}>

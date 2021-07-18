@@ -1,5 +1,5 @@
 //import modules
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StepIndicator from 'react-native-step-indicator';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useSelector} from 'react-redux';
 
 //Others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {OrderStatus} from '../../utils/OrderStatus';
 
 const labels = [
   'Chờ Xác Nhận',
@@ -56,7 +58,6 @@ const getStepIndicatorIconConfig = (
   },
   currentPosition,
 ) => {
-  console.log(currentPosition);
   const iconConfig = {
     name: 'feed',
     color:
@@ -193,8 +194,11 @@ const renderLabel = ({
 
 export const TrackOrder = () => {
   const navigation = useNavigation();
+  const orderStatus = useSelector((state) => state.notification.orderStatus);
 
-  const [currentPosition] = useState(0);
+  console.log('orderStatus: ', orderStatus);
+
+  const [currentPosition, setCurrentPosition] = useState(-1);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -202,13 +206,63 @@ export const TrackOrder = () => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    getOrderStatus();
+  }, [orderStatus]);
+
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  const getOrderStatus = () => {
+    switch (orderStatus) {
+      case OrderStatus.pending:
+        setCurrentPosition(0);
+        break;
+      case OrderStatus.confirm:
+        setCurrentPosition(1);
+        break;
+      case OrderStatus.delivery:
+        setCurrentPosition(2);
+        break;
+      case OrderStatus.done:
+        setCurrentPosition(3);
+        break;
+      default:
+        break;
+    }
   };
 
   const renderStepIndicator = (params: any) => (
     <MaterialIcons {...getStepIndicatorIconConfig(params, currentPosition)} />
   );
+
+  if (currentPosition === -1) {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView style={[styles.header]}>
+          <TouchableOpacity onPress={handleGoBack} style={{marginLeft: 20}}>
+            <Ionicons name="arrow-back" color={'white'} size={25} />
+          </TouchableOpacity>
+          <Text style={styles.titleHeader}>Theo Dõi Đơn Hàng</Text>
+          <View style={{width: DriveWidth * 0.1}} />
+        </SafeAreaView>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Image
+            source={require('../../assets/logo-khoaikhau.png')}
+            style={{
+              width: DriveHeight * 0.065,
+              height: DriveHeight * 0.065,
+              marginBottom: 10,
+            }}
+          />
+          <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>
+            Không Có Tiến Trình Đơn Hàng
+          </Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -219,19 +273,6 @@ export const TrackOrder = () => {
         <Text style={styles.titleHeader}>Theo Dõi Đơn Hàng</Text>
         <View style={{width: DriveWidth * 0.1}} />
       </SafeAreaView>
-      {/*<View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>*/}
-      {/*  <Image*/}
-      {/*    source={require('../../assets/logo-khoaikhau.png')}*/}
-      {/*    style={{*/}
-      {/*      width: DriveHeight * 0.065,*/}
-      {/*      height: DriveHeight * 0.065,*/}
-      {/*      marginBottom: 10,*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*  <Text style={{color: '#43bb6c', fontSize: 20, fontWeight: '500'}}>*/}
-      {/*    Không Có Tiến Trình Đơn Hàng*/}
-      {/*  </Text>*/}
-      {/*</View>*/}
       <View style={styles.title}>
         <Image
           source={require('../../assets/logo-khoaikhau.png')}
