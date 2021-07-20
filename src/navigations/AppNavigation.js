@@ -53,8 +53,7 @@ const AppNavigation = () => {
 
   PushNotification.createChannel({
     channelId: 'default_notification_channel_id', // (required)
-    channelName: 'My channel', // (required)
-    channelDescription: 'A channel to categorise your notifications', // (optional) default: undefined.
+    channelName: 'Khoái Khẩu', // (required)
     playSound: true, // (optional) default: true
     soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
     importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
