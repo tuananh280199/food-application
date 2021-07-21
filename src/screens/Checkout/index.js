@@ -25,8 +25,8 @@ import {clearCart} from '../Cart/slice/cartSlice';
 import {Spinner} from '../../components/Spinner';
 import {CONFIRM_ORDER, VOUCHER} from '../../constants/StackNavigation';
 import {formatNumber} from '../../utils/formatNumberVND';
-import { setOrderStatus } from "../../notifications/slice/notificationSlice";
-import { OrderStatus } from "../../utils/OrderStatus";
+import {setOrderStatus} from '../../notifications/slice/notificationSlice';
+import {OrderStatus} from '../../utils/OrderStatus';
 
 const moneyShip = 15000;
 
@@ -129,7 +129,14 @@ export const Checkout = () => {
       if (response.status === 201) {
         setLoading(false);
         dispatch(clearCart());
-        dispatch(setOrderStatus({status: OrderStatus.pending}));
+        dispatch(
+          setOrderStatus({
+            order: {
+              order_id: response.order_id,
+              status: OrderStatus.pending,
+            },
+          }),
+        );
         navigation.navigate(CONFIRM_ORDER, {order_id: response.order_id});
       }
     } catch (e) {

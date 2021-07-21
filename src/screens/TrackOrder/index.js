@@ -194,9 +194,11 @@ const renderLabel = ({
 
 export const TrackOrder = () => {
   const navigation = useNavigation();
-  const orderStatus = useSelector((state) => state.notification.orderStatus);
+  const orderStatus = useSelector(
+    (state) => state.notification.orderStatus.status,
+  );
 
-  console.log('orderStatus: ', orderStatus);
+  // console.log('orderStatus: ', orderStatus);
 
   const [currentPosition, setCurrentPosition] = useState(-1);
 
@@ -209,6 +211,17 @@ export const TrackOrder = () => {
   useEffect(() => {
     getOrderStatus();
   }, [orderStatus]);
+
+  useEffect(() => {
+    if (currentPosition === 3) {
+      let timeout = setTimeout(() => {
+        setCurrentPosition(-1);
+      }, 5000);
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [currentPosition]);
 
   const handleGoBack = () => {
     navigation.goBack();

@@ -39,6 +39,9 @@ import {ChangeProfileScreen} from '../screens/ChangeProfileUser';
 import {OTPVerify} from '../screens/OTPVerify';
 import {NewPassword} from '../screens/ForgotPassword/NewPassword';
 import {changeDescriptionToStatus} from '../utils/OrderStatus';
+import { localNotificationService } from "../notifications/localNotification";
+import { fcmService } from "../notifications/fcm";
+import messaging from "@react-native-firebase/messaging";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +54,67 @@ const AppNavigation = () => {
   // );
   const token = useSelector((state) => state.auth.token);
 
+  // useEffect(() => {
+  //   messaging()
+  //     .getToken()
+  //     .then((fcmToken) => {
+  //       if (fcmToken) {
+  //         // dispatch(onSetFcmToken({fcmToken: fcmToken}));
+  //         console.log('fcm token: ', fcmToken);
+  //       }
+  //     });
+  //
+  //   messaging().setBackgroundMessageHandler(async () => {
+  //     // dispatch(onSetIsNewNotification({isNewNotification: true}));
+  //   });
+  //
+  //   _registerNotify();
+  //   return () => {
+  //     fcmService.unRegister();
+  //     localNotificationService.unregister();
+  //   };
+  // }, [token]);
+  //
+  // const _registerNotify = () => {
+  //   fcmService.registerAppWithFCM();
+  //   fcmService.register(onRegister, onNotification, onOpenNotification);
+  //   localNotificationService.configure(onOpenNotification);
+  //
+  //   function onRegister(token) {
+  //     console.log('[App] onRegister: ', token);
+  //   }
+  //
+  //   function onNotification(remoteMessage) {
+  //     // dispatch(onSetIsNewNotification({isNewNotification: true}));
+  //     console.log('[App] onNotification: ', remoteMessage);
+  //     const notify = remoteMessage.notification;
+  //     const options = {
+  //       soundName: 'default',
+  //       playSound: true,
+  //       largeIcon: 'ic_notification', // add icon large for Android (Link: app/src/main/mipmap)
+  //       smallIcon: 'ic_notification', // add icon small for Android (Link: app/src/main/mipmap)
+  //       color: '#34389d',
+  //     };
+  //     localNotificationService.showNotification(
+  //       notify.messageId,
+  //       notify.title,
+  //       notify.body,
+  //       notify,
+  //       options,
+  //       remoteMessage,
+  //     );
+  //   }
+  //
+  //   function onOpenNotification(remoteMessage) {
+  //     if (token) {
+  //       // navigate(screenNames.PUSH_NOTIFICATION_SCREEN);
+  //     } else {
+  //       // navigate(screenNames.USER_REGISTER_REQUIRE_SCREEN);
+  //     }
+  //   }
+  // };
+
+
   PushNotification.createChannel({
     channelId: 'default_notification_channel_id', // (required)
     channelName: 'Khoái Khẩu', // (required)
@@ -62,17 +126,12 @@ const AppNavigation = () => {
 
   PushNotification.configure({
     onRegister: function (token) {
-      // console.log('device token:', token);
+      console.log('device token:', token);
       dispatch(setDeviceToken({token}));
     },
 
     onNotification: function (notification) {
-      // console.log('NOTIFICATION:', notification);
-      dispatch(
-        setOrderStatus({
-          status: changeDescriptionToStatus(notification.data.message),
-        }),
-      );
+      console.log('NOTIFICATION:', notification);
       if (token !== '') {
         PushNotification.localNotification({
           /* Android Only Properties */

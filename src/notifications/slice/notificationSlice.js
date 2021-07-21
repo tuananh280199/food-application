@@ -4,7 +4,10 @@ import {ADD_DEVICE} from '../../SocketIO/constants';
 
 const initState = {
   deviceToken: '',
-  orderStatus: '',
+  orderStatus: {
+    order_id: 0,
+    status: '',
+  },
 };
 
 const notificationSlice = createSlice({
@@ -19,8 +22,11 @@ const notificationSlice = createSlice({
       };
     },
     setOrderStatus(state, action) {
-      const {status} = action.payload;
-      state.orderStatus = status;
+      const {order} = action.payload;
+      state.orderStatus = {
+        order_id: order.order_id,
+        status: order.status,
+      };
     },
   },
 });
