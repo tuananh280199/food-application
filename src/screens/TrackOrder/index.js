@@ -7,16 +7,18 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StepIndicator from 'react-native-step-indicator';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 //Others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {OrderStatus} from '../../utils/OrderStatus';
+import {resetOrder} from '../../notifications/slice/notificationSlice';
 
 const labels = [
   'Chờ Xác Nhận',
@@ -194,6 +196,7 @@ const renderLabel = ({
 
 export const TrackOrder = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const orderStatus = useSelector(
     (state) => state.notification.orderStatus.status,
   );
@@ -216,6 +219,7 @@ export const TrackOrder = () => {
     if (currentPosition === 3) {
       let timeout = setTimeout(() => {
         setCurrentPosition(-1);
+        dispatch(resetOrder());
       }, 5000);
       return () => {
         clearTimeout(timeout);
@@ -241,7 +245,14 @@ export const TrackOrder = () => {
       case OrderStatus.done:
         setCurrentPosition(3);
         break;
+      case OrderStatus.cancel:
+        dispatch(resetOrder());
+        Alert.alert(
+          'Đơn hàng của bạn đã bị huỷ. Vui lòng đặt hàng vào thời gian khác !',
+        );
+        break;
       default:
+        setCurrentPosition(-1);
         break;
     }
   };

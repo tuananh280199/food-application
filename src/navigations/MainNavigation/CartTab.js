@@ -1,6 +1,8 @@
 //import node_modules
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 //import screen
 import {CartScreen} from '../../screens/Cart';
@@ -17,10 +19,27 @@ import {
   TRACK_ORDER,
   VOUCHER,
 } from '../../constants/StackNavigation';
+import {OrderStatus} from '../../utils/OrderStatus';
 
 const Stack = createStackNavigator();
 
 const CartTab = () => {
+  const navigation = useNavigation();
+  const orderStatus = useSelector((state) => state.notification.orderStatus);
+  console.log(orderStatus);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (
+        orderStatus?.status !== '' &&
+        orderStatus?.status !== OrderStatus.cancel
+      ) {
+        navigation.navigate(ConfirmOrder, {order_id: orderStatus?.order_id});
+      }
+    });
+
+    return unsubscribe;
+  }, [orderStatus.status]);
+
   return (
     <Stack.Navigator
       screenOptions={{

@@ -12,21 +12,31 @@ import {
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Toast from 'react-native-easy-toast';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 //Others
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Spinner} from '../../components/Spinner';
-import {TRACK_ORDER} from '../../constants/StackNavigation';
+import {
+  PROFILE_USER_NAVIGATION,
+  TRACK_ORDER,
+} from '../../constants/StackNavigation';
 import orderAPI from '../../services/order';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {resetOrder} from '../../notifications/slice/notificationSlice';
+import {OrderStatus} from '../../utils/OrderStatus';
 
 export const ConfirmOrder = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const toastRef = useRef();
   const route = useRoute();
   const order_id = route?.params?.order_id;
 
   const [loadingCancel, setLoadingCancel] = useState(false);
+  const orderStatus = useSelector(
+    (state) => state.notification.orderStatus.status,
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -49,11 +59,12 @@ export const ConfirmOrder = () => {
           }}>
           <AntDesign name={'check'} size={40} color={'white'} />
           <Text style={{color: 'white', marginTop: 5, textAlign: 'center'}}>
-            Đặt Hàng Thành Công
+            Huỷ đơn hàng thành công
           </Text>
         </View>,
         700,
         () => {
+          dispatch(resetOrder());
           navigation.popToTop();
         },
       );
@@ -96,7 +107,11 @@ export const ConfirmOrder = () => {
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
-            onPress={() => navigation.navigate(TRACK_ORDER)}>
+            onPress={() =>
+              navigation.navigate(PROFILE_USER_NAVIGATION, {
+                screen: TRACK_ORDER,
+              })
+            }>
             <LinearGradient
               colors={['#43bb6c', '#20c969']}
               style={styles.signIn}>
@@ -112,29 +127,31 @@ export const ConfirmOrder = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleCancelOrder()}
-            disabled={loadingCancel}
-            style={[
-              styles.signIn,
-              {
-                borderColor: '#43bb6c',
-                borderWidth: 1,
-                marginTop: 7,
-              },
-            ]}>
-            {loadingCancel && <Spinner color={'#43bb6c'} />}
-            <Text
+          {orderStatus === OrderStatus.pending && (
+            <TouchableOpacity
+              onPress={() => handleCancelOrder()}
+              disabled={loadingCancel}
               style={[
-                styles.textSign,
+                styles.signIn,
                 {
-                  marginLeft: 9,
-                  color: '#43bb6c',
+                  borderColor: '#43bb6c',
+                  borderWidth: 1,
+                  marginTop: 7,
                 },
               ]}>
-              Huỷ Đơn Hàng
-            </Text>
-          </TouchableOpacity>
+              {loadingCancel && <Spinner color={'#43bb6c'} />}
+              <Text
+                style={[
+                  styles.textSign,
+                  {
+                    marginLeft: 9,
+                    color: '#43bb6c',
+                  },
+                ]}>
+                Huỷ Đơn Hàng
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <Toast

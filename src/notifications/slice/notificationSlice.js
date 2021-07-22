@@ -28,6 +28,12 @@ const notificationSlice = createSlice({
         status: order.status,
       };
     },
+    resetOrder(state, action) {
+      state.orderStatus = {
+        order_id: 0,
+        status: '',
+      };
+    },
   },
 });
 
@@ -40,6 +46,10 @@ export const sendDeviceToken = (deviceToken) => async (dispatch, getState) => {
   });
 };
 
-export const {setOrderStatus, setDeviceToken} = notificationSlice.actions;
+export const {
+  setOrderStatus,
+  setDeviceToken,
+  resetOrder,
+} = notificationSlice.actions;
 
 export default notificationSlice.reducer;

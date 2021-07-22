@@ -28,6 +28,7 @@ import authAPI from '../services/auth';
 import {getErrorMessage} from '../utils/HandleError';
 import {setNewToken} from '../slices/authSlice';
 import {
+  sendDeviceToken,
   setDeviceToken,
   setOrderStatus,
 } from '../notifications/slice/notificationSlice';
@@ -39,9 +40,11 @@ import {ChangeProfileScreen} from '../screens/ChangeProfileUser';
 import {OTPVerify} from '../screens/OTPVerify';
 import {NewPassword} from '../screens/ForgotPassword/NewPassword';
 import {changeDescriptionToStatus} from '../utils/OrderStatus';
-import { localNotificationService } from "../notifications/localNotification";
-import { fcmService } from "../notifications/fcm";
-import messaging from "@react-native-firebase/messaging";
+import {localNotificationService} from '../notifications/localNotification';
+import {fcmService} from '../notifications/fcm';
+import messaging from '@react-native-firebase/messaging';
+import socket from '../SocketIO/socket.io';
+import {CLIENT_CONNECT_SERVER} from '../SocketIO/constants';
 
 const Stack = createStackNavigator();
 
@@ -52,7 +55,12 @@ const AppNavigation = () => {
   // const refresh_token = useSelector(
   //   (state) => state.auth.profile?.refresh_token,
   // );
-  const token = useSelector((state) => state.auth.token);
+  const {profile, token} = useSelector((state) => {
+    return {
+      profile: state.auth.profile,
+      token: state.auth.token,
+    };
+  });
 
   // useEffect(() => {
   //   messaging()
@@ -114,7 +122,6 @@ const AppNavigation = () => {
   //   }
   // };
 
-
   PushNotification.createChannel({
     channelId: 'default_notification_channel_id', // (required)
     channelName: 'Khoái Khẩu', // (required)
@@ -161,6 +168,12 @@ const AppNavigation = () => {
 
     requestPermissions: true,
   });
+
+  useEffect(() => {
+    if (profile?.id) {
+      socket.emit(CLIENT_CONNECT_SERVER, {user_id: profile.id});
+    }
+  }, []);
 
   // useEffect(() => {
   //   const refresh = setTimeout(() => {

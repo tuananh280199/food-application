@@ -12,12 +12,12 @@ socket.on(SERVER_SEND_STATUS, (data) => {
   const orderStatus = store.getState().notification.orderStatus;
   // console.log(token, orderStatus);
   if (orderStatus.order_id === data?.order_id && token !== '') {
-    console.log({
-      order: {
-        order_id: data?.order_id,
-        status: data?.status,
-      },
-    });
+    // console.log({
+    //   order: {
+    //     order_id: data?.order_id,
+    //     status: data?.status,
+    //   },
+    // });
     store.dispatch(
       setOrderStatus({
         order: {
