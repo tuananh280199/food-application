@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -220,7 +219,7 @@ export const TrackOrder = () => {
       let timeout = setTimeout(() => {
         setCurrentPosition(-1);
         dispatch(resetOrder());
-      }, 5000);
+      }, 1500);
       return () => {
         clearTimeout(timeout);
       };
@@ -228,7 +227,7 @@ export const TrackOrder = () => {
   }, [currentPosition]);
 
   const handleGoBack = () => {
-    navigation.goBack();
+    navigation.popToTop();
   };
 
   const getOrderStatus = () => {
@@ -247,9 +246,6 @@ export const TrackOrder = () => {
         break;
       case OrderStatus.cancel:
         dispatch(resetOrder());
-        Alert.alert(
-          'Đơn hàng của bạn đã bị huỷ. Vui lòng đặt hàng vào thời gian khác !',
-        );
         break;
       default:
         setCurrentPosition(-1);

@@ -18,7 +18,9 @@ import {
   PAYMENT,
   FOOD_DETAIL_FAVOURITE,
   TRACK_ORDER,
+  CONFIRM_ORDER,
 } from '../../constants/StackNavigation';
+import {ConfirmOrder} from '../../screens/ConfirmOrder';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +32,7 @@ const ProfileUserTab = () => {
       <Stack.Screen name={ORDER_HISTORY} component={OrderHistoryScreen} />
       <Stack.Screen name={PAYMENT} component={PaymentScreen} />
       <Stack.Screen name={FOOD_DETAIL_FAVOURITE} component={FoodDetail} />
+      <Stack.Screen name={CONFIRM_ORDER} component={ConfirmOrder} />
       <Stack.Screen name={TRACK_ORDER} component={TrackOrder} />
     </Stack.Navigator>
   );

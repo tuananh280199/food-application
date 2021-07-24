@@ -1,5 +1,5 @@
 //import modules
-import React, {useLayoutEffect, useState, useRef} from 'react';
+import React, {useLayoutEffect, useState, useRef, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-easy-toast';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
@@ -18,6 +18,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import {Spinner} from '../../components/Spinner';
 import {
+  CART_NAVIGATION,
   PROFILE_USER_NAVIGATION,
   TRACK_ORDER,
 } from '../../constants/StackNavigation';
@@ -25,18 +26,15 @@ import orderAPI from '../../services/order';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {resetOrder} from '../../notifications/slice/notificationSlice';
 import {OrderStatus} from '../../utils/OrderStatus';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export const ConfirmOrder = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const toastRef = useRef();
-  const route = useRoute();
-  const order_id = route?.params?.order_id;
 
   const [loadingCancel, setLoadingCancel] = useState(false);
-  const orderStatus = useSelector(
-    (state) => state.notification.orderStatus.status,
-  );
+  const orderStatus = useSelector((state) => state.notification.orderStatus);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,10 +42,25 @@ export const ConfirmOrder = () => {
     });
   }, [navigation]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        orderStatus.status === OrderStatus.done ||
+        orderStatus.status === OrderStatus.cancel
+      ) {
+        navigation.reset({
+          index: 0,
+          routes: [{name: CART_NAVIGATION}, {name: PROFILE_USER_NAVIGATION}],
+        });
+        dispatch(resetOrder());
+      }
+    }, [orderStatus.status]),
+  );
+
   const handleCancelOrder = async () => {
     try {
       setLoadingCancel(true);
-      await orderAPI.updateOrderStatus(order_id);
+      await orderAPI.updateOrderStatus(orderStatus.order_id);
       setLoadingCancel(false);
       toastRef.current.show(
         <View
@@ -69,15 +82,27 @@ export const ConfirmOrder = () => {
         },
       );
     } catch (e) {
+      console.log(e);
       setLoadingCancel(false);
       Alert.alert('Huỷ đơn thất bại');
     }
   };
 
+  const handleGoBack = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: CART_NAVIGATION}, {name: PROFILE_USER_NAVIGATION}],
+    });
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={[styles.header]}>
+        <TouchableOpacity onPress={handleGoBack} style={{marginLeft: 20}}>
+          <Ionicons name="arrow-back" color={'white'} size={25} />
+        </TouchableOpacity>
         <Text style={styles.titleHeader}>Đặt Hàng</Text>
+        <View style={{width: DriveWidth * 0.1}} />
       </SafeAreaView>
       <View
         style={{
@@ -107,11 +132,7 @@ export const ConfirmOrder = () => {
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
-            onPress={() =>
-              navigation.navigate(PROFILE_USER_NAVIGATION, {
-                screen: TRACK_ORDER,
-              })
-            }>
+            onPress={() => navigation.navigate(TRACK_ORDER)}>
             <LinearGradient
               colors={['#43bb6c', '#20c969']}
               style={styles.signIn}>
@@ -127,7 +148,7 @@ export const ConfirmOrder = () => {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-          {orderStatus === OrderStatus.pending && (
+          {orderStatus.status === OrderStatus.pending && (
             <TouchableOpacity
               onPress={() => handleCancelOrder()}
               disabled={loadingCancel}
@@ -174,7 +195,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: DriveWidth,
     height: DriveHeight * 0.12,

@@ -1,7 +1,6 @@
 //import node_modules
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
 //import screen
@@ -19,26 +18,19 @@ import {
   TRACK_ORDER,
   VOUCHER,
 } from '../../constants/StackNavigation';
-import {OrderStatus} from '../../utils/OrderStatus';
 
 const Stack = createStackNavigator();
 
 const CartTab = () => {
   const navigation = useNavigation();
-  const orderStatus = useSelector((state) => state.notification.orderStatus);
-  console.log(orderStatus);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (
-        orderStatus?.status !== '' &&
-        orderStatus?.status !== OrderStatus.cancel
-      ) {
-        navigation.navigate(ConfirmOrder, {order_id: orderStatus?.order_id});
-      }
+      navigation.navigate(CART_SCREEN);
     });
 
     return unsubscribe;
-  }, [orderStatus.status]);
+  }, [navigation]);
 
   return (
     <Stack.Navigator
@@ -55,8 +47,6 @@ const CartTab = () => {
       <Stack.Screen name={CART_SCREEN} component={CartScreen} />
       <Stack.Screen name={CHECKOUT} component={Checkout} />
       <Stack.Screen name={VOUCHER} component={VoucherScreen} />
-      <Stack.Screen name={CONFIRM_ORDER} component={ConfirmOrder} />
-      <Stack.Screen name={TRACK_ORDER} component={TrackOrder} />
     </Stack.Navigator>
   );
 };

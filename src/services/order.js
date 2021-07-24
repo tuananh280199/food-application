@@ -30,6 +30,9 @@ const orderAPI = {
       user_id: -1,
     });
   },
+  getLastOrderStatusByUserId: async (uid) => {
+    return await axios.get(`/order/get-last-order-status-by-user/${uid}`);
+  },
 };
 
 export default orderAPI;

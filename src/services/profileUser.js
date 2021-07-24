@@ -19,6 +19,7 @@ const profileUserAPI = {
   //   });
   // },
   uploadAvatar: (id, url) => {
+    console.log(id, url);
     return axios.put(`/files/public/${id}`, {url});
   },
 };

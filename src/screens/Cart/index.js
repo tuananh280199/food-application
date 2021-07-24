@@ -29,6 +29,7 @@ const CartScreen = () => {
   const dispatch = useDispatch();
   const listFoodInCart = useSelector((state) => state.cart.cartFood);
   const profile = useSelector((state) => state.auth.profile);
+  const orderStatus = useSelector((state) => state.notification.orderStatus);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,6 +44,13 @@ const CartScreen = () => {
     }
     if (!profile.id) {
       Alert.alert('Bạn cần đăng nhập để đặt hàng !');
+      return;
+    }
+    if (orderStatus.order_id) {
+      Alert.alert(
+        '',
+        'Bạn có đơn hàng đang được xử lý. Vui lòng chờ đến khi đơn hàng được xử lý xong !',
+      );
       return;
     }
     navigation.navigate(CHECKOUT);

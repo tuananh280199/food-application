@@ -4,7 +4,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Alert,
   Platform,
@@ -33,8 +32,9 @@ import {
   ORDER_HISTORY,
   SIGN_IN,
   FAVOURITE_FOOD,
-  TRACK_ORDER, CONFIRM_ORDER,
-} from "../../constants/StackNavigation";
+  CONFIRM_ORDER,
+  TRACK_ORDER,
+} from '../../constants/StackNavigation';
 import {logout, updateProfile} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import profileUserAPI from '../../services/profileUser';
@@ -42,6 +42,8 @@ import {DriveHeight, DriveWidth} from '../../constants/Dimensions';
 import orderAPI from '../../services/order';
 import {Spinner} from '../../components/Spinner';
 import productAPI from '../../services/product';
+import deviceAPI from '../../services/device';
+import {OrderStatus} from '../../utils/OrderStatus';
 
 const ProfileUserScreen = () => {
   const navigation = useNavigation();
@@ -53,6 +55,8 @@ const ProfileUserScreen = () => {
       token: state.auth.token,
     };
   });
+  const deviceToken = useSelector((state) => state.notification.deviceToken);
+  const orderStatus = useSelector((state) => state.notification.orderStatus);
 
   const [loadingChangeAvatar, setLoadingChangeAvatar] = useState(false);
   const [avatar, setAvatar] = useState(profile?.avatar);
@@ -146,8 +150,12 @@ const ProfileUserScreen = () => {
           {mode: 'contain', onlyScaleDown: false},
         );
 
+        const uriParts = resizedImage.uri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+
         data.append('file', {
           name: resizedImage.name,
+          type: `image/${fileType}`,
           uri:
             Platform.OS === 'android'
               ? resizedImage.uri
@@ -250,8 +258,39 @@ const ProfileUserScreen = () => {
       navigation.navigate(SIGN_IN);
       return;
     }
-    setNumberOrder(0);
-    dispatch(logout());
+    if (orderStatus.order_id) {
+      Alert.alert(
+        '',
+        'Bạn có đơn hàng đang được xử lý. Vui lòng chờ đến khi đơn hàng được xử lý xong !',
+        [
+          {
+            text: 'Ok',
+          },
+        ],
+      );
+      return;
+    }
+    Alert.alert('', 'Bạn có thực sự muốn đăng xuất ?', [
+      {
+        text: 'Huỷ',
+        style: 'cancel',
+      },
+      {
+        text: 'Đăng Xuất',
+        onPress: async () => {
+          try {
+            setNumberFavourite(0);
+            setNumberOrder(0);
+            dispatch(logout());
+            if (deviceToken) {
+              await deviceAPI.deleteDevice(profile.id, deviceToken.token);
+            }
+          } catch (e) {
+            return;
+          }
+        },
+      },
+    ]);
   };
 
   const handleOptionClick = (txt, screen) => {
@@ -367,7 +406,14 @@ const ProfileUserScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.commonOther}
-          onPress={() => handleOptionClick('Theo Dõi Đơn Hàng', TRACK_ORDER)}>
+          onPress={() =>
+            handleOptionClick(
+              'Theo Dõi Đơn Hàng',
+              orderStatus.status === OrderStatus.pending
+                ? CONFIRM_ORDER
+                : TRACK_ORDER,
+            )
+          }>
           <Octicons
             name={'list-ordered'}
             size={20}

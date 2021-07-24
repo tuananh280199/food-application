@@ -6,7 +6,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   FlatList,
   TouchableOpacity,
   Image,
@@ -72,29 +71,54 @@ const HomeScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    getInitData();
+    // getInitData();
+    getData();
   }, []);
 
-  const getInitData = async () => {
-    try {
-      const hotProducts = await productAPI.getHotProductHomeScreen();
-      const categories = await categoryAPI.getCategoryHomeScreen();
-      setLoadingAdvertisement(false);
-      setListHotProduct(hotProducts.data);
-      setLoadingListHotProduct(false);
-      setListCategory(categories.data);
-      setLoadingListCategory(false);
-      const hintProduct = await productAPI.getHintProductHomeScreen();
-      setListHintProduct(hintProduct.data);
-      setLoadingListHintProduct(false);
-    } catch (e) {
-      Snackbar.show({
-        text: getErrorMessage(e),
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: 'rgba(245, 101, 101, 1)',
+  const getData = () => {
+    Promise.all([
+      productAPI.getHotProductHomeScreen(),
+      categoryAPI.getCategoryHomeScreen(),
+      productAPI.getHintProductHomeScreen(),
+    ])
+      .then((results) => {
+        setLoadingAdvertisement(false);
+        setListHotProduct(results[0].data);
+        setLoadingListHotProduct(false);
+        setListCategory(results[1].data);
+        setLoadingListCategory(false);
+        setListHintProduct(results[2].data);
+        setLoadingListHintProduct(false);
+      })
+      .catch((e) => {
+        Snackbar.show({
+          text: getErrorMessage(e),
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: 'rgba(245, 101, 101, 1)',
+        });
       });
-    }
   };
+
+  // const getInitData = async () => {
+  //   try {
+  //     const hotProducts = await productAPI.getHotProductHomeScreen();
+  //     setLoadingAdvertisement(false);
+  //     setListHotProduct(hotProducts.data);
+  //     setLoadingListHotProduct(false);
+  //     const categories = await categoryAPI.getCategoryHomeScreen();
+  //     setListCategory(categories.data);
+  //     setLoadingListCategory(false);
+  //     const hintProduct = await productAPI.getHintProductHomeScreen();
+  //     setListHintProduct(hintProduct.data);
+  //     setLoadingListHintProduct(false);
+  //   } catch (e) {
+  //     Snackbar.show({
+  //       text: getErrorMessage(e),
+  //       duration: Snackbar.LENGTH_SHORT,
+  //       backgroundColor: 'rgba(245, 101, 101, 1)',
+  //     });
+  //   }
+  // };
 
   const handleClickCardFood = (item) => {
     navigation.navigate(FOOD_DETAIL, {

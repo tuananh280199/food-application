@@ -23,10 +23,16 @@ import {validatePhone} from '../../utils/ValidatePhone';
 import orderAPI from '../../services/order';
 import {clearCart} from '../Cart/slice/cartSlice';
 import {Spinner} from '../../components/Spinner';
-import {CONFIRM_ORDER, VOUCHER} from '../../constants/StackNavigation';
+import {
+  CONFIRM_ORDER,
+  PROFILE_USER_NAVIGATION,
+  VOUCHER,
+} from '../../constants/StackNavigation';
 import {formatNumber} from '../../utils/formatNumberVND';
 import {setOrderStatus} from '../../notifications/slice/notificationSlice';
 import {OrderStatus} from '../../utils/OrderStatus';
+import socket from '../../SocketIO/socket.io';
+import {CLIENT_SEND_ORDER} from '../../SocketIO/constants';
 
 const moneyShip = 15000;
 
@@ -128,6 +134,10 @@ export const Checkout = () => {
       );
       if (response.status === 201) {
         setLoading(false);
+        socket.emit(CLIENT_SEND_ORDER, {
+          user_id: profile.id,
+          order_id: response.order_id,
+        });
         dispatch(clearCart());
         dispatch(
           setOrderStatus({
@@ -137,7 +147,9 @@ export const Checkout = () => {
             },
           }),
         );
-        navigation.navigate(CONFIRM_ORDER, {order_id: response.order_id});
+        navigation.navigate(PROFILE_USER_NAVIGATION, {
+          screen: CONFIRM_ORDER,
+        });
       }
     } catch (e) {
       setLoading(false);

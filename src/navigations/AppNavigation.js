@@ -28,6 +28,7 @@ import authAPI from '../services/auth';
 import {getErrorMessage} from '../utils/HandleError';
 import {setNewToken} from '../slices/authSlice';
 import {
+  resetOrder,
   sendDeviceToken,
   setDeviceToken,
   setOrderStatus,
@@ -39,23 +40,71 @@ import {ForgotPasswordScreen} from '../screens/ForgotPassword';
 import {ChangeProfileScreen} from '../screens/ChangeProfileUser';
 import {OTPVerify} from '../screens/OTPVerify';
 import {NewPassword} from '../screens/ForgotPassword/NewPassword';
-import {changeDescriptionToStatus} from '../utils/OrderStatus';
+import {changeDescriptionToStatus, OrderStatus} from '../utils/OrderStatus';
 import {localNotificationService} from '../notifications/localNotification';
 import {fcmService} from '../notifications/fcm';
 import messaging from '@react-native-firebase/messaging';
 import socket from '../SocketIO/socket.io';
 import {CLIENT_CONNECT_SERVER} from '../SocketIO/constants';
+import {store} from '../store';
+import orderAPI from '../services/order';
 
 const Stack = createStackNavigator();
 
+PushNotification.createChannel({
+  channelId: 'default_notification_channel_id', // (required)
+  channelName: 'Khoái Khẩu', // (required)
+  playSound: true, // (optional) default: true
+  soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+  importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+  vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+});
+
+PushNotification.configure({
+  onRegister: function (token) {
+    // console.log('device token:', token);
+    store.dispatch(setDeviceToken({token}));
+  },
+
+  onNotification: function (notification) {
+    // console.log('NOTIFICATION:', notification);
+    if (store.getState().auth.token !== '') {
+      PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: 'default_notification_channel_id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        autoCancel: true, // (optional) default: true
+        vibrate: true, // (optional) default: true
+        vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
+
+        /* iOS and Android properties */
+        title: notification.data.title, // (optional)
+        message: notification.data.message, // (required)
+        userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
+        playSound: true,
+        soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      });
+      // notification.finish(PushNotificationIOS.FetchResult.NoData);
+    }
+  },
+
+  permissions: {
+    alert: true,
+    badge: true,
+    sound: true,
+  },
+
+  popInitialNotification: true,
+
+  requestPermissions: true,
+});
+
 const AppNavigation = () => {
   const dispatch = useDispatch();
-
   const firstIsLaunch = useSelector((state) => state.auth.firstIsLaunch);
   // const refresh_token = useSelector(
   //   (state) => state.auth.profile?.refresh_token,
   // );
-  const {profile, token} = useSelector((state) => {
+  const {profile} = useSelector((state) => {
     return {
       profile: state.auth.profile,
       token: state.auth.token,
@@ -122,57 +171,37 @@ const AppNavigation = () => {
   //   }
   // };
 
-  PushNotification.createChannel({
-    channelId: 'default_notification_channel_id', // (required)
-    channelName: 'Khoái Khẩu', // (required)
-    playSound: true, // (optional) default: true
-    soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-    importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
-    vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
-  });
-
-  PushNotification.configure({
-    onRegister: function (token) {
-      console.log('device token:', token);
-      dispatch(setDeviceToken({token}));
-    },
-
-    onNotification: function (notification) {
-      console.log('NOTIFICATION:', notification);
-      if (token !== '') {
-        PushNotification.localNotification({
-          /* Android Only Properties */
-          channelId: 'default_notification_channel_id', // (required) channelId, if the channel doesn't exist, notification will not trigger.
-          autoCancel: true, // (optional) default: true
-          vibrate: true, // (optional) default: true
-          vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-
-          /* iOS and Android properties */
-          title: notification.data.title, // (optional)
-          message: notification.data.message, // (required)
-          userInfo: {}, // (optional) default: {} (using null throws a JSON value '<null>' error)
-          playSound: true,
-          soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
-        });
-        // notification.finish(PushNotificationIOS.FetchResult.NoData);
-      }
-    },
-
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true,
-    },
-
-    popInitialNotification: true,
-
-    requestPermissions: true,
-  });
-
   useEffect(() => {
-    if (profile?.id) {
-      socket.emit(CLIENT_CONNECT_SERVER, {user_id: profile.id});
+    async function getStatusOrder() {
+      if (profile?.id) {
+        socket.emit(CLIENT_CONNECT_SERVER, {user_id: profile.id});
+        try {
+          const response = await orderAPI.getLastOrderStatusByUserId(
+            profile.id,
+          );
+          if (response?.status === 200) {
+            if (
+              response.data.status === OrderStatus.done ||
+              response.data.status === OrderStatus.cancel
+            ) {
+              dispatch(resetOrder());
+            } else {
+              dispatch(
+                setOrderStatus({
+                  order: {
+                    order_id: response.data.id,
+                    status: response.data.status,
+                  },
+                }),
+              );
+            }
+          }
+        } catch (e) {
+          return;
+        }
+      }
     }
+    getStatusOrder();
   }, []);
 
   // useEffect(() => {
