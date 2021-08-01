@@ -262,7 +262,7 @@ const HomeScreen = () => {
           <Text style={{color: 'gray'}}>Tìm kiếm đồ ăn !</Text>
         </View>
       </TouchableOpacity>
-      <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.body} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
         <View style={styles.sliderContainer}>
           {loadingAdvertisement ? (
             <AdvertisementPlaceholder />

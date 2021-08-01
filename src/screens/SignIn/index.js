@@ -34,6 +34,8 @@ import {login} from '../../slices/authSlice';
 import {getErrorMessage} from '../../utils/HandleError';
 import {Spinner} from '../../components/Spinner';
 import { sendDeviceToken } from "../../notifications/slice/notificationSlice";
+import socket from "../../SocketIO/socket.io";
+import { CLIENT_CONNECT_SERVER } from "../../SocketIO/constants";
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -137,6 +139,8 @@ const SignInScreen = () => {
         setLoading(false);
         if (deviceToken) {
           dispatch(sendDeviceToken(deviceToken));
+        } else {
+          socket.emit(CLIENT_CONNECT_SERVER, {user_id: response.profile.id});
         }
         navigation.navigate(PROFILE_USER_SCREEN);
       } catch (e) {

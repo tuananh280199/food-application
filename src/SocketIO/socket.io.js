@@ -11,8 +11,9 @@ socket.on(SERVER_SEND_STATUS, (data) => {
   const token = store.getState().auth.token;
   const orderStatus = store.getState().notification.orderStatus;
   // console.log(token, orderStatus);
+  // console.log(orderStatus.order_id === data?.order_id && token !== '');
   if (orderStatus.order_id === data?.order_id && token !== '') {
-    // console.log({
+    // console.log('order: ', {
     //   order: {
     //     order_id: data?.order_id,
     //     status: data?.status,

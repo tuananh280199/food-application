@@ -113,12 +113,12 @@ const ContactScreen = () => {
           </View>
         </View>
         <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item
-            buttonColor="#3498db"
-            title="Gửi Tin Nhắn"
-            onPress={() => alert('Chức năng này sẽ sớm ra mắt !')}>
-            <Fontisto name="messenger" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
+          {/*<ActionButton.Item*/}
+          {/*  buttonColor="#3498db"*/}
+          {/*  title="Gửi Tin Nhắn"*/}
+          {/*  onPress={() => alert('Chức năng này sẽ sớm ra mắt !')}>*/}
+          {/*  <Fontisto name="messenger" style={styles.actionButtonIcon} />*/}
+          {/*</ActionButton.Item>*/}
           <ActionButton.Item
             buttonColor="#1abc9c"
             title="Gọi Điện"

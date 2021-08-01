@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useEffect} from 'react';
 import {
   View,
   Text,
@@ -23,6 +23,8 @@ import {
 import {CHECKOUT} from '../../constants/StackNavigation';
 import {Image} from 'react-native-animatable';
 import {formatNumber} from '../../utils/formatNumberVND';
+import {OrderStatus} from '../../utils/OrderStatus';
+import {resetOrder} from '../../notifications/slice/notificationSlice';
 
 const CartScreen = () => {
   const navigation = useNavigation();
@@ -36,6 +38,19 @@ const CartScreen = () => {
       headerShown: false,
     });
   }, [navigation]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (
+        orderStatus.status === OrderStatus.done ||
+        orderStatus.status === OrderStatus.cancel
+      ) {
+        dispatch(resetOrder());
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, orderStatus]);
 
   const handleOrder = () => {
     if (!listFoodInCart.length) {

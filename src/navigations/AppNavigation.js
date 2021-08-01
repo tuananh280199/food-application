@@ -173,6 +173,7 @@ const AppNavigation = () => {
 
   useEffect(() => {
     async function getStatusOrder() {
+      // console.log('profile id: ', profile?.id);
       if (profile?.id) {
         socket.emit(CLIENT_CONNECT_SERVER, {user_id: profile.id});
         try {
