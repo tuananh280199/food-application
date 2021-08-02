@@ -203,7 +203,7 @@ const AppNavigation = () => {
       }
     }
     getStatusOrder();
-  }, []);
+  }, [profile?.id]);
 
   // useEffect(() => {
   //   const refresh = setTimeout(() => {
