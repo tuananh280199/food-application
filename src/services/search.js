@@ -13,6 +13,12 @@ const searchAPI = {
     );
     return data;
   },
+  searchProductByPrice: async (range, page) => {
+    const data = await axios.get(
+      `/product/search-by-price?max_price=${range}&page=${page}`,
+    );
+    return data;
+  },
 };
 
 export default searchAPI;

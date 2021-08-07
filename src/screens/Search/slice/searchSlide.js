@@ -41,6 +41,22 @@ export const fetchDataSearchByType = createAsyncThunk(
   },
 );
 
+export const fetchDataSearchByPrice = createAsyncThunk(
+  'search/searchByPrice',
+  async (params) => {
+    const {page, range, isLoadMore = false} = params;
+    try {
+      const result = await searchAPI.searchProductByPrice(range, page);
+      return {
+        result,
+        isLoadMore,
+      };
+    } catch (e) {
+      throw e;
+    }
+  },
+);
+
 const searchSlice = createSlice({
   name: 'search',
   initialState: initState,
@@ -60,6 +76,19 @@ const searchSlice = createSlice({
       };
     },
     [fetchDataSearchByType.fulfilled]: (state, action) => {
+      const {result, isLoadMore} = action.payload;
+      const currentList = isLoadMore
+        ? state.food.list.concat(result.data)
+        : result.data;
+      const hasNext = result.hasNext;
+      const page = result.page;
+      state.food = {
+        list: currentList,
+        hasNext,
+        page,
+      };
+    },
+    [fetchDataSearchByPrice.fulfilled]: (state, action) => {
       const {result, isLoadMore} = action.payload;
       const currentList = isLoadMore
         ? state.food.list.concat(result.data)

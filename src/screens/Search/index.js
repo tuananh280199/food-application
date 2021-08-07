@@ -29,6 +29,7 @@ import {FOOD_DETAIL} from '../../constants/StackNavigation';
 import {getErrorMessage} from '../../utils/HandleError';
 import {
   fetchDataSearchByName,
+  fetchDataSearchByPrice,
   fetchDataSearchByType,
 } from './slice/searchSlide';
 import {Spinner} from '../../components/Spinner';
@@ -38,6 +39,9 @@ import {
 } from './slice/historySearchSlice';
 import {addItemToCart} from '../Cart/slice/cartSlice';
 import {Image} from 'react-native-animatable';
+import Slider from '@react-native-community/slider';
+import {SwitchComponent} from './components/switch';
+import {formatNumber} from '../../utils/formatNumberVND';
 
 const SearchScreen = () => {
   const navigation = useNavigation();
@@ -60,6 +64,8 @@ const SearchScreen = () => {
   const [visibleFlatList, setVisibleFlatList] = useState(false);
   const [loading, setLoading] = useState(false);
   const [typeFood, setTypeFood] = useState('');
+  const [range, setRange] = useState(5000);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -99,6 +105,20 @@ const SearchScreen = () => {
     }
   };
 
+  const getDataSearchByPrice = async () => {
+    try {
+      setLoading(true);
+      await dispatch(fetchDataSearchByPrice({range, page: 1}));
+      setLoading(false);
+    } catch (e) {
+      Snackbar.show({
+        text: getErrorMessage(e),
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: 'rgba(245, 101, 101, 1)',
+      });
+    }
+  };
+
   const handleLoadMore = async () => {
     try {
       if (!hasNextPage) {
@@ -108,6 +128,14 @@ const SearchScreen = () => {
         await dispatch(
           fetchDataSearchByName({
             keyWord: valueTextInput,
+            page: currentPage + 1,
+            isLoadMore: true,
+          }),
+        );
+      } else if (typeFood === 'range') {
+        await dispatch(
+          fetchDataSearchByPrice({
+            range,
             page: currentPage + 1,
             isLoadMore: true,
           }),
@@ -164,6 +192,12 @@ const SearchScreen = () => {
     return getDataSearchByType(type);
   };
 
+  const handleSearchByPrice = () => {
+    setVisibleFlatList(true);
+    setTypeFood('range');
+    return getDataSearchByPrice();
+  };
+
   const handleClickCardFood = (item) => {
     navigation.navigate(FOOD_DETAIL, {
       product_id: item.id,
@@ -193,6 +227,11 @@ const SearchScreen = () => {
       </View>,
       700,
     );
+  };
+
+  const handleSlider = (val) => {
+    const currentRange = Math.round(val);
+    setRange(currentRange);
   };
 
   const renderItemRecommend = ({item, index}) => {
@@ -314,8 +353,77 @@ const SearchScreen = () => {
                 })}
               </View>
               <View style={styles.divider} />
-              <View style={styles.headerContent}>
-                <Text style={styles.title}>Tìm Kiếm Đồ Ăn</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  margin: 10,
+                }}>
+                <View style={[styles.headerContent, {marginHorizontal: 0}]}>
+                  <Text style={styles.title}>Giá Sản Phẩm</Text>
+                </View>
+                <SwitchComponent
+                  toggleSwitch={() => setIsEnabled(!isEnabled)}
+                  isEnabled={isEnabled}
+                />
+              </View>
+              <View style={{marginHorizontal: 20}}>
+                <Slider
+                  value={range}
+                  disabled={!isEnabled}
+                  minimumValue={5000}
+                  maximumValue={200000}
+                  onValueChange={handleSlider}
+                  // onSlidingComplete={() => dispatch(conditionSetRadius(range))}
+                  minimumTrackTintColor="#43bb6c"
+                  maximumTrackTintColor="#cccccc"
+                  thumbTintColor={'#43bb6c'}
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <Text style={{color: '#808080'}}>{`${formatNumber(
+                    5000,
+                  )} ₫`}</Text>
+                  <Text style={{color: '#808080'}}>{`${formatNumber(
+                    200000,
+                  )} ₫`}</Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 15,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#1a1a1a',
+                      fontSize: 15,
+                    }}>{`Giá từ: ${formatNumber(5000)}₫ -> ${formatNumber(
+                    range,
+                  )}₫`}</Text>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#43bb6c',
+                      padding: 5,
+                      borderRadius: 4,
+                    }}
+                    onPress={handleSearchByPrice}>
+                    <Ionicons
+                      name={'search'}
+                      size={20}
+                      color={'#fff'}
+                      style={{marginHorizontal: 5}}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={[styles.headerContent, {marginTop: 21}]}>
+                <Text style={styles.title}>Loại Đồ Ăn</Text>
               </View>
               <View
                 style={{
