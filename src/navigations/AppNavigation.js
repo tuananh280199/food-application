@@ -62,7 +62,7 @@ PushNotification.createChannel({
 
 PushNotification.configure({
   onRegister: function (token) {
-    // console.log('device token:', token);
+    console.log('device token:', token);
     store.dispatch(setDeviceToken({token}));
   },
 
